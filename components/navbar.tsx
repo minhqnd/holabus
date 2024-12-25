@@ -4,8 +4,8 @@ import { Phone } from 'lucide-react'
 
 export function Navbar() {
   return (
-    <nav className="border-b bg-white">
-      <div className="container flex h-16 items-center justify-between">
+    <nav className="border-b bg-white w-full sticky top-0 z-50">
+      <div className="container flex h-20 items-center justify-between mx-auto px-4">
         <div className="flex gap-6">
           <Link href="/" className="text-xl font-bold text-red-600">
             HolaBus

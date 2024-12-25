@@ -11,9 +11,9 @@ import {
 
 export function HeroSearch() {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/25" />
-      <div className="container relative flex min-h-[600px] flex-col items-center justify-center text-center">
+      <div className="container relative flex min-h-[600px] flex-col items-center justify-center text-center mx-auto px-4">
         <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
           Về nhà ăn tết thôi!
           <br />

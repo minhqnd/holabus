@@ -12,7 +12,7 @@ const provinces = [
   {
     title: "Hà Nội",
     image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đại học FPT", "TDBS", "BigC Thăng Long", "Bến xe Mỹ Đình"],
+    locations: ["Đại học FPT", "TDBS", "BigC Thăng Long", "Bến xe Mỹ Đình", "Hồ Hoàn Kiếm", "Văn Miếu Quốc Tử Giám", "Lăng Chủ tịch Hồ Chí Minh", "Chùa Trấn Quốc"],
     price: "135.000",
     ticketsLeft: 29
   },
@@ -156,9 +156,9 @@ export default function Home() {
   const displayedProvinces = showAll ? provinces : provinces.slice(0, 12)
 
   return (
-    <main className="min-h-screen bg-[#FFF9F0]">
+    <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full">
       <Navbar />
-      <div className="relative h-[600px] overflow-hidden">
+      <div className="relative h-[600px] overflow-hidden w-full">
         <img
           src="/placeholder.svg?height=600&width=1200"
           alt="Hero Background"
@@ -166,8 +166,8 @@ export default function Home() {
         />
         <HeroSearch />
       </div>
-      <div className="container py-12">
-        <div className="mb-8">
+      <div className="container py-12 mx-auto px-4 w-full">
+        <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-red-800">Lộ Trình HolaBus</h2>
           <p className="mt-2 text-gray-600">
             Chúng mình hy vọng rằng sẽ mang đến những trải nghiệm tuyệt vời nhất cho mọi người. 
