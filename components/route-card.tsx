@@ -44,18 +44,17 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
             <li key={index} className="flex items-center gap-2 text-gray-600">
               <div className="flex h-full flex-col items-center">
                 <div className={`h-2 w-2 rounded-full ${index === 0 ? 'bg-green-500' : index === displayedLocations.length - 1 ? 'bg-red-500' : 'bg-gray-400'}`}></div>
-                {index !== displayedLocations.length - 1 && (
-                  <div className="h-8 w-0.5 border-l border-dashed border-gray-300"></div>
-                )}
               </div>
               <span className="text-base">
-                {location}
+                {index !== 2 ? (
+                  location
+                ) : null}
                 {index === 2 && hasMoreLocations && (
                   <button
-                    className="ml-2 inline-flex items-center text-sm font-medium text-red-600 hover:text-red-800"
+                    className="inline-flex text-red-700 hover:text-red-800"
                     onClick={() => setShowAllStops(true)}
                   >
-                    Xem thêm <ChevronRight className="h-4 w-4" />
+                  Xem thêm
                   </button>
                 )}
               </span>
@@ -79,9 +78,6 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
             <li key={index} className="flex items-center gap-2 text-gray-600">
               <div className="flex h-full flex-col items-center">
                 <div className={`h-3 w-3 rounded-full ${index === 0 ? 'bg-green-500' : index === locations.length - 1 ? 'bg-red-500' : 'bg-gray-400'}`}></div>
-                {index !== locations.length - 1 && (
-                  <div className="h-12 w-0.5 border-l border-dashed border-gray-300"></div>
-                )}
               </div>
               <span className="text-lg">{location}</span>
             </li>
