@@ -12,7 +12,7 @@ const provinces = [
   {
     title: "Hà Nội",
     image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đại học FPT", "TDBS", "BigC Thăng Long", "Bến xe Mỹ Đình", "Hồ Hoàn Kiếm", "Văn Miếu Quốc Tử Giám", "Lăng Chủ tịch Hồ Chí Minh", "Chùa Trấn Quốc"],
+    locations: ["Đại học FPT", "TDBS", "BigC Thăng Long", "Bến xe Mỹ Đình"],
     price: "135.000",
     ticketsLeft: 29
   },

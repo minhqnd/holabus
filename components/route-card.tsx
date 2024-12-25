@@ -38,25 +38,29 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
             </div>
           )}
         </div>
-        <h3 className="mb-4 text-2xl font-bold text-red-800 md:text-3xl">{title}</h3>
+        <h3 className=" text-2xl font-bold text-red-800 md:text-3xl">{title}</h3>
         <ul className="mb-6 space-y-0">
           {displayedLocations.map((location, index) => (
             <li key={index} className="flex items-center gap-2 text-gray-600">
               <div className="flex h-full flex-col items-center">
+                {index !== 0 ? (
+                  <div className="relative z-0 h-4 w-0.5 border-l border-dashed border-gray-300"></div>
+                ) : <div className="relative z-0 h-4 w-0.5 bg-gray-300"></div>
+                }
                 <div className={`h-2 w-2 rounded-full ${index === 0 ? 'bg-green-500' : index === displayedLocations.length - 1 ? 'bg-red-500' : 'bg-gray-400'}`}></div>
+                {index !== displayedLocations.length - 1 ? (
+                  <div className="relative z-0 h-4 w-0.5 border-l border-dashed border-gray-300"></div>
+                ) : <div className="relative z-0 h-4 w-0.5 bg-gray-300"></div>}
               </div>
               <span className="text-base">
-                {index !== 2 ? (
-                  location
-                ) : null}
-                {index === 2 && hasMoreLocations && (
+                {index === 2 && hasMoreLocations ? (
                   <button
                     className="inline-flex text-red-700 hover:text-red-800"
                     onClick={() => setShowAllStops(true)}
                   >
-                  Xem thêm
+                    Xem thêm
                   </button>
-                )}
+                ) : location}
               </span>
             </li>
           ))}
@@ -77,7 +81,14 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
           {locations.map((location, index) => (
             <li key={index} className="flex items-center gap-2 text-gray-600">
               <div className="flex h-full flex-col items-center">
+              {index !== 0 ? (
+                  <div className="relative z-0 h-6 w-0.5 border-l border-dashed border-gray-300"></div>
+                ) : <div className="relative z-0 h-6 w-0.5 bg-gray-300"></div>
+                }
                 <div className={`h-3 w-3 rounded-full ${index === 0 ? 'bg-green-500' : index === locations.length - 1 ? 'bg-red-500' : 'bg-gray-400'}`}></div>
+                {index !== locations.length - 1 ? (
+                  <div className="relative z-0 h-6 w-0.5 border-l border-dashed border-gray-300"></div>
+                ) : <div className="relative z-0 h-6 w-0.5 bg-gray-300"></div>}
               </div>
               <span className="text-lg">{location}</span>
             </li>
