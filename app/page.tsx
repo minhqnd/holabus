@@ -158,7 +158,18 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full">
       <Navbar />
-      <div className="relative h-[600px] overflow-hidden w-full">
+      <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
+        <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
+          <img
+            src="/img/fpt.png"
+            alt="Hero Background"
+            className="absolute inset-0 h-full w-full object-cover shadow-lg"
+          />
+        </div>
+        <HeroSearch />
+      </div>
+
+      <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
         <img
           src="img/fpt.png"
           alt="Hero Background"
@@ -166,13 +177,11 @@ export default function Home() {
         />
         <HeroSearch />
       </div>
-      <div className="container py-12 mx-auto px-4 w-full">
+
+      <img src="./img/maidao.png" alt="maidao" className='w-full' />
+      <div className="container  pb-12  mx-auto px-4 w-full max-w-[90rem] xl:-translate-y-[256px] z-20">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-red-800">Lộ Trình HolaBus</h2>
-          <p className="mt-2 text-gray-600">
-            Chúng mình hy vọng rằng sẽ mang đến những trải nghiệm tuyệt vời nhất cho mọi người. 
-            Chúc mọi người có hành trình về nhà ăn Tết thật hạnh phúc và bình an
-          </p>
+          <img src="./img/lotrinhholabus.png" alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {displayedProvinces.map((province, index) => (
@@ -187,13 +196,13 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-8 text-center">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="lg"
             onClick={() => setShowAll(!showAll)}
             className="group border-2 border-red-600 text-red-600 hover:bg-red-50"
           >
-            {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'} 
+            {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
             <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />
           </Button>
         </div>
