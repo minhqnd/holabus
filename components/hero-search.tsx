@@ -44,7 +44,7 @@ export function HeroSearch() {
                 <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
               </SelectContent>
             </Select>
-            <Button className="bg-red-600 hover:bg-red-700">Tìm kiếm</Button>
+            <Button className="bg-red-600 hover:bg-red-700 ">Tìm kiếm</Button>
           </div>
         </div>
       </div>

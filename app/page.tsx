@@ -160,7 +160,7 @@ export default function Home() {
       <Navbar />
       <div className="relative h-[600px] overflow-hidden w-full">
         <img
-          src="/placeholder.svg?height=600&width=1200"
+          src="img/fpt.png"
           alt="Hero Background"
           className="absolute inset-0 h-full w-full object-cover"
         />
