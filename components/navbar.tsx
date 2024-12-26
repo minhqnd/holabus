@@ -20,7 +20,7 @@ export function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-red-600">
+          <div className="items-center gap-2 text-red-600 hidden md:flex">
             <Phone className="h-4 w-4" />
             <span className="text-sm font-medium">Hotline: 0901234567</span>
           </div>
