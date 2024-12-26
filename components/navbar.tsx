@@ -11,7 +11,7 @@ export function Navbar() {
             HolaBus
           </Link>
           <div className="hidden items-center gap-6 md:flex">
-            <Link href="/tim-du-thuyen" className="text-sm hover:text-red-600">
+            <Link href="/search" className="text-sm hover:text-red-600">
               Tìm xe bus
             </Link>
             <Link href="/tim-ve-may-bay" className="text-sm hover:text-red-600">
