@@ -53,7 +53,7 @@ export function HeroSearch() {
           Quê bạn ở đâu vậy nhỉ?
         </h1>
         <p className="mb-8 text-lg text-white/90">
-          Hơn 20 tuyến xe và các bến đang chờ đợi chở bạn về nhà
+          Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
         </p>
         <div className="w-full max-w-4xl rounded-3xl bg-white p-6 shadow-lg">
           <div className="grid gap-4 md:grid-cols-3">
