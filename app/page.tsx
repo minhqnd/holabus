@@ -179,7 +179,7 @@ export default function Home() {
       </div>
 
       <img src="./img/maidao.png" alt="maidao" className='w-full' />
-      <div className="container  pb-12  mx-auto px-4 w-full max-w-[90rem] xl:-translate-y-[256px] z-20">
+      <div className="container  pb-12  mx-auto px-4 w-full  xl:-translate-y-[256px]">
         <div className="mb-8 text-center">
           <img src="./img/lotrinhholabus.png" alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
         </div>
