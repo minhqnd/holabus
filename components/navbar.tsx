@@ -12,19 +12,10 @@ export function Navbar() {
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Link href="/tim-du-thuyen" className="text-sm hover:text-red-600">
-              Tìm du thuyền
+              Tìm xe bus
             </Link>
             <Link href="/tim-ve-may-bay" className="text-sm hover:text-red-600">
-              Tìm vé máy bay
-            </Link>
-            <Link href="/tim-khach-san" className="text-sm hover:text-red-600">
-              Tìm khách sạn
-            </Link>
-            <Link href="/doanh-nghiep" className="text-sm hover:text-red-600">
-              Doanh nghiệp
-            </Link>
-            <Link href="/blog" className="text-sm hover:text-red-600">
-              Blog
+              Tra cứu vé
             </Link>
           </div>
         </div>
