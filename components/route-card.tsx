@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Popup } from '@/components/popup'
+import Popup from '@/components/popup'
 import { ChevronRight } from 'lucide-react'
 
 interface RouteCardProps {
@@ -75,8 +75,8 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
       <Popup
         isOpen={showAllStops}
         onClose={() => setShowAllStops(false)}
-        title={`Tất cả điểm dừng - ${title}`}
       >
+        <h2 className="mb-4 text-2xl font-bold">{`Tất cả điểm dừng - ${title}`}</h2>
         <ul className="space-y-0">
           {locations.map((location, index) => (
             <li key={index} className="flex items-center gap-2 text-gray-600">
