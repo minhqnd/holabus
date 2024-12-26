@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -21,16 +22,11 @@ export function HeroSearch() {
             Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
           </p>
           <div className="grid gap-4 md:grid-cols-3">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Tất cả địa điểm" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hanoi">Hà Nội</SelectItem>
-                <SelectItem value="hochiminh">TP. Hồ Chí Minh</SelectItem>
-                <SelectItem value="danang">Đà Nẵng</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input
+              type="text"
+              placeholder="Nhập địa điểm"
+              className="rounded-full border-gray-300"
+            />
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Tất cả mức giá" />
@@ -45,7 +41,7 @@ export function HeroSearch() {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/25 md:hidden h-lvh"/>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/25 md:hidden h-lvh" />
       <div className="container relative flex min-h-[600px] flex-col items-center justify-center text-center mx-auto px-4 md:hidden">
         <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
           Về nhà ăn tết thôi!
@@ -57,16 +53,11 @@ export function HeroSearch() {
         </p>
         <div className="w-full max-w-4xl rounded-3xl bg-white p-6 shadow-lg">
           <div className="grid gap-4 md:grid-cols-3">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Tất cả địa điểm" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hanoi">Hà Nội</SelectItem>
-                <SelectItem value="hochiminh">TP. Hồ Chí Minh</SelectItem>
-                <SelectItem value="danang">Đà Nẵng</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input
+              type="text"
+              placeholder="Nhập địa điểm"
+              className="rounded-full border-gray-300"
+            />
             <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Tất cả mức giá" />
