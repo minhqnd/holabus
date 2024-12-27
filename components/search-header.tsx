@@ -25,8 +25,8 @@ export function SearchHeader() {
           <Label className="font-medium">Điểm đi</Label>
           <Input
             type="text"
-            placeholder="Trường Đại học FPT"
-            className="rounded-full border-gray-300 focus:border-red-500 focus:ring-red-500"
+            value="Trường Đại học FPT"
+            className="rounded-full border-gray-300"
             readOnly
           />
         </div>
