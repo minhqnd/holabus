@@ -34,33 +34,6 @@ const flights = [
         to: 'SGN',
         price: '1,806,040',
     },
-    {
-        id: 'VJ159',
-        airline: 'Vietjet Air',
-        departure: '18:55',
-        arrival: '21:05',
-        from: 'HAN',
-        to: 'SGN',
-        price: '1,883,800',
-    },
-    {
-        id: 'VJ161',
-        airline: 'Vietjet Air',
-        departure: '20:45',
-        arrival: '22:55',
-        from: 'HAN',
-        to: 'SGN',
-        price: '1,883,800',
-    },
-    {
-        id: 'VJ181',
-        airline: 'Vietjet Air',
-        departure: '21:05',
-        arrival: '23:15',
-        from: 'HAN',
-        to: 'SGN',
-        price: '1,883,800',
-    },
 ]
 
 export function FlightResults() {
@@ -74,8 +47,9 @@ export function FlightResults() {
     ]
 
     return (
-        <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
-            <div className="rounded-3xl bg-white p-6">
+        // <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
+        <div className="grid gap-6">
+            {/* <div className="rounded-3xl bg-white p-6">
                 <h3 className="mb-4 font-medium">Hiển thị theo</h3>
                 <div className="space-y-4">
                     {airlines.map((airline) => (
@@ -85,7 +59,7 @@ export function FlightResults() {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             <div className="space-y-6">
                 <div className="rounded-3xl bg-white p-6">
@@ -94,7 +68,7 @@ export function FlightResults() {
                             <div className="relative h-8 w-8">
                                 <Image
                                     src="/placeholder.svg?height=32&width=32"
-                                    alt="Plane icon"
+                                    alt="Logo"
                                     width={32}
                                     height={32}
                                     className="object-contain"
@@ -102,14 +76,15 @@ export function FlightResults() {
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold">
-                                    Sân bay Nội Bài (HAN) → Sân bay Tân Sơn Nhất (SGN)
+                                    Đại học FPT (Hà Nội) → Quảng Ninh
                                 </h2>
-                                <p className="text-sm text-gray-500">Thứ 7, 28/12/2024</p>
+                                {/* <p className="text-sm text-gray-500">Thứ 7, 28/12/2024</p> */}
                             </div>
                         </div>
                     </div>
 
-                    <div className="mb-6 flex items-center gap-2">
+                    {/* date */}
+                    {/* <div className="mb-6 flex items-center gap-2">
                         {dates.map((date) => (
                             <Button
                                 key={date.date}
@@ -123,7 +98,7 @@ export function FlightResults() {
                                 </div>
                             </Button>
                         ))}
-                    </div>
+                    </div> */}
 
                     <div className="space-y-4">
                         {flights.map((flight) => (
@@ -141,12 +116,12 @@ export function FlightResults() {
                                 Trước
                             </Button>
                             <Button variant="outline" className="rounded-xl">1</Button>
-                            <Button variant="outline" className="rounded-xl">2</Button>
+                            {/* <Button variant="outline" className="rounded-xl">2</Button>
                             <Button variant="outline" className="rounded-xl">3</Button>
                             <span>...</span>
                             <Button variant="outline" className="rounded-xl">41</Button>
                             <Button variant="outline" className="rounded-xl">42</Button>
-                            <Button variant="outline" className="rounded-xl">43</Button>
+                            <Button variant="outline" className="rounded-xl">43</Button> */}
                             <Button variant="outline" className="rounded-xl">
                                 Tiếp
                                 <ChevronRight className="h-4 w-4" />

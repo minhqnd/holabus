@@ -15,7 +15,7 @@ export default function SearchPage() {
             <Navbar />
             <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
                 <SearchHeader />
-                <div className="mb-8">
+                <div className="mb-8 mx-auto">
                     <ProgressSteps currentStep={currentStep} />
                 </div>
                 <FlightResults />
