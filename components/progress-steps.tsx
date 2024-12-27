@@ -12,7 +12,12 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
   return (
     <div className="flex justify-between w-full">
       {steps.map((step, index) => (
-        <div key={step.number} className="relative flex items-center">
+        <div key={step.number} className="relative flex flex-1 items-center">
+          <div
+              className={`h-0.5 flex-1 hidden md:block ${
+                currentStep + 1 > step.number ? 'bg-[#86efac]' : 'bg-gray-200'
+              }`}
+            />
           <div className="flex flex-col items-center">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full ${currentStep >= step.number
@@ -26,13 +31,14 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
               <div className="font-medium">{step.title}</div>
               <div className="text-sm text-gray-500">{step.subtitle}</div>
             </div>
-          {index < steps.length - 1 && (
-            <div
-              className={`h-0.5 flex-1 ${currentStep > step.number ? 'bg-[#86efac]' : 'bg-gray-200'
-                }`}
-            />
-          )}
           </div>
+          {/* {index < steps.length - 1 && ( */}
+            <div
+              className={`h-0.5 flex-1 hidden md:block ${
+                currentStep > step.number ? 'bg-[#86efac]' : 'bg-gray-200'
+              }`}
+            />
+          {/* )} */}
         </div>
       ))}
     </div>
