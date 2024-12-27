@@ -39,8 +39,8 @@ export function FlightCard({
   return (
     <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
       <div className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="flex items-center gap-4 w-full md:w-auto">
             {/* <div className="relative h-12 w-12 overflow-hidden rounded-lg">
               <Image
                 src="/placeholder.svg?height=48&width=48"
@@ -55,24 +55,24 @@ export function FlightCard({
               <div className="text-sm text-gray-500">{id}</div>
             </div>
           </div>
-          <div className="text-right">
+          <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold">{departure}</div>
             <div className="text-sm text-gray-500">{from}</div>
           </div>
-          <div className="text-center">
+          <div className="text-center w-full md:w-auto mt-4 md:mt-0">
             <div className="h-0.5 w-16 bg-gray-300" />
           </div>
-          <div>
+          <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold">{arrival}</div>
             <div className="text-sm text-gray-500">{to}</div>
           </div>
-          <div>
+          <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold text-red-600">{price}</div>
             <div className="text-sm text-gray-500">VND</div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full md:w-auto mt-4 md:mt-0">
             <Button 
-              className="rounded-full bg-red-600 text-white hover:bg-red-700"
+              className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-auto"
             >
               Chọn
             </Button>
