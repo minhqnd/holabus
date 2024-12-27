@@ -13,12 +13,14 @@ export default function SearchPage() {
     return (
         <main className="min-h-screen bg-[#FFF9F0]">
             <Navbar />
-            <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-                <SearchHeader />
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen">
                 <div className="mb-8 mx-auto">
                     <ProgressSteps currentStep={currentStep} />
                 </div>
-                <FlightResults />
+                <SearchHeader />
+                <div className="mb-8">
+                    <FlightResults />
+                </div>
             </div>
             <Footer />
         </main>

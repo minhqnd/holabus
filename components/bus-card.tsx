@@ -7,7 +7,7 @@ import { ChevronDown } from 'lucide-react'
 
 interface FlightCardProps {
   id: string
-  airline: string
+  name: string
   departure: string
   arrival: string
   from: string
@@ -22,14 +22,14 @@ interface FlightCardProps {
 
 export function FlightCard({
   id,
-  airline,
+  name,
   departure,
   arrival,
   from,
   to,
   price,
   duration = "130 phút",
-  aircraft = "320",
+  aircraft = "29",
   cabinClass = "Economy",
   handBaggage = "7kg",
   checkInBaggage = "Vui lòng chọn ở bước tiếp theo",
@@ -37,11 +37,11 @@ export function FlightCard({
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all">
+    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="relative h-12 w-12 overflow-hidden rounded-lg">
+            {/* <div className="relative h-12 w-12 overflow-hidden rounded-lg">
               <Image
                 src="/placeholder.svg?height=48&width=48"
                 alt={airline}
@@ -49,9 +49,9 @@ export function FlightCard({
                 height={48}
                 className="object-cover"
               />
-            </div>
+            </div> */}
             <div>
-              <div className="font-medium">{airline}</div>
+              <div className="font-medium">{name}</div>
               <div className="text-sm text-gray-500">{id}</div>
             </div>
           </div>
@@ -102,32 +102,16 @@ export function FlightCard({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <div className="text-sm text-gray-500">Hãng:</div>
-                <div className="font-medium">{airline}</div>
+                <div className="text-sm text-gray-500">Tên chuyến:</div>
+                <div className="font-medium">{name}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Chuyến bay:</div>
+                <div className="text-sm text-gray-500">ID chuyến:</div>
                 <div className="font-medium">{id}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Thời gian chuyến đi:</div>
-                <div className="font-medium">{duration}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Máy bay:</div>
+                <div className="text-sm text-gray-500">Chỗ ngồi:</div>
                 <div className="font-medium">{aircraft}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Hạng chỗ:</div>
-                <div className="font-medium">{cabinClass}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Hành lý xách tay:</div>
-                <div className="font-medium">{handBaggage}</div>
-              </div>
-              <div className="col-span-2">
-                <div className="text-sm text-gray-500">Hành lý ký gửi:</div>
-                <div className="font-medium">{checkInBaggage}</div>
               </div>
             </div>
           </div>

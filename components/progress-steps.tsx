@@ -10,7 +10,7 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
   ]
 
   return (
-    <div className="flex justify- mx-80">
+    <div className="flex justify-between w-full">
       {steps.map((step, index) => (
         <div key={step.number} className="relative flex items-center">
           <div className="flex flex-col items-center">
@@ -26,8 +26,13 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
               <div className="font-medium">{step.title}</div>
               <div className="text-sm text-gray-500">{step.subtitle}</div>
             </div>
+          {index < steps.length - 1 && (
+            <div
+              className={`h-0.5 flex-1 ${currentStep > step.number ? 'bg-[#86efac]' : 'bg-gray-200'
+                }`}
+            />
+          )}
           </div>
-
         </div>
       ))}
     </div>

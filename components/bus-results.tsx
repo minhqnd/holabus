@@ -17,22 +17,22 @@ const airlines = [
 
 const flights = [
     {
-        id: 'VJ171',
-        airline: 'Vietjet Air',
-        departure: '21:35',
-        arrival: '23:45',
-        from: 'HAN',
-        to: 'SGN',
-        price: '1,754,200',
+        id: 'HNQN01',
+        name: 'FPT - Quang Ninh',
+        departure: '7:35',
+        arrival: '9:45',
+        from: '13/01/2025',
+        to: '13/01/2025',
+        price: '189.000',
     },
     {
-        id: 'VU787',
-        airline: 'Vietravel Airlines',
-        departure: '22:05',
-        arrival: '00:20',
-        from: 'HAN',
-        to: 'SGN',
-        price: '1,806,040',
+        id: 'HNQN02',
+        name: 'FPT - Quang Ninh',
+        departure: '13:05',
+        arrival: '15:20',
+        from: '13/01/2025',
+        to: '13/01/2025',
+        price: '189.000',
     },
 ]
 
@@ -62,18 +62,21 @@ export function FlightResults() {
             </div> */}
 
             <div className="space-y-6">
-                <div className="rounded-3xl bg-white p-6">
+                <div className="rounded-3xl bg-white p-6 ">
                     <div className="mb-4">
                         <div className="flex items-center gap-2">
-                            <div className="relative h-8 w-8">
-                                <Image
+                            {/* <div className="relative h-8 w-8"> */}
+                                {/* <Image
                                     src="/placeholder.svg?height=32&width=32"
                                     alt="Logo"
                                     width={32}
                                     height={32}
                                     className="object-contain"
-                                />
-                            </div>
+                                /> */}
+                                <div className="text-xl font-bold text-red-600">
+                                    HolaBus
+                                </div>
+                            {/* </div> */}
                             <div>
                                 <h2 className="text-lg font-bold">
                                     Đại học FPT (Hà Nội) → Quảng Ninh
@@ -100,16 +103,16 @@ export function FlightResults() {
                         ))}
                     </div> */}
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 min-h-96">
                         {flights.map((flight) => (
                             <FlightCard key={flight.id} {...flight} />
                         ))}
                     </div>
 
                     <div className="mt-6 flex items-center justify-between">
-                        <div className="text-sm text-gray-500">
+                        {/* <div className="text-sm text-gray-500">
                             Đang xem: 5 của 211
-                        </div>
+                        </div> */}
                         <div className="flex items-center gap-2">
                             <Button variant="outline" className="rounded-xl">
                                 <ChevronLeft className="h-4 w-4" />
