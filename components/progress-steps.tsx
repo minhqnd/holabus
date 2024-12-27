@@ -4,7 +4,7 @@ interface ProgressStepsProps {
 
 export function ProgressSteps({ currentStep }: ProgressStepsProps) {
   const steps = [
-    { number: 1, title: 'Chọn chuyến xe', subtitle: 'Vui lòng chọn chuyến xe' },
+    { number: 1, title: 'Chọn chuyến', subtitle: 'Vui lòng chọn chuyến xe' },
     { number: 2, title: 'Đặt chỗ', subtitle: 'Điền thông tin để đặt chỗ' },
     { number: 3, title: 'Thanh toán', subtitle: 'Thanh toán để nhận vé xe' },
   ]
