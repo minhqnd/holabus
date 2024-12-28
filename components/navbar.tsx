@@ -1,20 +1,22 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Phone } from 'lucide-react'
+import Image from 'next/image'
 
 export function Navbar() {
   return (
     <nav className="bg-white w-full sticky top-0 z-50">
       <div className="container flex h-20 md:h-24 items-center justify-between mx-auto px-4 md:px-30 font-medium">
         <div className="flex gap-6">
-          <Link href="/" className="text-xl font-bold text-red-600">
-            HolaBus
+          <Link href="/" className="">
+
+          <img src="/white-logo.png" className="w-auto h-12" alt="Logo" />
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Link href="/search" className="text-base hover:text-red-600">
               Tìm xe bus
             </Link>
-            <Link href="/tim-ve-may-bay" className="text-base hover:text-red-600">
+            <Link href="/tra-cuu" className="text-base hover:text-red-600">
               Tra cứu vé
             </Link>
           </div>
