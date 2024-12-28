@@ -28,11 +28,7 @@ export function FlightCard({
   from,
   to,
   price,
-  duration = "130 phút",
   aircraft = "29",
-  cabinClass = "Economy",
-  handBaggage = "7kg",
-  checkInBaggage = "Vui lòng chọn ở bước tiếp theo",
 }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -56,15 +52,15 @@ export function FlightCard({
             </div>
           </div>
           <div className="w-full md:w-auto mt-4 md:mt-0">
-            <div className="text-lg font-bold">{departure}</div>
-            <div className="text-sm text-gray-500">{from}</div>
+            <div className="text-lg font-bold">{departure} · {from}</div>
+            <div className="text-sm text-gray-500">Giờ xuất phát</div>
           </div>
-          <div className="text-center w-full md:w-auto mt-4 md:mt-0">
+          {/* <div className="text-center w-full md:w-auto mt-4 md:mt-0">
             <div className="h-0.5 w-16 bg-gray-300" />
-          </div>
+          </div> */}
           <div className="w-full md:w-auto mt-4 md:mt-0">
-            <div className="text-lg font-bold">{arrival}</div>
-            <div className="text-sm text-gray-500">{to}</div>
+            <div className="text-lg font-bold">{aircraft}</div>
+            <div className="text-sm text-gray-500">Chỗ ngồi</div>
           </div>
           <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold text-red-600">{price}</div>

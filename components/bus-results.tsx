@@ -64,18 +64,18 @@ export function FlightResults() {
             <div className="space-y-6">
                 <div className="rounded-3xl bg-white p-6 ">
                     <div className="mb-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex gap-2 md:flex-row flex-col">
                             {/* <div className="relative h-8 w-8"> */}
-                                {/* <Image
+                            {/* <Image
                                     src="/placeholder.svg?height=32&width=32"
                                     alt="Logo"
                                     width={32}
                                     height={32}
                                     className="object-contain"
                                 /> */}
-                                <div className="text-xl font-bold text-red-600">
-                                    HolaBus
-                                </div>
+                            <div className="text-xl font-bold text-red-600">
+                                HolaBus
+                            </div>
                             {/* </div> */}
                             <div>
                                 <h2 className="text-lg font-bold">
@@ -109,7 +109,7 @@ export function FlightResults() {
                         ))}
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between">
+                    <div className="mt-6 flex items-center mx-auto justify-center md:justify-between">
                         {/* <div className="text-sm text-gray-500">
                             Đang xem: 5 của 211
                         </div> */}
