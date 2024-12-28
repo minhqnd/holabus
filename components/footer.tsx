@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:gap-20 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Image src="/white-logo.png" width={0} height={0} sizes="100vw" className="w-full h-auto mb-4" alt="Logo" />
+            <Image src="./white-logo.png" width={0} height={0} sizes="100vw" className="w-full h-auto mb-4" alt="Logo" />
             <ul className="space-y-2">
               <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết nguyên đán Ất Tỵ 2025</li>
               <li className="text-sm">Một sản phẩm thuộc FPTU Business Club - FBC</li>

@@ -39,7 +39,7 @@ export function FlightCard({
           <div className="flex items-center gap-4 w-full md:w-auto">
             <div className="relative h-12 w-12 overflow-hidden rounded-lg">
               <Image
-                src="/modal-icon.png"
+                src="./modal-icon.png"
                 alt={'hanoi'}
                 width={48}
                 height={48}

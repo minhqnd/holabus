@@ -9,7 +9,7 @@ export function Navbar() {
       <div className="container flex h-20 md:h-24 items-center justify-between mx-auto px-4 md:px-30 font-medium">
         <div className="flex gap-6">
           <Link href="/" className="">
-            <Image src="/red-logo.png" width={0} height={0} sizes="50vw" className="w-auto h-12" alt="Logo" />
+            <Image src="./red-logo.png" width={0} height={0} sizes="50vw" className="w-auto h-12" alt="Logo" />
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Link href="/search" className="text-base hover:text-red-600">
