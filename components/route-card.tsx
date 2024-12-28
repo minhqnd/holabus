@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Popup from '@/components/popup'
-import { ChevronRight } from 'lucide-react'
 
 interface RouteCardProps {
   image: string
@@ -24,7 +23,7 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
       <Card className="overflow-hidden rounded-[32px] border-red-100 bg-white p-4 transition-transform hover:scale-[1.02]">
         <div className="relative mb-4 h-40 w-full overflow-hidden rounded-[24px]">
           <Image
-            src={image}
+            src={`/img/tinh/hanoi.png?${image}`}
             alt={title}
             fill
             className="object-cover"
@@ -32,8 +31,8 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
           {ticketsLeft && (
             <div className="absolute left-4 top-4 rounded-full bg-yellow-100 px-4 py-2 text-yellow-700">
               <span className="flex items-center gap-2 text-sm">
-                <span className="text-yellow-500">★</span>
-                Còn {ticketsLeft} vé
+                {/* <span className="text-yellow-500">★</span> */}
+              Còn {ticketsLeft} vé
               </span>
             </div>
           )}

@@ -11,7 +11,7 @@ export function ProgressSteps({ currentStep }: ProgressStepsProps) {
 
   return (
     <div className="flex justify-between w-full">
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <div key={step.number} className="relative flex flex-1 items-center">
           <div
               className={`h-0.5 flex-1 hidden md:block ${

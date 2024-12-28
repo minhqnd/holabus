@@ -7,6 +7,7 @@ import { RouteCard } from '@/components/route-card'
 import { Button } from "@/components/ui/button"
 import { ChevronDown } from 'lucide-react'
 import { Footer } from '@/components/footer'
+import Image from 'next/image'
 
 const provinces = [
   {
@@ -160,28 +161,41 @@ export default function Home() {
       <Navbar />
       <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
         <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
-          <img
+          <Image
             src="/img/fpt.png"
             alt="Hero Background"
-            className="absolute inset-0 h-full w-full object-cover shadow-lg"
+            layout="fill"
+            objectFit="cover"
+            className="shadow-lg"
           />
         </div>
         <HeroSearch />
       </div>
 
       <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
-        <img
-          src="img/fpt.png"
+        <Image
+          src="/img/fpt.png"
           alt="Hero Background"
-          className="absolute inset-0 h-full w-full object-cover"
+          layout="fill"
+          objectFit="cover"
         />
         <HeroSearch />
       </div>
-
-      <img src="./img/maidao.png" alt="maidao" className='w-full' />
+      <div className="w-full">
+        <Image src="/img/maidao.png"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: '100%', height: 'auto' }}
+          alt="maidao" />
+      </div>
       <div className="container  pb-12  mx-auto px-4 w-full  xl:-translate-y-[256px]">
         <div className="mb-8 text-center">
-          <img src="./img/lotrinhholabus.png" alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
+          <Image src="/img/lotrinhholabus.png" width={0}
+            height={0}
+            sizes="100vw"
+            style={{ height: 'auto' }}
+            alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {displayedProvinces.map((province, index) => (
