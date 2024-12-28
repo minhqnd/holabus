@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
 interface PopupProps {
@@ -12,20 +12,27 @@ interface PopupProps {
 }
 
 const Popup = ({ isOpen, onClose, children }: PopupProps) => {
-  const [portalElement] = React.useState(() => document.createElement('div'))
+  const [portalElement, setPortalElement] = useState<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (isOpen) {
+    if (typeof window !== 'undefined') {
+      const element = document.createElement('div')
+      setPortalElement(element)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (portalElement && isOpen) {
       document.body.appendChild(portalElement)
     }
     return () => {
-      if (document.body.contains(portalElement)) {
+      if (portalElement && document.body.contains(portalElement)) {
         document.body.removeChild(portalElement)
       }
     }
   }, [isOpen, portalElement])
 
-  if (!isOpen) return null
+  if (!isOpen || !portalElement) return null
 
   const handleClose = () => {
     console.log('Closing popup');
@@ -34,8 +41,8 @@ const Popup = ({ isOpen, onClose, children }: PopupProps) => {
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50" 
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50"
         onClick={handleClose}
       />
       <div className="relative bg-white rounded-lg p-6 max-w-lg w-full mx-4 z-50">
@@ -53,4 +60,3 @@ const Popup = ({ isOpen, onClose, children }: PopupProps) => {
 }
 
 export default Popup
-

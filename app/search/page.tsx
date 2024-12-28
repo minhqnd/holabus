@@ -10,7 +10,8 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 
 export default function SearchPage() {
     const [currentStep] = useState(3)
-    const [currentPage, setCurrentPage] = useState('FPT - Quảng Ninh')
+    // const [currentPage, setCurrentPage] = useState('FPT - Quảng Ninh')
+    const [currentPage] = useState('FPT - Quảng Ninh')
 
     return (
         <main className="min-h-screen h-full bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">

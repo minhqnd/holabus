@@ -33,19 +33,19 @@ export function FlightCard({
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all duration-500 ease-in-out cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
       <div className="p-6">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center gap-4 w-full md:w-auto">
-            {/* <div className="relative h-12 w-12 overflow-hidden rounded-lg">
+            <div className="relative h-12 w-12 overflow-hidden rounded-lg">
               <Image
-                src="/placeholder.svg?height=48&width=48"
-                alt={airline}
+                src="/modal-icon.png"
+                alt={'hanoi'}
                 width={48}
                 height={48}
                 className="object-cover"
               />
-            </div> */}
+            </div>
             <div>
               <div className="font-medium">{name}</div>
               <div className="text-sm text-gray-500">{id}</div>
@@ -84,7 +84,7 @@ export function FlightCard({
         </div>
       </div>
       {isExpanded && (
-        <div className="border-t border-gray-100 bg-gray-50 p-6">
+        <div className="border-t border-gray-100 bg-gray-50 p-6 max-h-96 transition-max-height">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2">

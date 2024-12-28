@@ -1,19 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+// import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
+// import { Checkbox } from '@/components/ui/checkbox'
+// import { Label } from '@/components/ui/label'
 import { FlightCard } from '@/components/bus-card'
-import Image from 'next/image'
+// import Image from 'next/image'
 
-const airlines = [
-    { id: 'vietjet', name: 'Vietjet Air' },
-    { id: 'vietravel', name: 'Vietravel Airlines' },
-    { id: 'bamboo', name: 'Bamboo Airways' },
-    { id: 'vietnam', name: 'Vietnam Airlines' },
-]
+// const airlines = [
+//     { id: 'vietjet', name: 'Vietjet Air' },
+//     { id: 'vietravel', name: 'Vietravel Airlines' },
+//     { id: 'bamboo', name: 'Bamboo Airways' },
+//     { id: 'vietnam', name: 'Vietnam Airlines' },
+// ]
 
 const flights = [
     {
@@ -37,14 +37,14 @@ const flights = [
 ]
 
 export function FlightResults() {
-    const [selectedDate] = useState(28)
-    const dates = [
-        { day: 'Thứ 5', date: 26 },
-        { day: 'Thứ 6', date: 27 },
-        { day: 'Thứ 7', date: 28 },
-        { day: 'Chủ nhật', date: 29 },
-        { day: 'Thứ 2', date: 30 },
-    ]
+    // const [selectedDate] = useState(28)
+    // const dates = [
+    //     { day: 'Thứ 5', date: 26 },
+    //     { day: 'Thứ 6', date: 27 },
+    //     { day: 'Thứ 7', date: 28 },
+    //     { day: 'Chủ nhật', date: 29 },
+    //     { day: 'Thứ 2', date: 30 },
+    // ]
 
     return (
         // <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
