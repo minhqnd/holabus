@@ -1,5 +1,7 @@
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import React, { useEffect } from 'react'
+import ReactDOM from 'react-dom'
 
 interface PopupProps {
   isOpen: boolean
@@ -9,26 +11,45 @@ interface PopupProps {
 }
 
 const Popup = ({ isOpen, onClose, children }: PopupProps) => {
-  if (!isOpen) return null;
+  const [portalElement] = React.useState(() => document.createElement('div'))
 
-  return (
+  useEffect(() => {
+    if (isOpen) {
+      document.body.appendChild(portalElement)
+    }
+    return () => {
+      if (document.body.contains(portalElement)) {
+        document.body.removeChild(portalElement)
+      }
+    }
+  }, [isOpen, portalElement])
+
+  if (!isOpen) return null
+
+  const handleClose = () => {
+    console.log('Closing popup');
+    onClose();
+  }
+
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div 
         className="fixed inset-0 bg-black bg-opacity-50" 
-        onClick={onClose}
+        onClick={handleClose}
       />
       <div className="relative bg-white rounded-lg p-6 max-w-lg w-full mx-4 z-50">
         <button
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-          onClick={onClose}
+          onClick={handleClose}
         >
           <X className="h-6 w-6" />
         </button>
         {children}
       </div>
-    </div>
-  );
-};
+    </div>,
+    portalElement
+  )
+}
 
-export default Popup;
+export default Popup
 
