@@ -11,6 +11,13 @@ html,body {
   overflow-x: hidden;
 }
 
+main {
+  min-height: 100vh;
+  height: 100%;
+  background-color: #FFF9F0;
+  background-image: url('/section-background.png');
+  background-repeat: repeat;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
