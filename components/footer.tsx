@@ -10,8 +10,8 @@ export function Footer() {
           <div>
             <Image src="/white-logo.png" width={0} height={0} sizes="100vw" className="w-full h-auto mb-4" alt="Logo" />
             <ul className="space-y-2">
-              <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết nguyên đán Ất Tỵ 2025</li>
-              <li className="text-sm">Một sản phẩm thuộc FPTU Business Club - FBC</li>
+              <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết Nguyên đán Ất Tỵ 2025</li>
+              <li className="text-sm">Một dự án thuộc FPTU Business Club - FBC</li>
             </ul>
           </div>
           <div>
