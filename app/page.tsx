@@ -156,7 +156,7 @@ export default function Home() {
   const displayedProvinces = showAll ? provinces : provinces.slice(0, 12)
 
   return (
-    <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full">
+    <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
       <Navbar />
       <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
         <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
