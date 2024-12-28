@@ -1,5 +1,6 @@
+'use client'
+
 import { X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 
