@@ -7,7 +7,6 @@ import { SearchHeader } from '@/components/search-header'
 import { FlightResults } from '@/components/bus-results'
 import { ProgressSteps } from '@/components/progress-steps'
 import { Breadcrumbs } from '@/components/breadcrumbs'
-
 export default function SearchPage() {
     const [currentStep] = useState(3)
     // const [currentPage, setCurrentPage] = useState('FPT - Quảng Ninh')
