@@ -67,7 +67,7 @@ export function FlightResults() {
                         <div className="flex gap-2 md:flex-row flex-col">
                             {/* <div className="relative h-8 w-8"> */}
                             {/* <Image
-                                    src="./placeholder.svg?height=32&width=32"
+                                    src="/placeholder.svg?height=32&width=32"
                                     alt="Logo"
                                     width={32}
                                     height={32}

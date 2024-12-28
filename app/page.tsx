@@ -162,7 +162,7 @@ export default function Home() {
       <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
         <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
           <Image
-            src="./img/fpt.png"
+            src="/img/fpt.avif"
             alt="Hero Background"
             layout="fill"
             objectFit="cover"
@@ -174,7 +174,7 @@ export default function Home() {
 
       <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
         <Image
-          src="./img/fpt.png"
+          src="/img/fpt.png"
           alt="Hero Background"
           layout="fill"
           objectFit="cover"
@@ -182,7 +182,7 @@ export default function Home() {
         <HeroSearch />
       </div>
       <div className="w-full">
-        <Image src="./img/maidao.png"
+        <Image src="/img/maidao.png"
           width={0}
           height={0}
           sizes="100vw"
@@ -191,7 +191,7 @@ export default function Home() {
       </div>
       <div className="container  pb-12  mx-auto px-4 w-full  xl:-translate-y-[256px]">
         <div className="mb-8 text-center">
-          <Image src="./img/lotrinhholabus.png" width={0}
+          <Image src="/img/lotrinhholabus.png" width={0}
             height={0}
             sizes="100vw"
             style={{ height: 'auto' }}
