@@ -13,7 +13,7 @@ export default function SearchPage() {
     const [currentPage, setCurrentPage] = useState('FPT - Quảng Ninh')
 
     return (
-        <main className="min-h-screen bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">
+        <main className="min-h-screen h-full bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">
             <Navbar />
             <Breadcrumbs currentPage={currentPage} />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 min-h-screen ">

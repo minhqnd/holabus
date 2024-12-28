@@ -10,7 +10,7 @@ export function Navbar() {
         <div className="flex gap-6">
           <Link href="/" className="">
 
-          <img src="/white-logo.png" className="w-auto h-12" alt="Logo" />
+          <img src="/red-logo.png" className="w-auto h-12" alt="Logo" />
           </Link>
           <div className="hidden items-center gap-6 md:flex">
             <Link href="/search" className="text-base hover:text-red-600">

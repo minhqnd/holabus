@@ -3,15 +3,22 @@ import { Facebook, Instagram, Twitter } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-red-800 text-white w-full">
+    <footer className="bottom-0 bg-red-900 text-gray-100 w-full">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:gap-20 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <img src="/white-logo.png" alt="Logo" className="w-full h-auto mb-4" />
+            <ul className="space-y-2">
+              <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết nguyên đán Ất Tỵ 2025</li>
+              <li className="text-sm">Một sản phẩm thuộc FPTU Business Club - FBC</li>
+            </ul>
+          </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Về HolaBus</h3>
             <ul className="space-y-2">
-              <li><Link href="/about">Giới thiệu</Link></li>
-              <li><Link href="/careers">Tuyển dụng</Link></li>
-              <li><Link href="/press">Báo chí</Link></li>
+              <li><Link href="/">Trang chủ</Link></li>
+              <li><Link href="/search">Tìm xe bus</Link></li>
+              <li><Link href="/tra-cuu">Tra cứu vé</Link></li>
             </ul>
           </div>
           <div>
@@ -20,14 +27,6 @@ export function Footer() {
               <li><Link href="/help">Trung tâm trợ giúp</Link></li>
               <li><Link href="/contact">Liên hệ</Link></li>
               <li><Link href="/faq">Câu hỏi thường gặp</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">Chính sách</h3>
-            <ul className="space-y-2">
-              <li><Link href="/terms">Điều khoản sử dụng</Link></li>
-              <li><Link href="/privacy">Chính sách bảo mật</Link></li>
-              <li><Link href="/refund">Chính sách hoàn tiền</Link></li>
             </ul>
           </div>
           <div>
@@ -45,8 +44,11 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-red-700 pt-8 text-center">
-          <p>&copy; 2024 HolaBus. Tất cả các quyền được bảo lưu.</p>
+
+      </div>
+      <div className="w-full bg-red-800 text-gray-200">
+        <div className="mx-auto py-4 text-center">
+          <p>&copy; 2025 HolaBus. Made with ❤️ by moi.</p>
         </div>
       </div>
     </footer>
