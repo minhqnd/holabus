@@ -12,7 +12,7 @@ import { PassengerForm } from '@/components/passenger-form'
 
 export default function SearchPage() {
     const router = useRouter()
-    const [currentStep, setCurrentStep] = useState(1)
+    const [currentStep, setCurrentStep] = useState(2)
     const [currentPage] = useState('FPT - Quảng Ninh')
     const [selectedFlight, setSelectedFlight] = useState<any>(null)
 
@@ -42,7 +42,7 @@ export default function SearchPage() {
                     {currentStep === 2 && (
                         <div className="space-y-6">
                             <div className="rounded-3xl bg-white p-6">
-                                <h2 className="mb-4 text-lg font-bold">Chuyến bay đã chọn</h2>
+                                {/* <h2 className="mb-4 text-lg font-bold">Chuyến bay đã chọn</h2> */}
                                 {/* <FlightResults selectedFlight={selectedFlight} /> */}
                                 <FlightResults  />
                             </div>
