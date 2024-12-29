@@ -5,14 +5,13 @@ import { Card } from '@/components/ui/card'
 import Popup from '@/components/popup'
 
 interface RouteCardProps {
-  image: string
   title: string
   locations: string[]
   price: string
   ticketsLeft?: number
 }
 
-export function RouteCard({ image, title, locations, price, ticketsLeft }: RouteCardProps) {
+export function RouteCard({ title, locations, price, ticketsLeft }: RouteCardProps) {
   const [showAllStops, setShowAllStops] = useState(false)
 
   const displayedLocations = locations.slice(0, 4)
@@ -20,25 +19,25 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
 
   return (
     <>
-      <Card className="overflow-hidden rounded-[32px] border-red-100 bg-white p-4 transition-transform hover:scale-[1.02]">
+      <Card className="overflow-hidden rounded-[32px] border-red-100 bg-white p-4 transition-transform hover:scale-[1.02] flex flex-col">
         <div className="relative mb-4 h-40 w-full overflow-hidden rounded-[24px]">
           <Image
-            src={`/img/tinh/hanoi.png?${image}`}
+            src={`/img/tinh/${title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '')}.png`}
             alt={title}
             fill
             className="object-cover"
           />
-          {ticketsLeft && (
+          {/* {ticketsLeft && (
             <div className="absolute left-4 top-4 rounded-full bg-yellow-100 px-4 py-2 text-yellow-700">
               <span className="flex items-center gap-2 text-sm">
-                {/* <span className="text-yellow-500">★</span> */}
+                <span className="text-yellow-500">★</span>
               Còn {ticketsLeft} vé
               </span>
             </div>
-          )}
+          )} */}
         </div>
-        <h3 className=" text-2xl font-bold text-red-800 md:text-3xl">{title}</h3>
-        <ul className="mb-6 space-y-0">
+        <h3 className="text-2xl font-bold text-red-800 md:text-3xl">{title}</h3>
+        <ul className="mb-auto space-y-0 min-h-[120px]">
           {displayedLocations.map((location, index) => (
             <li key={index} className="flex items-center gap-2 text-gray-600">
               <div className="flex h-full flex-col items-center">
@@ -59,12 +58,12 @@ export function RouteCard({ image, title, locations, price, ticketsLeft }: Route
                   >
                     Xem thêm
                   </button>
-                ) : location}
+                ) : (index === displayedLocations.length - 1 ? locations[locations.length - 1] : location) }
               </span>
             </li>
           ))}
         </ul>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-4">
           <div className="text-xl font-bold text-red-700 md:text-2xl">{price} VND</div>
           <Button className="rounded-full bg-red-600 px-6 py-2 text-base font-medium text-white hover:bg-red-700">
             Đặt ngay

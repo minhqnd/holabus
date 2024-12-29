@@ -31,18 +31,15 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Kết nối với chúng tôi</h3>
-            <div className="flex space-x-4">
-              <Link href="#" className="hover:text-red-300">
-                <Facebook />
-              </Link>
-              <Link href="#" className="hover:text-red-300">
-                <Instagram />
-              </Link>
-              <Link href="#" className="hover:text-red-300">
-                <Twitter />
-              </Link>
-            </div>
+            <h3 className="mb-4 text-lg font-semibold">Liên hệ</h3>
+            <ul className="space-y-2">
+              <li className="text-base font-bold">Đỗ Bá Trung - Chịu trách nhiệm nội dung</li>
+              <li className="text-base">SDT: 0944355789</li>
+              <li className="text-base">Email: Trungdbhs186524@fpt.edu.vn</li>
+              <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Quản lý dự án</li>
+              <li className="text-base">SDT: 0929343780</li>
+              <li className="text-base">Email: kyvkhe182094@fpt.edu.vn</li>
+            </ul>
           </div>
         </div>
 

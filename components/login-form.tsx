@@ -14,12 +14,31 @@ export function LoginForm() {
       </div>
       <form className="space-y-6">
         <div>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" className="mt-2 rounded-full" placeholder="Nhập email của bạn" />
+          <Label htmlFor="email">Email</Label>  
+          <Input 
+            height="3rem"
+            width="100%"
+            borderRadius="9999px"
+            backgroundColor="white"
+            borderColor="#e5e7eb"
+            fontSize="1rem"
+            padding="0.75rem 1rem"
+            id="email" 
+            type="email" 
+            className="mt-2" 
+            placeholder="Nhập email của bạn" 
+          />
         </div>
         <div>
           <Label htmlFor="password">Mật khẩu</Label>
-          <Input id="password" type="password" className="mt-2 rounded-full" placeholder="Nhập mật khẩu" />
+          <Input 
+            height="3rem"
+
+            id="password" 
+            type="password" 
+            className="mt-2 rounded-full" 
+            placeholder="Nhập mật khẩu" 
+          />
         </div>
         <div className="flex items-center justify-between">
           <Link href="/forgot-password" className="text-sm text-red-600 hover:underline">
