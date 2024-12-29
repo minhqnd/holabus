@@ -133,14 +133,25 @@ export default function Home() {
               alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {displayedProvinces.map((province, index) => (
-              <RouteCard
-                key={index}
-                title={province.title}
-                locations={province.locations}
-                price={province.price}
-                ticketsLeft={province.ticketsLeft}
-              />
+            {provinces.map((province, index) => (
+              <div 
+                key={index} 
+                className={`overflow-hidden transition-all duration-500 ease-in-out h-full
+                  ${index >= 8 ? (showAll ? 'h-auto opacity-100' : 'h-0 opacity-0') : 'h-auto opacity-100'}`}
+              >
+                <div className={`transition-all duration-500 ease-in-out h-full
+                  ${!showAll && index >= 8 ? 'transform scale-95' : 'transform scale-100'}`}
+                >
+                  <div className="h-full">
+                    <RouteCard
+                      title={province.title}
+                      locations={province.locations}
+                      price={province.price}
+                      ticketsLeft={province.ticketsLeft}
+                    />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
           <div className="mt-8 text-center">
@@ -148,7 +159,7 @@ export default function Home() {
               variant="outline"
               size="lg"
               onClick={() => setShowAll(!showAll)}
-              className="group border-2 border-red-600 text-red-600 hover:bg-red-50"
+              className="group border-2 rounded-full border-red-600 text-red-600 hover:bg-red-50"
             >
               {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
               <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />

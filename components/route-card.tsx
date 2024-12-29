@@ -19,7 +19,7 @@ export function RouteCard({ title, locations, price, ticketsLeft }: RouteCardPro
 
   return (
     <>
-      <Card className="overflow-hidden rounded-[32px] border-red-100 bg-white p-4 transition-transform hover:scale-[1.02] flex flex-col">
+      <Card className="overflow-hidden rounded-[32px] border-red-100 bg-white h-full p-4 transition-transform hover:scale-[1.02] flex flex-col">
         <div className="relative mb-4 h-40 w-full overflow-hidden rounded-[24px]">
           <Image
             src={`/img/tinh/${title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '')}.png`}
