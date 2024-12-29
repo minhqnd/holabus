@@ -21,13 +21,18 @@ export function HeroSearch() {
           <p className="mb-8 text-lg text-gray-600">
             Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
           </p>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="flex flex-row gap-4">
             <Input
               type="text"
-              placeholder="Nhập địa điểm"
-              className="rounded-full border-gray-300"
+              placeholder="Nhập tỉnh thành" 
+              className=" border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 rounded-full text-base px-4 w-[70%]"
+              height="3rem"
+              width="70%"
+              borderRadius="9999px"
+              fontSize="1rem"
+              padding="0.75rem 1rem"
             />
-            <Select>
+            {/* <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Tất cả mức giá" />
               </SelectTrigger>
@@ -36,8 +41,8 @@ export function HeroSearch() {
                 <SelectItem value="500-1000">500.000đ - 1.000.000đ</SelectItem>
                 <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
               </SelectContent>
-            </Select>
-            <Button className="bg-red-600 hover:bg-red-700 ">Tìm kiếm</Button>
+            </Select> */}
+            <Button className="bg-red-600 hover:bg-red-700 w-[30%] rounded-full h-12">Tìm kiếm</Button>
           </div>
         </div>
       </div>
@@ -58,7 +63,7 @@ export function HeroSearch() {
               placeholder="Nhập địa điểm"
               className="rounded-full border-gray-300"
             />
-            <Select>
+            {/* <Select>
               <SelectTrigger>
                 <SelectValue placeholder="Tất cả mức giá" />
               </SelectTrigger>
@@ -67,7 +72,7 @@ export function HeroSearch() {
                 <SelectItem value="500-1000">500.000đ - 1.000.000đ</SelectItem>
                 <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
               </SelectContent>
-            </Select>
+            </Select> */}
             <Button className="bg-red-600 hover:bg-red-700 ">Tìm kiếm</Button>
           </div>
         </div>
