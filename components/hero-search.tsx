@@ -17,7 +17,7 @@ export function HeroSearch() {
           </p>
           <div className="flex flex-row gap-4">
             <AutocompleteInput />
-            <Button className="bg-red-600 hover:bg-red-700 w-[30%] rounded-full h-12">Tìm kiếm</Button>
+            {/* <Button className="bg-red-600 hover:bg-red-700 w-[30%] rounded-full h-12">Tìm kiếm</Button> */}
           </div>
         </div>
       </div>
@@ -33,14 +33,15 @@ export function HeroSearch() {
         </p>
         <div className="w-full max-w-4xl rounded-3xl bg-white p-6 shadow-lg">
           <div className="grid gap-4">
-            <Input
+            {/* <Input
               type="text"
               placeholder="Nhập tỉnh thành"
               className="rounded-full border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 text-base px-4 w-full"
               height="3rem"
               borderRadius="9999px"
             />
-            <Button className="bg-red-600 hover:bg-red-700 rounded-full h-12">Tìm kiếm</Button>
+            <Button className="bg-red-600 hover:bg-red-700 rounded-full h-12">Tìm kiếm</Button> */}
+            <AutocompleteInput />
           </div>
         </div>
       </div>

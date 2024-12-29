@@ -1,89 +1,127 @@
 "use client"
 
 import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
-import { PROVINCES } from '@/lib/constants/provinces'
+import { PROVINCES, Province } from '@/lib/constants/provinces'
+import { Search } from 'lucide-react'
 
-export function AutocompleteInput() {
-  const [inputValue, setInputValue] = useState('')
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const wrapperRef = useRef<HTMLDivElement>(null)
+        export function AutocompleteInput() {
+            const router = useRouter()
+            const [inputValue, setInputValue] = useState('')
+            const [selectedId, setSelectedId] = useState<string>('')
+            const [suggestions, setSuggestions] = useState<Province[]>([])
+            const [isOpen, setIsOpen] = useState(false)
+            const [selectedIndex, setSelectedIndex] = useState(-1)
+            const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputValue(value)
-    
-    if (value.length > 0) {
-      const filtered = PROVINCES.filter(province =>
-        province.toLowerCase().includes(value.toLowerCase())
-      )
-      setSuggestions(filtered)
-      setIsOpen(true)
-    } else {
-      setSuggestions([])
-      setIsOpen(false)
-    }
-    setSelectedIndex(-1)
-  }
+            const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value
+                setInputValue(value)
+                setSelectedId('')
 
-  const handleSelectSuggestion = (suggestion: string) => {
-    setInputValue(suggestion)
-    setIsOpen(false)
-    setSuggestions([])
-  }
+                if (value.length > 0) {
+                    const filtered = PROVINCES.filter(province =>
+                        province.name.toLowerCase().includes(value.toLowerCase())
+                    )
+                    setSuggestions(filtered)
+                    setIsOpen(true)
+                } else {
+                    setSuggestions([])
+                    setIsOpen(false)
+                }
+                setSelectedIndex(-1)
+            }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setSelectedIndex(prev => 
-        prev < suggestions.length - 1 ? prev + 1 : prev
-      )
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setSelectedIndex(prev => prev > 0 ? prev - 1 : prev)
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
-      handleSelectSuggestion(suggestions[selectedIndex])
-    }
-  }
+            const handleSelectSuggestion = (province: Province) => {
+                setInputValue(province.name)
+                setSelectedId(province.id)
+                setIsOpen(false)
+                setSuggestions([])
+            }
 
-  // Click outside to close
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+            const handleSearch = () => {
+                if (selectedId) {
+                    router.push(`/search?tinh=${selectedId}`)
+                }
+            }
 
-  return (
-    <div className="relative w-full" ref={wrapperRef}>
-      <Input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        placeholder="Nhập tỉnh thành"
-        className="rounded-full border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 h-12 text-base px-4 w-full"
-      />
-      {isOpen && suggestions.length > 0 && (
-        <div className="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg max-h-60 overflow-auto">
-          {suggestions.map((suggestion, index) => (
-            <div
-              key={suggestion}
-              className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
-                index === selectedIndex ? 'bg-gray-100' : ''
-              }`}
-              onClick={() => handleSelectSuggestion(suggestion)}
-            >
-              {suggestion}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
+            const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault()
+                    setSelectedIndex(prev =>
+                        prev < suggestions.length - 1 ? prev + 1 : prev
+                    )
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    setSelectedIndex(prev => prev > 0 ? prev - 1 : prev)
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    handleSelectSuggestion(suggestions[selectedIndex])
+                }
+            }
+
+            // Click outside to close
+            useEffect(() => {
+                const handleClickOutside = (event: MouseEvent) => {
+                    if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+                        setIsOpen(false)
+                    }
+                }
+                document.addEventListener('mousedown', handleClickOutside)
+                return () => document.removeEventListener('mousedown', handleClickOutside)
+            }, [])
+
+            return (
+                <div className="flex gap-4 w-full" ref={wrapperRef}>
+                    <div className="relative flex-1">
+                        <Input
+                            type="text"
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Nhập tỉnh thành"
+                            className="rounded-full border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 text-base px-4 w-full"
+                            height="3rem"
+                            borderRadius="9999px"
+                        />
+                        {isOpen && suggestions.length > 0 && (
+                            <div className="absolute z-[9999] w-full mt-1 bg-white rounded-lg shadow-lg max-h-60 overflow-auto">
+                                {suggestions.map((province, index) => (
+                                    <div
+                                        key={province.id}
+                                        className={`px-4 py-3 cursor-pointer text-base hover:bg-gray-100 text-left ${
+                                            index === selectedIndex ? 'bg-gray-100' : ''
+                                        }`}
+                                        onClick={() => handleSelectSuggestion(province)}
+                                    >
+                                        {province.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                    <button 
+                        onClick={handleSearch}
+                        disabled={!selectedId}
+                        className={`rounded-full px-8 h-12 md:flex items-center justify-center hidden ${
+                            selectedId 
+                                ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    >
+                        Tìm kiếm
+                    </button>
+                    <button 
+                        onClick={handleSearch}
+                        disabled={!selectedId}
+                        className={`rounded-full w-12 h-12 flex md:hidden items-center justify-center ${
+                            selectedId 
+                                ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer' 
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                    >
+                        <Search className="w-5 h-5" />
+                    </button>
+                </div>
+            )
+        }
