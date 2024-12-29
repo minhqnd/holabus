@@ -68,7 +68,7 @@ export function BusCard({
             </Button>
             <Button
               variant="outline"
-              size="icon"
+              size="default"
               className="rounded-full "
               onClick={() => setIsExpanded(!isExpanded)}
             >

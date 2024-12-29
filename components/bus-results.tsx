@@ -7,6 +7,7 @@ import { getProvinceNameById } from '@/lib/utils/province'
 
 interface BusResultsProps {
     provinceId: string;
+    provinceName: string;
 }
 
 interface Trip {
@@ -35,7 +36,7 @@ interface BusRoutes {
 // Thêm kiểu cho busRoutes
 const typedBusRoutes = busRoutes as BusRoutes;
 
-export function BusResults({ provinceId }: BusResultsProps) {
+export function BusResults({ provinceId, provinceName }: BusResultsProps) {
     const [trips, setTrips] = useState<Trip[]>([])
 
     useEffect(() => {
@@ -61,7 +62,7 @@ export function BusResults({ provinceId }: BusResultsProps) {
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold">
-                                    Đại học FPT (Hà Nội) → {getProvinceNameById(provinceId)}
+                                    Đại học FPT (Hà Nội) → {provinceName}
                                 </h2>
                             </div>
                         </div>

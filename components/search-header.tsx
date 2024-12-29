@@ -4,7 +4,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AutocompleteInput } from '@/components/autocomplete-input'
 
-export function SearchHeader() {
+interface SearchHeaderProps {
+  provinceName: string;
+}
+
+export function SearchHeader({ provinceName }: SearchHeaderProps) {
   return (
     <div className="mb-8 rounded-3xl bg-white p-6 shadow-lg">
       <div className="grid gap-4 md:grid-cols-2">
@@ -21,9 +25,8 @@ export function SearchHeader() {
         </div>
         <div className="space-y-2">
           <Label className="font-medium">Điểm đến</Label>
-          <AutocompleteInput />
+          <AutocompleteInput initialValue={provinceName} />
         </div>
-
       </div>
     </div>
   )

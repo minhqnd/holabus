@@ -9,19 +9,22 @@ import { BusResults } from '@/components/bus-results'
 import { ProgressSteps } from '@/components/progress-steps'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PassengerForm } from '@/components/passenger-form'
+import { PROVINCES } from '@/lib/constants/provinces'
 
 export default function SearchPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [currentStep, setCurrentStep] = useState(2)
-    const [currentPage] = useState('FPT - Quảng Ninh')
     const [selectedFlight, setSelectedFlight] = useState<any>(null)
     const [provinceId, setProvinceId] = useState<string>('')
+    const [provinceName, setProvinceName] = useState<string>('')
     
     useEffect(() => {
         const tinh = searchParams.get('tinh')
         if (tinh) {
             setProvinceId(tinh)
+            const province = PROVINCES.find(p => p.id === tinh.toUpperCase())
+            setProvinceName(province?.name || '')
         }
     }, [searchParams])
 
@@ -38,25 +41,25 @@ export default function SearchPage() {
         <main className="min-h-screen h-full bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">
             <Navbar />
             <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen ">
-            <Breadcrumbs currentPage={currentPage} />
+                <Breadcrumbs currentPage={provinceName} />
                 <div className="mb-16 mx-auto md:w-4/5">
                     <ProgressSteps currentStep={currentStep} />
                 </div>
-                <SearchHeader />
+                <SearchHeader provinceName={provinceName} />
                 <div className="mb-8">
                     {currentStep === 1 && (
-                        <BusResults provinceId={provinceId} />
+                        <BusResults provinceId={provinceId} provinceName={provinceName} />
                     )}
                     {currentStep === 2 && (
                         <div className="space-y-6">
                             <div className="rounded-3xl bg-white p-6">
-                                <BusResults provinceId={provinceId} />
+                                <BusResults provinceId={provinceId} provinceName={provinceName} />
                             </div>
                             <PassengerForm onSubmit={handleFormSubmit} />
                         </div>
                     )}
                     {currentStep === 3 && (
-                        <BusResults provinceId={provinceId} />
+                        <BusResults provinceId={provinceId} provinceName={provinceName} />
                     )}
                 </div>
             </div>
