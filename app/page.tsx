@@ -124,7 +124,7 @@ export default function Home() {
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
           alt="maidao" />
-        <div className="container pb-12 mx-auto px-4 w-full xl:-translate-y-[256px]">
+        <div className="container pb-12 mx-auto px-4 w-full xl:-mt-[256px]">
           <div className="mb-8 text-center">
             <Image src="/img/lotrinhholabus.png" width={0}
               height={0}
