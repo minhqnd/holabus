@@ -1,20 +1,29 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { SearchHeader } from '@/components/search-header'
-import { FlightResults } from '@/components/bus-results'
+import { BusResults } from '@/components/bus-results'
 import { ProgressSteps } from '@/components/progress-steps'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PassengerForm } from '@/components/passenger-form'
 
 export default function SearchPage() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [currentStep, setCurrentStep] = useState(2)
     const [currentPage] = useState('FPT - Quảng Ninh')
     const [selectedFlight, setSelectedFlight] = useState<any>(null)
+    const [provinceId, setProvinceId] = useState<string>('')
+    
+    useEffect(() => {
+        const tinh = searchParams.get('tinh')
+        if (tinh) {
+            setProvinceId(tinh)
+        }
+    }, [searchParams])
 
     const handleFlightSelect = (flight: any) => {
         setSelectedFlight(flight)
@@ -36,21 +45,18 @@ export default function SearchPage() {
                 <SearchHeader />
                 <div className="mb-8">
                     {currentStep === 1 && (
-                        // <FlightResults onFlightSelect={handleFlightSelect} />
-                        <FlightResults  />
+                        <BusResults provinceId={provinceId} />
                     )}
                     {currentStep === 2 && (
                         <div className="space-y-6">
                             <div className="rounded-3xl bg-white p-6">
-                                {/* <h2 className="mb-4 text-lg font-bold">Chuyến bay đã chọn</h2> */}
-                                {/* <FlightResults selectedFlight={selectedFlight} /> */}
-                                <FlightResults  />
+                                <BusResults provinceId={provinceId} />
                             </div>
                             <PassengerForm onSubmit={handleFormSubmit} />
                         </div>
                     )}
                     {currentStep === 3 && (
-                        <FlightResults />
+                        <BusResults provinceId={provinceId} />
                     )}
                 </div>
             </div>

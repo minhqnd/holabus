@@ -1,0 +1,64 @@
+{
+  "routes": {
+    "QUANGNINH": {
+      "name": "Quảng Ninh",
+      "trips": [
+        {
+          "id": "HNQN01",
+          "name": "FPT - Quảng Ninh",
+          "location": [
+            "Đại học FPT Hà Nội",
+            "Vịnh Hạ Long",
+            "Bãi Cháy", 
+            "Sun World",
+            "Chợ Hạ Long",
+            "Động Thiên Cung",
+            "Động Sửng Sốt",
+            "Hòn Trống Mái"
+          ],
+          "time": "7:35",
+          "date": "13/01/2025",
+          "price": "189.000",
+          "slot": 10
+        },
+        {
+          "id": "HNQN02", 
+          "name": "FPT - Quảng Ninh",
+          "location": [
+            "Đại học FPT Hà Nội",
+            "Vịnh Hạ Long",
+            "Bãi Cháy",
+            "Sun World",
+            "Chợ Hạ Long",
+            "Động Thiên Cung",
+            "Động Sửng Sốt",
+            "Hòn Trống Mái"
+          ],
+          "time": "13:05",
+          "date": "13/01/2025", 
+          "price": "189.000",
+          "slot": 10
+        }
+      ]
+    },
+    "HALONG": {
+      "name": "Hạ Long",
+      "trips": [
+        {
+          "id": "HNHL01",
+          "name": "FPT - Hạ Long",
+          "location": [
+            "Đại học FPT Hà Nội",
+            "Vịnh Hạ Long",
+            "Bãi Cháy",
+            "Sun World"
+          ],
+          "time": "8:00",
+          "date": "13/01/2025",
+          "price": "165.000",
+          "slot": 15
+        }
+      ]
+    }
+  }
+} 

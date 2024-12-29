@@ -17,7 +17,7 @@ interface FlightCardProps {
 
 
 
-export function FlightCard({
+export function BusCard({
   id,
   name,
   time,
