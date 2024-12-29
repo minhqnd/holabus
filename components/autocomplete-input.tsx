@@ -6,13 +6,6 @@ import { Input } from '@/components/ui/input'
 import { PROVINCES, Province } from '@/lib/constants/provinces'
 import { Search } from 'lucide-react'
 
-        // Thêm hàm chuyển đổi chuỗi có dấu thành không dấu
-        const removeAccents = (str: string): string => {
-            return str.normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toLowerCase();
-        }
-
         export function AutocompleteInput() {
             const router = useRouter()
             const [inputValue, setInputValue] = useState('')
@@ -29,9 +22,8 @@ import { Search } from 'lucide-react'
                 setSelectedId('')
 
                 if (value.length > 0) {
-                    const searchValue = removeAccents(value)
                     const filtered = PROVINCES.filter(province =>
-                        removeAccents(province.name).includes(searchValue)
+                        province.name.toLowerCase().includes(value.toLowerCase())
                     )
                     setSuggestions(filtered)
                     setIsOpen(true)
