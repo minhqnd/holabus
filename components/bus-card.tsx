@@ -6,29 +6,25 @@ import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
 
 interface FlightCardProps {
-  id: string
-  name: string
-  departure: string
-  arrival: string
-  from: string
-  to: string
-  price: string
-  duration?: string
-  aircraft?: string
-  cabinClass?: string
-  handBaggage?: string
-  checkInBaggage?: string
+  id: string;
+  name: string;
+  time: string;
+  date: string;
+  price: string;
+  slot: number;
+  location: string[];
 }
+
+
 
 export function FlightCard({
   id,
   name,
-  departure,
-  arrival,
-  from,
-  to,
+  time,
+  date,
   price,
-  aircraft = "29",
+  slot,
+  location,
 }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -52,32 +48,31 @@ export function FlightCard({
             </div>
           </div>
           <div className="w-full md:w-auto mt-4 md:mt-0">
-            <div className="text-lg font-bold">{departure} · {from}</div>
+            <div className="text-lg font-bold">{time} · {date}</div>
             <div className="text-sm text-gray-500">Giờ xuất phát</div>
           </div>
           {/* <div className="text-center w-full md:w-auto mt-4 md:mt-0">
             <div className="h-0.5 w-16 bg-gray-300" />
           </div> */}
           <div className="w-full md:w-auto mt-4 md:mt-0">
-            <div className="text-lg font-bold">{aircraft}</div>
+            <div className="text-lg font-bold">{slot}</div>
             <div className="text-sm text-gray-500">Chỗ ngồi</div>
           </div>
           <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold text-red-600">{price}</div>
             <div className="text-sm text-gray-500">VND</div>
           </div>
-          <div className="flex gap-2 w-full md:w-auto mt-4 md:mt-0">
-            <Button 
-              className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-auto"
-            >
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-4 md:mt-0 justify-center items-center">
+            <Button className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-auto">
               Chọn
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full"
+              className="rounded-full "
               onClick={() => setIsExpanded(!isExpanded)}
             >
+            <div className="text-sm text-gray-500 block md:hidden">Chi tiết</div>
               <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
             </Button>
           </div>
@@ -86,17 +81,24 @@ export function FlightCard({
       {isExpanded && (
         <div className="border-t border-gray-100 bg-gray-50 p-6 max-h-96 transition-max-height">
           <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-gray-400" />
-                <span className="text-gray-600">{`${departure} · ${from}`}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-gray-400" />
-                <span className="text-gray-600">{`${arrival} · ${to}`}</span>
-              </div>
+            <div className="space-y-0">
+              {location.map((place, index) => (
+                <div key={index} className="flex items-center gap-2 text-gray-600">
+                  <div className="flex h-full flex-col items-center">
+                    {index !== 0 ? (
+                      <div className="relative z-0 h-3 w-0.5 border-l border-dashed border-gray-300"></div>
+                    ) : <div className="relative z-0 h-3 w-0.5"></div>
+                    }
+                    <div className={`h-2 w-2 rounded-full ${index === 0 ? 'bg-green-500' : index === location.length - 1 ? 'bg-red-500' : 'bg-gray-400'}`}></div>
+                    {index !== location.length - 1 ? (
+                      <div className="relative z-0 h-3 w-0.5 border-l border-dashed border-gray-300"></div>
+                    ) : <div className="relative z-0 h-3 w-0.5"></div>}
+                  </div>
+                  <span className="">{place}</span>
+                </div>
+              ))}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-500">Tên chuyến:</div>
                 <div className="font-medium">{name}</div>
@@ -107,7 +109,7 @@ export function FlightCard({
               </div>
               <div>
                 <div className="text-sm text-gray-500">Chỗ ngồi:</div>
-                <div className="font-medium">{aircraft}</div>
+                <div className="font-medium">{slot}</div>
               </div>
             </div>
           </div>
