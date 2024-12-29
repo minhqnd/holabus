@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AutocompleteInput } from '@/components/autocomplete-input'
 
 export function HeroSearch() {
   return (
@@ -15,26 +16,7 @@ export function HeroSearch() {
             Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
           </p>
           <div className="flex flex-row gap-4">
-            <Input
-              type="text"
-              placeholder="Nhập tỉnh thành" 
-              className=" border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 rounded-full text-base px-4 w-[70%]"
-              height="3rem"
-              width="70%"
-              borderRadius="9999px"
-              fontSize="1rem"
-              padding="0.75rem 1rem"
-            />
-            {/* <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Tất cả mức giá" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0-500">0 - 500.000đ</SelectItem>
-                <SelectItem value="500-1000">500.000đ - 1.000.000đ</SelectItem>
-                <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
-              </SelectContent>
-            </Select> */}
+            <AutocompleteInput />
             <Button className="bg-red-600 hover:bg-red-700 w-[30%] rounded-full h-12">Tìm kiếm</Button>
           </div>
         </div>
