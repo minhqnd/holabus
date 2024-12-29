@@ -14,6 +14,7 @@ import { Search } from 'lucide-react'
             const [isOpen, setIsOpen] = useState(false)
             const [selectedIndex, setSelectedIndex] = useState(-1)
             const wrapperRef = useRef<HTMLDivElement>(null)
+            const [shake, setShake] = useState(false)
 
             const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.target.value
@@ -60,6 +61,13 @@ import { Search } from 'lucide-react'
                 }
             }
 
+            const handleInvalidClick = () => {
+                if (!selectedId) {
+                    setShake(true)
+                    setTimeout(() => setShake(false), 500)
+                }
+            }
+
             // Click outside to close
             useEffect(() => {
                 const handleClickOutside = (event: MouseEvent) => {
@@ -101,24 +109,22 @@ import { Search } from 'lucide-react'
                         )}
                     </div>
                     <button 
-                        onClick={handleSearch}
-                        disabled={!selectedId}
-                        className={`rounded-full px-8 h-12 md:flex items-center justify-center hidden ${
-                            selectedId 
-                                ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer' 
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
+                        onClick={selectedId ? handleSearch : handleInvalidClick}
+                        className={`rounded-full px-8 h-12 md:flex items-center justify-center hidden
+                            bg-red-600 hover:bg-red-700 text-white 
+                            transition-all duration-200 ease-in-out
+                            ${!selectedId && 'opacity-80'}
+                            ${shake ? 'animate-shake' : ''}`}
                     >
                         Tìm kiếm
                     </button>
                     <button 
-                        onClick={handleSearch}
-                        disabled={!selectedId}
-                        className={`rounded-full w-12 h-12 flex md:hidden items-center justify-center ${
-                            selectedId 
-                                ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer' 
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
+                        onClick={selectedId ? handleSearch : handleInvalidClick}
+                        className={`rounded-full w-12 h-12 flex md:hidden items-center justify-center
+                            bg-red-600 hover:bg-red-700 text-white 
+                            transition-all duration-200 ease-in-out
+                            ${!selectedId && 'opacity-80'}
+                            ${shake ? 'animate-shake' : ''}`}
                     >
                         <Search className="w-5 h-5" />
                     </button>

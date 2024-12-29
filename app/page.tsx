@@ -93,28 +93,28 @@ export default function Home() {
       <Navbar />
       {/* Phần hero và search */}
       <div className="w-full relative z-10">
-      <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
-        <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
+        <div className="relative mx-auto w-full md:px-8 max-w-[90rem] hidden md:block">
+          <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
+            <Image
+              src="/img/fpt.avif"
+              alt="Hero Background"
+              layout="fill"
+              objectFit="cover"
+              className="shadow-lg"
+            />
+          </div>
+          <HeroSearch />
+        </div>
+
+        <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
           <Image
-            src="/img/fpt.avif"
+            src="/img/fpt.png"
             alt="Hero Background"
             layout="fill"
             objectFit="cover"
-            className="shadow-lg"
           />
+          <HeroSearch />
         </div>
-        <HeroSearch />
-      </div>
-
-      <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
-        <Image
-          src="/img/fpt.png"
-          alt="Hero Background"
-          layout="fill"
-          objectFit="cover"
-        />
-        <HeroSearch />
-      </div>
       </div>
 
       <div className="w-full relative z-0">
