@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { BusCard } from '@/components/bus-card'
 import busRoutes from '@/data/bus-routes.json'
+import { getProvinceNameById } from '@/lib/utils/province'
 
 interface BusResultsProps {
     provinceId: string;
@@ -19,16 +20,16 @@ interface Trip {
 }
 
 interface RouteData {
-  name: string;
-  trips: Trip[];
+    name: string;
+    trips: Trip[];
 }
 
 interface Routes {
-  [key: string]: RouteData;
+    [key: string]: RouteData;
 }
 
 interface BusRoutes {
-  routes: Routes;
+    routes: Routes;
 }
 
 // Thêm kiểu cho busRoutes
@@ -52,7 +53,7 @@ export function BusResults({ provinceId }: BusResultsProps) {
     return (
         <div className="grid gap-6">
             <div className="space-y-6">
-                <div className="rounded-3xl bg-white p-6">
+                <div className="rounded-3xl bg-white md:p-6">
                     <div className="mb-4">
                         <div className="flex gap-2 md:flex-row flex-col">
                             <div className="text-xl font-bold text-red-600">
@@ -60,7 +61,7 @@ export function BusResults({ provinceId }: BusResultsProps) {
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold">
-                                    Đại học FPT (Hà Nội) → {typedBusRoutes.routes[provinceId?.toUpperCase()]?.name || ''}
+                                    Đại học FPT (Hà Nội) → {getProvinceNameById(provinceId)}
                                 </h2>
                             </div>
                         </div>
