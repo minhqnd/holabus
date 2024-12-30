@@ -14,7 +14,7 @@ import { PROVINCES } from '@/lib/constants/provinces'
 export default function SearchPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [currentStep, setCurrentStep] = useState(2)
+    const [currentStep, setCurrentStep] = useState(1)
     const [selectedFlight, setSelectedFlight] = useState<any>(null)
     const [provinceId, setProvinceId] = useState<string>('')
     const [provinceName, setProvinceName] = useState<string>('')
@@ -47,10 +47,10 @@ export default function SearchPage() {
                 </div>
                 <SearchHeader provinceName={provinceName} />
                 <div className="mb-8">
-                    {currentStep === 1 && (
+                    {currentStep === 1 && provinceId && (
                         <BusResults provinceId={provinceId} provinceName={provinceName} />
                     )}
-                    {currentStep === 2 && (
+                    {currentStep === 2 && provinceId && (
                         <div className="space-y-6">
                             <div className="rounded-3xl bg-white p-6">
                                 <BusResults provinceId={provinceId} provinceName={provinceName} />
@@ -58,7 +58,7 @@ export default function SearchPage() {
                             <PassengerForm onSubmit={handleFormSubmit} />
                         </div>
                     )}
-                    {currentStep === 3 && (
+                    {currentStep === 3 && provinceId && (
                         <BusResults provinceId={provinceId} provinceName={provinceName} />
                     )}
                 </div>

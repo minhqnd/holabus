@@ -13,7 +13,7 @@ export function SearchHeader({ provinceName }: SearchHeaderProps) {
     <div className="mb-8 rounded-3xl bg-white p-6 shadow-lg">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label className="font-medium">Điểm đi</Label>
+          <Label className="font-bold text-lg">Điểm đi</Label>
           <Input
             type="text"
             value="Trường Đại học FPT"
@@ -24,7 +24,7 @@ export function SearchHeader({ provinceName }: SearchHeaderProps) {
           />
         </div>
         <div className="space-y-2">
-          <Label className="font-medium">Điểm đến</Label>
+          <Label className="font-bold text-lg">Điểm đến</Label>
           <AutocompleteInput initialValue={provinceName} />
         </div>
       </div>

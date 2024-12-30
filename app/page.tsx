@@ -11,72 +11,84 @@ import Image from 'next/image'
 
 const provinces = [
   {
+    id: "HANOI",
     title: "Hà Nội",
     locations: ["Đại học FPT", "TBDS", "BigC Thăng Long", "Mỹ Đình"],
     price: "135.000",
     ticketsLeft: 29
   },
   {
+    id: "HAIPHONG",
     title: "Hải Phòng", 
     locations: ["Đại học FPT", "QL5", "Bến xe Thượng Lý", "Bến xe Lạc Long"],
     price: "145.000",
     ticketsLeft: 24
   },
   {
+    id: "NINHBINH",
     title: "Ninh Bình",
     locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "TP. Ninh Bình", "BX Kim Sơn"],
     price: "160.000",
     ticketsLeft: 25
   },
   {
+    id: "HAIDUONG",
     title: "Hải Dương",
     locations: ["Đại học FPT", "QL5", "Gia Lộc", "Hải Tân", "Tứ Kỳ"],
     price: "140.000",
     ticketsLeft: 28
   },
   {
+    id: "BACNINH",
     title: "Bắc Ninh",
     locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "Cây xăng Hải An (TT Phố Mới)"],
     price: "135.000",
     ticketsLeft: 30
   },
   {
+    id: "BACGIANG",
     title: "Bắc Giang",
     locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "KCN Đình Trám (BG)", "BigC Bắc Giang"],
     price: "145.000",
     ticketsLeft: 26
   },
   {
+    id: "HUNGYEN",
     title: "Hưng Yên",
     locations: ["Đại học FPT", "QL5", "Cầu vượt Tân Tiến (Văn Giang)", "Ân Thi", "Chợ Gạo"],
     price: "135.000",
     ticketsLeft: 32
   },
   {
+    id: "NAMDINH",
     title: "Nam Định",
     locations: ["Đại học FPT", "BigC Nam Định", "Nam Trực", "Trực Ninh", "Cổ Lễ", "Hải Hậu"],
     price: "145.000",
     ticketsLeft: 29
   },
   {
+    id: "THANHHOA",
     title: "Thanh Hóa",
     locations: ["Đại học FPT", "TP. Ninh Bình", "BigC Thanh Hóa", "BX Thanh Hóa (phía Bắc mới)"],
     price: "160.000",
     ticketsLeft: 22
   },
   {
+    id: "QUANGNINH",
     title: "Quảng Ninh",
     locations: ["Đại học FPT", "Cầu Đại Phúc (QL18)", "Sao Đỏ (Hải Dương)", "Ngã 6 Đông Triều", "Uông Bí", "Tuần Châu", "BX Bãi Cháy"],
     price: "150.000",
     ticketsLeft: 21
   },
   {
+    id: "THAIBINH",
     title: "Thái Bình",
     locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "BX TP. Thái Bình"],
     price: "140.000",
     ticketsLeft: 27
   },
   {
+    id: "HANAM",
     title: "Hà Nam",
     locations: ["Đại học FPT", "QL1A", "Bến xe Phủ Lý Hà Nam"],
     price: "130.000",
@@ -148,6 +160,7 @@ export default function Home() {
                       locations={province.locations}
                       price={province.price}
                       ticketsLeft={province.ticketsLeft}
+                      id={province.id}
                     />
                   </div>
                 </div>

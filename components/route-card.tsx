@@ -3,15 +3,18 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Popup from '@/components/popup'
+import { useRouter } from 'next/navigation'
 
 interface RouteCardProps {
   title: string
   locations: string[]
   price: string
   ticketsLeft?: number
+  id: string
 }
 
-export function RouteCard({ title, locations, price, ticketsLeft }: RouteCardProps) {
+export function RouteCard({ title, locations, price, ticketsLeft, id }: RouteCardProps) {
+  const router = useRouter()
   const [showAllStops, setShowAllStops] = useState(false)
 
   const displayedLocations = locations.slice(0, 4)
@@ -65,7 +68,10 @@ export function RouteCard({ title, locations, price, ticketsLeft }: RouteCardPro
         </ul>
         <div className="flex items-center justify-between mt-4">
           <div className="text-xl font-bold text-red-700 md:text-2xl">{price} VND</div>
-          <Button className="rounded-full bg-red-600 px-6 py-2 text-base font-medium text-white hover:bg-red-700">
+          <Button 
+            className="rounded-full bg-red-600 px-6 py-2 text-base font-medium text-white hover:bg-red-700"
+            onClick={() => router.push(`/search?tinh=${id}`)}
+          >
             Đặt ngay
           </Button>
         </div>
