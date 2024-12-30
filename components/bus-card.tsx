@@ -13,9 +13,9 @@ interface FlightCardProps {
   price: string;
   slot: number;
   location: string[];
+  isSelected?: boolean;
+  onSelect: () => void;
 }
-
-
 
 export function BusCard({
   id,
@@ -25,11 +25,21 @@ export function BusCard({
   price,
   slot,
   location,
+  isSelected,
+  onSelect,
 }: FlightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white transition-all duration-500 ease-in-out cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+    <div 
+      className={`overflow-hidden rounded-3xl border 
+        ${isSelected 
+          ? `border-red-600 ${isExpanded ? 'bg-white' : 'bg-red-50/50'}`
+          : 'border-gray-200 bg-white'
+        } 
+        transition-all duration-500 ease-in-out cursor-pointer`} 
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
       <div className="p-6">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center gap-4 w-full md:w-auto">
@@ -63,8 +73,14 @@ export function BusCard({
             <div className="text-sm text-gray-500">VND</div>
           </div>
           <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-4 md:mt-0 justify-center items-center">
-            <Button className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-32">
-              Chọn
+            <Button 
+                className={`rounded-full ${isSelected ? 'border-[1px] border-red-600 hover:bg-gray-100 bg-white text-red-600' : 'hover:bg-red-700 bg-red-600 text-white'}  w-full md:w-32`}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    onSelect()
+                }}
+            >
+                {isSelected ? 'Chọn lại' : 'Chọn'}
             </Button>
             <Button
               variant="outline"
@@ -78,12 +94,8 @@ export function BusCard({
           </div>
         </div>
       </div>
-      <div 
-        className={`border-t border-gray-100 bg-gray-50 overflow-hidden transition-all duration-300 ease-in-out ${
-          isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="p-6">
+      {isExpanded && (
+        <div className="border-t border-gray-100 bg-gray-50 p-6 max-h-96 transition-max-height">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-0">
               {location.map((place, index) => (
@@ -118,7 +130,7 @@ export function BusCard({
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
