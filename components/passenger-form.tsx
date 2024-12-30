@@ -38,7 +38,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   }
 
   return (
-    <div className="rounded-3xl bg-white p-6">
+    <div className="rounded-3xl bg-white p-6 mb-16">
       <h2 className="mb-6 text-2xl font-bold">Thông tin liên hệ</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
