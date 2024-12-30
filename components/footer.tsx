@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Instagram, Twitter } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -10,8 +9,34 @@ export function Footer() {
           <div>
             <Image src="/white-logo.png" width={0} height={0} sizes="100vw" className="w-full h-auto mb-4" alt="Logo" />
             <ul className="space-y-2">
-              <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết nguyên đán Ất Tỵ 2025</li>
-              <li className="text-sm">Một sản phẩm thuộc FPTU Business Club - FBC</li>
+              <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết Nguyên đán Ất Tỵ 2025</li>
+              <li className="text-sm">Một dự án thuộc FPTU Business Club - FBC</li>
+              <div className="grid grid-cols-3 gap-4 items-center justify-items-center">
+                <Image 
+                  src="/img/fpt_logo.png"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-auto h-auto"
+                  alt="FPT Logo"
+                />
+                <Image
+                  src="/img/fbc_logo.png" 
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-auto h-12"
+                  alt="FBC Logo"
+                />
+                <Image
+                  src="/modal-icon.png" 
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                  className="w-auto h-12"
+                  alt="HolaBus Logo"
+                />
+              </div>
             </ul>
           </div>
           <div>
@@ -31,18 +56,15 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Kết nối với chúng tôi</h3>
-            <div className="flex space-x-4">
-              <Link href="#" className="hover:text-red-300">
-                <Facebook />
-              </Link>
-              <Link href="#" className="hover:text-red-300">
-                <Instagram />
-              </Link>
-              <Link href="#" className="hover:text-red-300">
-                <Twitter />
-              </Link>
-            </div>
+            <h3 className="mb-4 text-lg font-semibold">Liên hệ</h3>
+            <ul className="space-y-2">
+              <li className="text-base font-bold">Đỗ Bá Trung - Chịu trách nhiệm nội dung</li>
+              <li className="text-base">SDT: 0944355789</li>
+              <li className="text-base">Email: Trungdbhs186524@fpt.edu.vn</li>
+              <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Quản lý dự án</li>
+              <li className="text-base">SDT: 0929343780</li>
+              <li className="text-base">Email: kyvkhe182094@fpt.edu.vn</li>
+            </ul>
           </div>
         </div>
 

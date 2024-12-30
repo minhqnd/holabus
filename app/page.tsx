@@ -11,214 +11,172 @@ import Image from 'next/image'
 
 const provinces = [
   {
+    id: "HANOI",
     title: "Hà Nội",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đại học FPT", "TDBS", "BigC Thăng Long", "Bến xe Mỹ Đình"],
+    locations: ["Đại học FPT", "TBDS", "BigC Thăng Long", "Mỹ Đình"],
     price: "135.000",
     ticketsLeft: 29
   },
   {
-    title: "TP. Hồ Chí Minh",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Bến xe miền Đông", "Đại học Quốc gia", "Landmark 81", "Phố đi bộ Nguyễn Huệ", "Chợ Bến Thành", "Nhà thờ Đức Bà", "Bảo tàng Chứng tích Chiến tranh", "Dinh Độc Lập"],
-    price: "245.000",
-    ticketsLeft: 15
+    id: "HAIPHONG",
+    title: "Hải Phòng", 
+    locations: ["Đại học FPT", "QL5", "Bến xe Thượng Lý", "Bến xe Lạc Long"],
+    price: "145.000",
+    ticketsLeft: 24
   },
   {
-    title: "Đà Nẵng",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Cầu Rồng", "Bãi biển Mỹ Khê", "Asia Park", "Chợ Hàn", "Bán đảo Sơn Trà", "Ngũ Hành Sơn", "Bảo tàng Chăm", "Sân bay Đà Nẵng"],
-    price: "180.000",
-    ticketsLeft: 20
-  },
-  {
-    title: "Huế",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đại Nội", "Chùa Thiên Mụ", "Cầu Trường Tiền", "Chợ Đông Ba", "Lăng Khải Định", "Lăng Tự Đức", "Vườn Quốc gia Bạch Mã", "Sông Hương"],
+    id: "NINHBINH",
+    title: "Ninh Bình",
+    locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "TP. Ninh Bình", "BX Kim Sơn"],
     price: "160.000",
     ticketsLeft: 25
   },
   {
-    title: "Nha Trang",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Vinpearl Land", "Tháp Bà Ponagar", "Chợ Đầm", "Bãi biển Trần Phú", "Hòn Mun", "Viện Hải dương học", "Nhà thờ Chính tòa", "Tháp Trầm Hương"],
-    price: "190.000",
-    ticketsLeft: 18
-  },
-  {
-    title: "Đà Lạt",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Hồ Xuân Hương", "Chợ Đà Lạt", "Thung lũng Tình yêu", "Ga Đà Lạt", "Dinh Bảo Đại", "Thiền viện Trúc Lâm", "Hồ Tuyền Lâm", "Cánh đồng hoa"],
-    price: "175.000",
-    ticketsLeft: 22
-  },
-  {
-    title: "Cần Thơ",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Chợ nổi Cái Răng", "Bến Ninh Kiều", "Thiền viện Trúc Lâm", "Đại học Cần Thơ", "Vườn quốc gia Tràm Chim", "Cù Lao Dung", "Làng du lịch Mỹ Khánh", "Cầu Cần Thơ"],
-    price: "165.000",
-    ticketsLeft: 30
-  },
-  {
-    title: "Hải Phòng",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đồ Sơn", "Cát Bà", "Chợ Hàng", "Bến xe Lạc Long", "Cầu Bính", "Nhà hát lớn Hải Phòng", "Bảo tàng Hải Phòng", "Vườn quốc gia Cát Bà"],
-    price: "145.000",
-    ticketsLeft: 24
-  },
-  {
-    title: "Vũng Tàu",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Bãi Trước", "Tượng Chúa", "Bạch Dinh", "Hồ Mây", "Bãi Sau", "Khu du lịch Hồ Cốc", "Mũi Nghinh Phong", "Đảo Long Sơn"],
-    price: "155.000",
-    ticketsLeft: 27
-  },
-  {
-    title: "Quy Nhơn",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Eo Gió", "Kỳ Co", "Tháp Đôi", "FLC Quy Nhơn", "Bãi Xếp", "Ghềnh Ráng", "Đầm Thị Nại", "Khu du lịch Phương Mai"],
-    price: "185.000",
-    ticketsLeft: 19
-  },
-  {
-    title: "Hạ Long",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Vịnh Hạ Long", "Bãi Cháy", "Sun World", "Chợ Hạ Long", "Động Thiên Cung", "Động Sửng Sốt", "Hòn Trống Mái", "Cầu Bãi Cháy"],
-    price: "150.000",
-    ticketsLeft: 21
-  },
-  {
-    title: "Vinh",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Quảng trường Hồ Chí Minh", "Bến xe Vinh", "Đại học Vinh", "Chợ Vinh", "Cửa Lò", "Vườn quốc gia Pù Mát", "Chùa Thiên Ấn", "Sân bay Vinh"],
-    price: "170.000",
-    ticketsLeft: 23
-  },
-  {
-    title: "Buôn Ma Thuột",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Bảo tàng Thế giới Cà phê", "Thác Dray Nur", "Buôn Akô Dhông", "Nhà thờ Chính tòa", "Chư Yang Sin", "Vườn quốc gia Yok Đôn", "Thác Gia Long", "Sân bay Buôn Ma Thuột"],
-    price: "195.000",
-    ticketsLeft: 16
-  },
-  {
-    title: "Pleiku",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Biển Hồ", "Chư Đăng Ya", "Công viên Đồng Xanh", "Quảng trường Đại Đoàn Kết", "Thác Phú Cường", "Nhà thờ Pleiku", "Bảo tàng tỉnh Gia Lai", "Sân bay Pleiku"],
-    price: "180.000",
+    id: "HAIDUONG",
+    title: "Hải Dương",
+    locations: ["Đại học FPT", "QL5", "Gia Lộc", "Hải Tân", "Tứ Kỳ"],
+    price: "140.000",
     ticketsLeft: 28
   },
   {
-    title: "Phan Thiết",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Mũi Né", "Bàu Trắng", "Tháp Chàm", "Đồi cát bay", "Hồ Cát", "Suối Tiên", "Làng chài Mũi Né", "Sân bay Phan Thiết"],
-    price: "165.000",
+    id: "BACNINH",
+    title: "Bắc Ninh",
+    locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "Cây xăng Hải An (TT Phố Mới)"],
+    price: "135.000",
+    ticketsLeft: 30
+  },
+  {
+    id: "BACGIANG",
+    title: "Bắc Giang",
+    locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "KCN Đình Trám (BG)", "BigC Bắc Giang"],
+    price: "145.000",
     ticketsLeft: 26
   },
   {
-    title: "Long Xuyên",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Núi Sam", "Chợ Long Xuyên", "Đại học An Giang", "Công viên Mỹ Thới", "Chùa Tây An", "Lăng Thoại Ngọc Hầu", "Rừng tràm Trà Sư", "Sân bay Long Xuyên"],
-    price: "155.000",
-    ticketsLeft: 31
+    id: "HUNGYEN",
+    title: "Hưng Yên",
+    locations: ["Đại học FPT", "QL5", "Cầu vượt Tân Tiến (Văn Giang)", "Ân Thi", "Chợ Gạo"],
+    price: "135.000",
+    ticketsLeft: 32
   },
   {
-    title: "Rạch Giá",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Bến tàu Phú Quốc", "Chợ Rạch Sỏi", "Dinh Cậu", "Quảng trường Trần Quang Khải", "Núi Sập", "Vườn quốc gia Mũi Cà Mau", "Đảo Hòn Khoai", "Sân bay Rạch Giá"],
-    price: "175.000",
-    ticketsLeft: 17
-  },
-  {
-    title: "Thái Nguyên",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Đại học Thái Nguyên", "Hồ Núi Cốc", "Bảo tàng Văn hóa", "Chợ Trung tâm", "Đền Sóc Sơn", "Chùa Phật Tích", "Vườn quốc gia Chư Mom Ray", "Sân bay Thái Nguyên"],
-    price: "140.000",
-    ticketsLeft: 24
-  },
-  {
+    id: "NAMDINH",
     title: "Nam Định",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Nhà thờ Lớn", "Chợ Rồng", "Đền Trần", "Khu du lịch Quất Lâm", "Chùa Keo", "Lăng Trương Định", "Vườn quốc gia Xuân Thủy", "Sân bay Nam Định"],
+    locations: ["Đại học FPT", "BigC Nam Định", "Nam Trực", "Trực Ninh", "Cổ Lễ", "Hải Hậu"],
     price: "145.000",
     ticketsLeft: 29
   },
   {
+    id: "THANHHOA",
     title: "Thanh Hóa",
-    image: "/placeholder.svg?height=200&width=300",
-    locations: ["Sầm Sơn", "Thành Nhà Hồ", "Suối cá Cẩm Lương", "Phố đi bộ Lê Lợi", "Bãi biển Hải Tiến", "Đền Bà Triệu", "Vườn quốc gia Bến En", "Sân bay Thọ Xuân"],
+    locations: ["Đại học FPT", "TP. Ninh Bình", "BigC Thanh Hóa", "BX Thanh Hóa (phía Bắc mới)"],
     price: "160.000",
     ticketsLeft: 22
+  },
+  {
+    id: "QUANGNINH",
+    title: "Quảng Ninh",
+    locations: ["Đại học FPT", "Cầu Đại Phúc (QL18)", "Sao Đỏ (Hải Dương)", "Ngã 6 Đông Triều", "Uông Bí", "Tuần Châu", "BX Bãi Cháy"],
+    price: "150.000",
+    ticketsLeft: 21
+  },
+  {
+    id: "THAIBINH",
+    title: "Thái Bình",
+    locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "BX TP. Thái Bình"],
+    price: "140.000",
+    ticketsLeft: 27
+  },
+  {
+    id: "HANAM",
+    title: "Hà Nam",
+    locations: ["Đại học FPT", "QL1A", "Bến xe Phủ Lý Hà Nam"],
+    price: "130.000",
+    ticketsLeft: 33
   }
 ]
 
 export default function Home() {
   const [showAll, setShowAll] = useState(false)
-  const displayedProvinces = showAll ? provinces : provinces.slice(0, 12)
+  // const displayedProvinces = showAll ? provinces : provinces.slice(0, 8)
 
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
       <Navbar />
-      <div className="relative w-full md:px-8 max-w-[90rem] hidden md:block">
-        <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
+      {/* Phần hero và search */}
+      <div className="w-full relative z-10">
+        <div className="relative mx-auto w-full md:px-8 max-w-[90rem] hidden md:block">
+          <div className="container mx-auto my-5 h-[55vh] md:rounded-3xl overflow-hidden relative pb-96">
+            <Image
+              src="/img/fpt.avif"
+              alt="Hero Background"
+              layout="fill"
+              objectFit="cover"
+              className="shadow-lg"
+            />
+          </div>
+          <HeroSearch />
+        </div>
+
+        <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
           <Image
-            src="/img/fpt.avif"
+            src="/img/fpt.png"
             alt="Hero Background"
             layout="fill"
             objectFit="cover"
-            className="shadow-lg"
           />
+          <HeroSearch />
         </div>
-        <HeroSearch />
       </div>
 
-      <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
-        <Image
-          src="/img/fpt.png"
-          alt="Hero Background"
-          layout="fill"
-          objectFit="cover"
-        />
-        <HeroSearch />
-      </div>
-      <div className="w-full">
+      <div className="w-full relative z-0">
         <Image src="/img/maidao.png"
           width={0}
           height={0}
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
           alt="maidao" />
-      </div>
-      <div className="container  pb-12  mx-auto px-4 w-full  xl:-translate-y-[256px]">
-        <div className="mb-8 text-center">
-          <Image src="/img/lotrinhholabus.png" width={0}
-            height={0}
-            sizes="100vw"
-            style={{ height: 'auto' }}
-            alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {displayedProvinces.map((province, index) => (
-            <RouteCard
-              key={index}
-              image={province.image}
-              title={province.title}
-              locations={province.locations}
-              price={province.price}
-              ticketsLeft={province.ticketsLeft}
-            />
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => setShowAll(!showAll)}
-            className="group border-2 border-red-600 text-red-600 hover:bg-red-50"
-          >
-            {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
-            <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />
-          </Button>
+        <div className="container pb-12 mx-auto px-4 w-full xl:-mt-[256px]">
+          <div className="mb-8 text-center">
+            <Image src="/img/lotrinhholabus.png" width={0}
+              height={0}
+              sizes="100vw"
+              style={{ height: 'auto' }}
+              alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {provinces.map((province, index) => (
+              <div 
+                key={index} 
+                className={`overflow-hidden transition-all duration-500 ease-in-out h-full
+                  ${index >= 8 ? (showAll ? 'h-auto opacity-100' : 'h-0 opacity-0') : 'h-auto opacity-100'}`}
+              >
+                <div className={`transition-all duration-500 ease-in-out h-full
+                  ${!showAll && index >= 8 ? 'transform scale-95' : 'transform scale-100'}`}
+                >
+                  <div className="h-full">
+                    <RouteCard
+                      title={province.title}
+                      locations={province.locations}
+                      price={province.price}
+                      id={province.id}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setShowAll(!showAll)}
+              className="group border-2 rounded-full border-red-600 text-red-600 hover:bg-red-50"
+            >
+              {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
+              <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />
+            </Button>
+          </div>
         </div>
       </div>
       <Footer />

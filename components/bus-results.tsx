@@ -1,135 +1,86 @@
 'use client'
 
-// import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-// import { Checkbox } from '@/components/ui/checkbox'
-// import { Label } from '@/components/ui/label'
-import { FlightCard } from '@/components/bus-card'
-// import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { BusCard } from '@/components/bus-card'
+import busRoutes from '@/data/bus-routes.json'
+// import { getProvinceNameById } from '@/lib/utils/province'
 
-// const airlines = [
-//     { id: 'vietjet', name: 'Vietjet Air' },
-//     { id: 'vietravel', name: 'Vietravel Airlines' },
-//     { id: 'bamboo', name: 'Bamboo Airways' },
-//     { id: 'vietnam', name: 'Vietnam Airlines' },
-// ]
+interface BusResultsProps {
+    provinceId: string;
+    provinceName: string;
+}
 
-const flights = [
-    {
-        id: 'HNQN01',
-        name: 'FPT - Quang Ninh',
-        departure: '7:35',
-        arrival: '9:45',
-        from: '13/01/2025',
-        to: '13/01/2025',
-        price: '189.000',
-    },
-    {
-        id: 'HNQN02',
-        name: 'FPT - Quang Ninh',
-        departure: '13:05',
-        arrival: '15:20',
-        from: '13/01/2025',
-        to: '13/01/2025',
-        price: '189.000',
-    },
-]
+interface Trip {
+    id: string;
+    name: string;
+    time: string;
+    date: string;
+    price: string;
+    slot: number;
+    location: string[];
+}
 
-export function FlightResults() {
-    // const [selectedDate] = useState(28)
-    // const dates = [
-    //     { day: 'Thứ 5', date: 26 },
-    //     { day: 'Thứ 6', date: 27 },
-    //     { day: 'Thứ 7', date: 28 },
-    //     { day: 'Chủ nhật', date: 29 },
-    //     { day: 'Thứ 2', date: 30 },
-    // ]
+interface RouteData {
+    name: string;
+    trips: Trip[];
+}
+
+interface Routes {
+    [key: string]: RouteData;
+}
+
+interface BusRoutes {
+    routes: Routes;
+}
+
+// Thêm kiểu cho busRoutes
+const typedBusRoutes = busRoutes as BusRoutes;
+
+export function BusResults({ provinceId, provinceName }: BusResultsProps) {
+    const [trips, setTrips] = useState<Trip[]>([])
+
+    useEffect(() => {
+        if (provinceId) {
+            // Lấy chuyến đi dựa theo provinceId
+            const routeData = typedBusRoutes.routes[provinceId.toUpperCase()]
+            if (routeData) {
+                setTrips(routeData.trips)
+            } else {
+                setTrips([])
+            }
+        }
+    }, [provinceId])
 
     return (
-        // <div className="grid gap-6 lg:grid-cols-[300px,1fr]">
         <div className="grid gap-6">
-            {/* <div className="rounded-3xl bg-white p-6">
-                <h3 className="mb-4 font-medium">Hiển thị theo</h3>
-                <div className="space-y-4">
-                    {airlines.map((airline) => (
-                        <div key={airline.id} className="flex items-center space-x-2">
-                            <Checkbox id={airline.id} />
-                            <Label htmlFor={airline.id}>{airline.name}</Label>
-                        </div>
-                    ))}
-                </div>
-            </div> */}
-
             <div className="space-y-6">
-                <div className="rounded-3xl bg-white p-6 ">
+                <div className="rounded-3xl bg-white p-6">
                     <div className="mb-4">
                         <div className="flex gap-2 md:flex-row flex-col">
-                            {/* <div className="relative h-8 w-8"> */}
-                            {/* <Image
-                                    src="/placeholder.svg?height=32&width=32"
-                                    alt="Logo"
-                                    width={32}
-                                    height={32}
-                                    className="object-contain"
-                                /> */}
                             <div className="text-xl font-bold text-red-600">
                                 HolaBus
                             </div>
-                            {/* </div> */}
                             <div>
                                 <h2 className="text-lg font-bold">
-                                    Đại học FPT (Hà Nội) → Quảng Ninh
+                                    Đại học FPT (Hà Nội) → {provinceName}
                                 </h2>
-                                {/* <p className="text-sm text-gray-500">Thứ 7, 28/12/2024</p> */}
                             </div>
                         </div>
                     </div>
 
-                    {/* date */}
-                    {/* <div className="mb-6 flex items-center gap-2">
-                        {dates.map((date) => (
-                            <Button
-                                key={date.date}
-                                variant={selectedDate === date.date ? "default" : "outline"}
-                                className={`flex-1 rounded-xl ${selectedDate === date.date ? 'bg-red-600 text-white hover:bg-red-700' : ''
-                                    }`}
-                            >
-                                <div>
-                                    <div className="text-sm">{date.day}</div>
-                                    <div className="text-lg font-bold">{date.date}</div>
-                                </div>
-                            </Button>
-                        ))}
-                    </div> */}
-
-                    <div className="space-y-4 min-h-96">
-                        {flights.map((flight) => (
-                            <FlightCard key={flight.id} {...flight} />
-                        ))}
-                    </div>
-
-                    <div className="mt-6 flex items-center mx-auto justify-center md:justify-between">
-                        {/* <div className="text-sm text-gray-500">
-                            Đang xem: 5 của 211
-                        </div> */}
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" className="rounded-xl">
-                                <ChevronLeft className="h-4 w-4" />
-                                Trước
-                            </Button>
-                            <Button variant="outline" className="rounded-xl">1</Button>
-                            {/* <Button variant="outline" className="rounded-xl">2</Button>
-                            <Button variant="outline" className="rounded-xl">3</Button>
-                            <span>...</span>
-                            <Button variant="outline" className="rounded-xl">41</Button>
-                            <Button variant="outline" className="rounded-xl">42</Button>
-                            <Button variant="outline" className="rounded-xl">43</Button> */}
-                            <Button variant="outline" className="rounded-xl">
-                                Tiếp
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
+                    <div className="space-y-4 mb-16">
+                        <div className="text-sm text-gray-500">
+                            Tìm thấy {trips.length} chuyến
                         </div>
+                        {trips.length === 0 ? (
+                            <div className="text-center py-8">
+                                <p className="text-gray-600">Rất tiếc địa điểm bạn chọn HolaBus đã hết vé hoặc không có tuyến rồi 😿</p>
+                            </div>
+                        ) : (
+                            trips.map((trip) => (
+                                <BusCard key={trip.id} {...trip} />
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

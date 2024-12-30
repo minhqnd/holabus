@@ -1,14 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { AutocompleteInput } from '@/components/autocomplete-input'
 
 export function HeroSearch() {
   return (
@@ -21,23 +13,9 @@ export function HeroSearch() {
           <p className="mb-8 text-lg text-gray-600">
             Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
           </p>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Input
-              type="text"
-              placeholder="Nhập địa điểm"
-              className="rounded-full border-gray-300"
-            />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Tất cả mức giá" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0-500">0 - 500.000đ</SelectItem>
-                <SelectItem value="500-1000">500.000đ - 1.000.000đ</SelectItem>
-                <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button className="bg-red-600 hover:bg-red-700 ">Tìm kiếm</Button>
+          <div className="flex flex-row gap-4">
+            <AutocompleteInput />
+            {/* <Button className="bg-red-600 hover:bg-red-700 w-[30%] rounded-full h-12">Tìm kiếm</Button> */}
           </div>
         </div>
       </div>
@@ -52,23 +30,16 @@ export function HeroSearch() {
           Hơn 20 tuyến xe giá tốt đang chờ đợi chở bạn về nhà
         </p>
         <div className="w-full max-w-4xl rounded-3xl bg-white p-6 shadow-lg">
-          <div className="grid gap-4 md:grid-cols-3">
-            <Input
+          <div className="grid gap-4">
+            {/* <Input
               type="text"
-              placeholder="Nhập địa điểm"
-              className="rounded-full border-gray-300"
+              placeholder="Nhập tỉnh thành"
+              className="rounded-full border-gray-300 focus:border-red-500 focus:ring-red-500 focus-visible:ring-red-500 focus-visible:ring-2 text-base px-4 w-full"
+              height="3rem"
+              borderRadius="9999px"
             />
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Tất cả mức giá" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0-500">0 - 500.000đ</SelectItem>
-                <SelectItem value="500-1000">500.000đ - 1.000.000đ</SelectItem>
-                <SelectItem value="1000+">Trên 1.000.000đ</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button className="bg-red-600 hover:bg-red-700 ">Tìm kiếm</Button>
+            <Button className="bg-red-600 hover:bg-red-700 rounded-full h-12">Tìm kiếm</Button> */}
+            <AutocompleteInput />
           </div>
         </div>
       </div>
