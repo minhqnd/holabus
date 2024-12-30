@@ -55,8 +55,8 @@ function SearchContent() {
                 <ProgressSteps currentStep={currentStep} />
             </div>
             
-            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out overflow-hidden ${
-                currentStep === 1 ? 'max-h-[500px]' : 'max-h-0'
+            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out ${
+                currentStep === 1 ? 'max-h-[500px] overflow-visible' : 'max-h-0 overflow-hidden' 
             }`}>
                 <SearchHeader provinceName={provinceName} />
             </div>

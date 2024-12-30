@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { BusCard } from '@/components/bus-card'
 import busRoutes from '@/data/bus-routes.json'
+import { Skeleton } from '@/components/ui/skeleton'
 // import { getProvinceNameById } from '@/lib/utils/province'
 
 interface BusResultsProps {
@@ -41,22 +42,27 @@ const typedBusRoutes = busRoutes as BusRoutes;
 
 export function BusResults({ provinceId, provinceName, selectedTripId, onTripSelect, currentStep }: BusResultsProps) {
     const [trips, setTrips] = useState<Trip[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (provinceId) {
-            const routeData = typedBusRoutes.routes[provinceId.toUpperCase()]
+        const fetchData = async () => {
+            setLoading(true)
+            // Giả lập delay API
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            
+            const routeData = typedBusRoutes.routes[provinceId]
             if (routeData) {
                 setTrips(routeData.trips)
             } else {
                 setTrips([])
             }
+            setLoading(false)
         }
+
+        fetchData()
     }, [provinceId])
 
-    // Lọc chỉ hiển thị chuyến được chọn khi ở bước 2
-    const displayedTrips = currentStep === 2 
-        ? trips.filter(trip => trip.id === selectedTripId)
-        : trips
+    const displayedTrips = currentStep === 1 ? trips : trips.filter(trip => trip.id === selectedTripId)
 
     return (
         <div className="space-y-6 mb-8">
@@ -75,12 +81,25 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                 </div>
 
                 <div className={`space-y-4 ${currentStep === 1 ? 'mb-8' : 'mb-0'}`}>
-                    {currentStep === 1 && (
+                    {currentStep === 1 && !loading && (
                         <div className="text-sm text-gray-500">
                             Tìm thấy {trips.length} chuyến
                         </div>
                     )}
-                    {displayedTrips.length === 0 ? (
+                    
+                    {loading ? (
+                        // Loading skeleton
+                        Array(3).fill(0).map((_, index) => (
+                            <div key={index} className="rounded-xl border p-6">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <Skeleton className="h-6 w-32" />
+                                    <Skeleton className="h-6 w-24" />
+                                    <Skeleton className="h-6 w-20" />
+                                    <Skeleton className="h-10 w-32" />
+                                </div>
+                            </div>
+                        ))
+                    ) : displayedTrips.length === 0 ? (
                         <div className="text-center py-8">
                             <p className="text-gray-600">Rất tiếc địa điểm bạn chọn HolaBus đã hết vé hoặc không có tuyến rồi 😿</p>
                         </div>
