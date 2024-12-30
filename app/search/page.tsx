@@ -30,8 +30,18 @@ function SearchContent() {
     }, [searchParams])
 
     const handleTripSelect = (tripId: string) => {
-        setSelectedTripId(tripId)
-        setCurrentStep(2)
+        if (tripId === selectedTripId && currentStep === 2) {
+            setCurrentStep(1)
+            setSelectedTripId('')
+        } else {
+            setSelectedTripId(tripId)
+            setCurrentStep(2)
+        }
+    }
+
+    const handleBackButton = () => {
+        setCurrentStep(1)
+        setSelectedTripId('')
     }
 
     const handleFormSubmit = () => {
@@ -57,7 +67,10 @@ function SearchContent() {
             )}
             
             {currentStep === 2 && (
-                <PassengerForm onSubmit={handleFormSubmit} />
+                <PassengerForm 
+                    onSubmit={handleFormSubmit} 
+                    onBack={handleBackButton}
+                />
             )}
         </div>
     )

@@ -15,9 +15,10 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 interface PassengerFormProps {
   onSubmit: () => void
+  onBack: () => void
 }
 
-export function PassengerForm({ onSubmit }: PassengerFormProps) {
+export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const [formData, setFormData] = useState({
     title: '',
     lastName: '',
@@ -101,7 +102,7 @@ export function PassengerForm({ onSubmit }: PassengerFormProps) {
             type="button"
             variant="ghost"
             className="rounded-full"
-            onClick={() => window.history.back()}
+            onClick={onBack}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Quay lại

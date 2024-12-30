@@ -10,7 +10,7 @@ interface SearchHeaderProps {
 
 export function SearchHeader({ provinceName }: SearchHeaderProps) {
   return (
-    <div className="mb-8 rounded-3xl bg-white p-6 shadow-lg">
+    <div className="animate-slide-down origin-top transition-all duration-500 ease-in-out mb-8 rounded-3xl bg-white p-6 shadow-lg">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label className="font-bold text-lg">Điểm đi</Label>
