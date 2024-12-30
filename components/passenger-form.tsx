@@ -20,6 +20,13 @@ interface PassengerFormProps {
 
 export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const [formData, setFormData] = useState({
+    title: 'Anh',
+    lastName: '',
+    firstName: '',
+    phone: '',
+  })
+
+  const [errors, setErrors] = useState({
     title: '',
     lastName: '',
     firstName: '',
@@ -32,9 +39,47 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     lastNameInputRef.current?.focus()
   }, [])
 
+  const validateForm = () => {
+    let isValid = true
+    const newErrors = {
+      title: '',
+      lastName: '',
+      firstName: '',
+      phone: '',
+    }
+
+    if (!formData.title) {
+      newErrors.title = 'Vui lòng chọn danh xưng'
+      isValid = false
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Vui lòng nhập họ và tên đệm'
+      isValid = false
+    }
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'Vui lòng nhập tên'
+      isValid = false
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Vui lòng nhập số điện thoại'
+      isValid = false
+    } else if (!/^[0-9]{10}$/.test(formData.phone)) {
+      newErrors.phone = 'Số điện thoại không hợp lệ'
+      isValid = false
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit()
+    if (validateForm()) {
+      onSubmit()
+    }
   }
 
   return (
@@ -45,51 +90,65 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           <div>
             <Label>Danh xưng</Label>
             <Select
+              defaultValue="mr"
               value={formData.title}
               onValueChange={(value) => setFormData({ ...formData, title: value })}
             >
-              <SelectTrigger className="mt-1 rounded-full">
-                <SelectValue placeholder="Ông" />
+              <SelectTrigger className="mt-1 rounded-full h-12">
+                <SelectValue placeholder="Anh" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mr">Ông</SelectItem>
-                <SelectItem value="mrs">Bà</SelectItem>
-                <SelectItem value="ms">Cô</SelectItem>
+                <SelectItem value="mr">Anh</SelectItem>
+                <SelectItem value="mrs">Chị</SelectItem>
               </SelectContent>
             </Select>
+            {errors.title && <span className="text-sm text-red-500 mt-1">{errors.title}</span>}
           </div>
           <div>
-            <Label>Họ</Label>
+            <Label>Tên</Label>
             <Input
-              ref={lastNameInputRef}
               type="text"
-              placeholder="Nhập họ"
-              className="mt-1 rounded-full"
-              value={formData.lastName}
-              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+              placeholder="Nhập tên"
+              className="mt-1"
+              height='3rem'
+              borderRadius='9999px'
+              value={formData.firstName}
+              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             />
+            {errors.firstName && <span className="text-sm text-red-500 mt-1">{errors.firstName}</span>}
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
           <div>
-            <Label>Tên đệm và tên</Label>
+            <Label>Họ và tên đệm</Label>
             <Input
+              ref={lastNameInputRef}
               type="text"
-              placeholder="Nhập tên đệm và tên"
-              className="mt-1 rounded-full"
-              value={formData.firstName}
-              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+              placeholder="Nhập họ và tên đệm"
+              className="mt-1"
+              height='3rem'
+              borderRadius='9999px'
+              value={formData.lastName}
+              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             />
+            {errors.lastName && <span className="text-sm text-red-500 mt-1">{errors.lastName}</span>}
           </div>
           <div>
             <Label>Điện thoại</Label>
             <Input
               type="tel"
               placeholder="Nhập điện thoại"
-              className="mt-1 rounded-full"
+              className="mt-1"
+              height='3rem'
+              borderRadius='9999px'
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, '')
+                setFormData({ ...formData, phone: value })
+              }}
+              maxLength={10}
             />
+            {errors.phone && <span className="text-sm text-red-500 mt-1">{errors.phone}</span>}
           </div>
         </div>
         <Button
