@@ -11,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, SearchX } from 'lucide-react'
+import Image from 'next/image'
 
 interface PassengerFormProps {
   onSubmit: () => void
@@ -20,16 +21,16 @@ interface PassengerFormProps {
 
 export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const [formData, setFormData] = useState({
-    title: 'Anh',
-    lastName: '',
-    firstName: '',
+    sex: '1',
+    name: '',
+    mail: '',
     phone: '',
   })
 
   const [errors, setErrors] = useState({
-    title: '',
-    lastName: '',
-    firstName: '',
+    sex: '',
+    name: '',
+    mail: '',
     phone: '',
   })
 
@@ -42,24 +43,24 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const validateForm = () => {
     let isValid = true
     const newErrors = {
-      title: '',
-      lastName: '',
-      firstName: '',
+      sex: '',
+      name: '',
+      mail: '',
       phone: '',
     }
 
-    if (!formData.title) {
-      newErrors.title = 'Vui lòng chọn danh xưng'
+    if (!formData.sex) {
+      newErrors.sex = 'Vui lòng chọn danh xưng'
       isValid = false
     }
 
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Vui lòng nhập họ và tên đệm'
+    if (!formData.name.trim()) {
+      newErrors.name = 'Vui lòng nhập họ và tên đệm'
       isValid = false
     }
 
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Vui lòng nhập tên'
+    if (!formData.mail.trim()) {
+      newErrors.mail = 'Vui lòng nhập tên'
       isValid = false
     }
 
@@ -90,49 +91,36 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           <div>
             <Label>Danh xưng</Label>
             <Select
-              defaultValue="mr"
-              value={formData.title}
-              onValueChange={(value) => setFormData({ ...formData, title: value })}
+              defaultValue="1"
+              value={formData.sex}
+              onValueChange={(value) => setFormData({ ...formData, sex: value })}
             >
               <SelectTrigger className="mt-1 rounded-full h-12">
                 <SelectValue placeholder="Anh" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="mr">Anh</SelectItem>
-                <SelectItem value="mrs">Chị</SelectItem>
+                <SelectItem value="1">Anh</SelectItem>
+                <SelectItem value="2">Chị</SelectItem>
               </SelectContent>
             </Select>
-            {errors.title && <span className="text-sm text-red-500 mt-1">{errors.title}</span>}
+            {errors.sex && <span className="text-sm text-red-500 mt-1">{errors.sex}</span>}
           </div>
           <div>
-            <Label>Tên</Label>
+            <Label>Họ và tên</Label>
             <Input
               type="text"
-              placeholder="Nhập tên"
+              placeholder="Nhập đầy đủ họ và tên"
               className="mt-1"
               height='3rem'
               borderRadius='9999px'
-              value={formData.firstName}
-              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+              value={formData.mail}
+              onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
             />
-            {errors.firstName && <span className="text-sm text-red-500 mt-1">{errors.firstName}</span>}
+            {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          <div>
-            <Label>Họ và tên đệm</Label>
-            <Input
-              ref={lastNameInputRef}
-              type="text"
-              placeholder="Nhập họ và tên đệm"
-              className="mt-1"
-              height='3rem'
-              borderRadius='9999px'
-              value={formData.lastName}
-              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            />
-            {errors.lastName && <span className="text-sm text-red-500 mt-1">{errors.lastName}</span>}
-          </div>
+
           <div>
             <Label>Điện thoại</Label>
             <Input
@@ -150,19 +138,22 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             />
             {errors.phone && <span className="text-sm text-red-500 mt-1">{errors.phone}</span>}
           </div>
+          <div>
+            <Label>Email</Label>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12"
+            >
+              <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
+              Xác thực bằng gmail
+            </Button>
+          </div>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-4 w-full rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50"
-        >
-          {/* <img
-            src="/placeholder.svg?height=24&width=24"
-            alt="Google"
-            className="mr-2 h-6 w-6"
-          /> */}
-          Xác thực bằng gmail
-        </Button>
+        <div className="grid gap-6 md:grid-cols-2">
+
+          <div></div>
+        </div>
         <div className="flex justify-between pt-6">
           <Button
             type="button"
@@ -170,7 +161,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             className="rounded-full"
             onClick={onBack}
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="1-2 h-4 w-4" />
             Quay lại
           </Button>
           <Button
