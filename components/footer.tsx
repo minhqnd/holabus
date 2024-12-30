@@ -11,7 +11,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li className="text-base font-bold">HolaBus - đơn vị cung cấp chuyến xe về quê trong dịp Tết Nguyên đán Ất Tỵ 2025</li>
               <li className="text-sm">Một dự án thuộc FPTU Business Club - FBC</li>
-              <div className="grid grid-cols-3 gap-4 items-center justify-items-center">
+              <div className="grid grid-cols-3 gap-4 items-center justify-items-center !mt-6">
                 <Image 
                   src="/img/fpt_logo.png"
                   width={0}
