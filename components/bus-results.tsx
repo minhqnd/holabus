@@ -74,7 +74,7 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                     </div>
                 </div>
 
-                <div className={`space-y-4 ${currentStep === 1 ? 'mb-16' : 'mb-0'}`}>
+                <div className={`space-y-4 ${currentStep === 1 ? 'mb-8' : 'mb-0'}`}>
                     {currentStep === 1 && (
                         <div className="text-sm text-gray-500">
                             Tìm thấy {trips.length} chuyến
