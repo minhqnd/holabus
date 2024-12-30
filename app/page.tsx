@@ -148,20 +148,18 @@ export default function Home() {
             {provinces.map((province, index) => (
               <div 
                 key={index} 
-                className={`overflow-hidden transition-all duration-500 ease-in-out h-full
-                  ${index >= 8 ? (showAll ? 'h-auto opacity-100' : 'h-0 opacity-0') : 'h-auto opacity-100'}`}
+                className={`
+                  grid transition-all duration-300 ease-in-out
+                  ${index >= 8 && !showAll ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}
+                `}
               >
-                <div className={`transition-all duration-500 ease-in-out h-full
-                  ${!showAll && index >= 8 ? 'transform scale-95' : 'transform scale-100'}`}
-                >
-                  <div className="h-full">
-                    <RouteCard
-                      title={province.title}
-                      locations={province.locations}
-                      price={province.price}
-                      id={province.id}
-                    />
-                  </div>
+                <div className="overflow-hidden">
+                  <RouteCard
+                    title={province.title}
+                    locations={province.locations}
+                    price={province.price}
+                    id={province.id}
+                  />
                 </div>
               </div>
             ))}
