@@ -78,8 +78,12 @@ export function BusCard({
           </div>
         </div>
       </div>
-      {isExpanded && (
-        <div className="border-t border-gray-100 bg-gray-50 p-6 max-h-96 transition-max-height">
+      <div 
+        className={`border-t border-gray-100 bg-gray-50 overflow-hidden transition-all duration-300 ease-in-out ${
+          isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="p-6">
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-0">
               {location.map((place, index) => (
@@ -114,7 +118,7 @@ export function BusCard({
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
