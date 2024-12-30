@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { BusCard } from '@/components/bus-card'
 import busRoutes from '@/data/bus-routes.json'
-import { getProvinceNameById } from '@/lib/utils/province'
+// import { getProvinceNameById } from '@/lib/utils/province'
 
 interface BusResultsProps {
     provinceId: string;

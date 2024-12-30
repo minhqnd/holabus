@@ -58,19 +58,19 @@ export function LoginForm() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Button variant="outline" className="rounded-full">
-            <img
+            {/* <img
               src="/placeholder.svg?height=24&width=24"
               alt="Google"
               className="mr-2 h-6 w-6"
-            />
+            /> */}
             Google
           </Button>
           <Button variant="outline" className="rounded-full">
-            <img
+            {/* <img
               src="/placeholder.svg?height=24&width=24"
               alt="Facebook"
               className="mr-2 h-6 w-6"
-            />
+            /> */}
             Facebook
           </Button>
         </div>

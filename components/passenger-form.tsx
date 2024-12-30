@@ -89,11 +89,11 @@ export function PassengerForm({ onSubmit }: PassengerFormProps) {
           variant="outline"
           className="mt-4 w-full rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50"
         >
-          <img
+          {/* <img
             src="/placeholder.svg?height=24&width=24"
             alt="Google"
             className="mr-2 h-6 w-6"
-          />
+          /> */}
           Xác thực bằng gmail
         </Button>
         <div className="flex justify-between pt-6">

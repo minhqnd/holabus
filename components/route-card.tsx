@@ -9,11 +9,11 @@ interface RouteCardProps {
   title: string
   locations: string[]
   price: string
-  ticketsLeft?: number
+  // ticketsLeft?: number
   id: string
 }
 
-export function RouteCard({ title, locations, price, ticketsLeft, id }: RouteCardProps) {
+export function RouteCard({ title, locations, price, id }: RouteCardProps) {
   const router = useRouter()
   const [showAllStops, setShowAllStops] = useState(false)
 

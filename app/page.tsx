@@ -98,7 +98,7 @@ const provinces = [
 
 export default function Home() {
   const [showAll, setShowAll] = useState(false)
-  const displayedProvinces = showAll ? provinces : provinces.slice(0, 8)
+  // const displayedProvinces = showAll ? provinces : provinces.slice(0, 8)
 
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
@@ -159,7 +159,6 @@ export default function Home() {
                       title={province.title}
                       locations={province.locations}
                       price={province.price}
-                      ticketsLeft={province.ticketsLeft}
                       id={province.id}
                     />
                   </div>
