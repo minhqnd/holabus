@@ -164,7 +164,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="mt-8 text-center">
+          <div className={`mt-8 text-center ${!showAll ? '-mt-20' : ''}`}>
             <Button
               variant="outline"
               size="lg"
