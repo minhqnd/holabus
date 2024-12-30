@@ -54,7 +54,12 @@ function SearchContent() {
             <div className="mb-16 mx-auto md:w-4/5">
                 <ProgressSteps currentStep={currentStep} />
             </div>
-            {currentStep === 1 && <SearchHeader provinceName={provinceName} />}
+            
+            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+                currentStep === 1 ? 'max-h-[500px]' : 'max-h-0'
+            }`}>
+                <SearchHeader provinceName={provinceName} />
+            </div>
             
             {provinceId && (
                 <BusResults 
@@ -66,12 +71,14 @@ function SearchContent() {
                 />
             )}
             
-            {currentStep === 2 && (
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+                currentStep === 2 ? 'max-h-[1000px]' : 'max-h-0'
+            }`}>
                 <PassengerForm 
                     onSubmit={handleFormSubmit} 
                     onBack={handleBackButton}
                 />
-            )}
+            </div>
         </div>
     )
 }

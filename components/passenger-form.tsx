@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,6 +25,12 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     firstName: '',
     phone: '',
   })
+
+  const lastNameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    lastNameInputRef.current?.focus()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,6 +61,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           <div>
             <Label>Họ</Label>
             <Input
+              ref={lastNameInputRef}
               type="text"
               placeholder="Nhập họ"
               className="mt-1 rounded-full"
