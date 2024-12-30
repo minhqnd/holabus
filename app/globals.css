@@ -82,3 +82,9 @@ main {
     @apply bg-background text-foreground;
   }
 }
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 95%; /* Giảm kích thước font xuống 75% trên mobile */
+  }
+}
