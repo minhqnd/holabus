@@ -63,7 +63,7 @@ export function BusCard({
             <div className="text-sm text-gray-500">VND</div>
           </div>
           <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-4 md:mt-0 justify-center items-center">
-            <Button className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-auto">
+            <Button className="rounded-full bg-red-600 text-white hover:bg-red-700 w-full md:w-32">
               Chọn
             </Button>
             <Button
