@@ -1,0 +1,198 @@
+{
+    "routes": {
+        "HANOI": {
+            "name": "Hà Nội",
+            "locations": [
+                "Đại học FPT",
+                "TBDS",
+                "BigC Thăng Long",
+                "Mỹ Đình"
+            ],
+            "price": "135.000"
+        },
+        "HAIPHONG": {
+            "name": "Hải Phòng",
+            "locations": [
+                "Đại học FPT",
+                "QL5",
+                "Bến xe Thượng Lý",
+                "Bến xe Lạc Long"
+            ],
+            "price": "145.000"
+        },
+        "NINHBINH": {
+            "name": "Ninh Bình",
+            "locations": [
+                "Đại học FPT",
+                "TP. Phủ Lý (Hà Nam)",
+                "TP. Ninh Bình",
+                "BX Kim Sơn"
+            ],
+            "price": "160.000"
+        },
+        "HAIDUONG": {
+            "name": "Hải Dương",
+            "locations": [
+                "Đại học FPT",
+                "QL5",
+                "Gia Lộc",
+                "Hải Tân",
+                "Tứ Kỳ"
+            ],
+            "price": "140.000"
+        },
+        "BACNINH": {
+            "name": "Bắc Ninh",
+            "locations": [
+                "Đại học FPT",
+                "KCN VISIP Bắc Ninh",
+                "Cầu Đại Phúc (QL1A)",
+                "Cây xăng Hải An (TT Phố Mới)"
+            ],
+            "price": "135.000"
+        },
+        "BACGIANG": {
+            "name": "Bắc Giang",
+            "locations": [
+                "Đại học FPT",
+                "KCN VISIP Bắc Ninh",
+                "Cầu Đại Phúc (QL1A)",
+                "KCN Đình Trám (BG)",
+                "BigC Bắc Giang"
+            ],
+            "price": "145.000"
+        },
+        "HUNGYEN": {
+            "name": "Hưng Yên",
+            "locations": [
+                "Đại học FPT",
+                "QL5",
+                "Cầu vượt Tân Tiến (Văn Giang)",
+                "Ân Thi",
+                "Chợ Gạo"
+            ],
+            "price": "135.000"
+        },
+        "NAMDINH": {
+            "name": "Nam Định",
+            "locations": [
+                "Đại học FPT",
+                "BigC Nam Định",
+                "Nam Trực",
+                "Trực Ninh",
+                "Cổ Lễ",
+                "Hải Hậu"
+            ],
+            "price": "145.000"
+        },
+        "THANHHOA": {
+            "name": "Thanh Hóa",
+            "locations": [
+                "Đại học FPT",
+                "TP. Ninh Bình",
+                "BigC Thanh Hóa",
+                "BX Thanh Hóa (phía Bắc mới)"
+            ],
+            "price": "160.000"
+        },
+        "QUANGNINH": {
+            "name": "Quảng Ninh",
+            "locations": [
+                "Đại học FPT",
+                "Cầu Đại Phúc (QL18)",
+                "Sao Đỏ (Hải Dương)",
+                "Ngã 6 Đông Triều",
+                "Uông Bí",
+                "Tuần Châu",
+                "BX Bãi Cháy"
+            ],
+            "price": "150.000"
+        },
+        "THAIBINH": {
+            "name": "Thái Bình",
+            "locations": [
+                "Đại học FPT",
+                "TP. Phủ Lý (Hà Nam)",
+                "BX TP. Thái Bình"
+            ],
+            "price": "140.000"
+        },
+        "HANAM": {
+            "name": "Hà Nam",
+            "locations": [
+                "Đại học FPT",
+                "QL1A",
+                "Bến xe Phủ Lý Hà Nam"
+            ],
+            "price": "130.000"
+        }
+    },
+    "trips": {
+        "HNQN01": {
+            "routeId": "QUANGNINH",
+            "name": "FPT - Quảng Ninh",
+            "time": "7:35",
+            "date": "13/01/2025",
+            "price": "189.000",
+            "ticketsLeft": 10
+        },
+        "HNQN02": {
+            "routeId": "QUANGNINH",
+            "name": "FPT - Quảng Ninh",
+            "time": "13:05",
+            "date": "13/01/2025",
+            "price": "189.000",
+            "ticketsLeft": 10
+        },
+        "HNHL01": {
+            "routeId": "HALONG",
+            "name": "FPT - Hạ Long",
+            "time": "8:00",
+            "date": "13/01/2025",
+            "price": "165.000",
+            "ticketsLeft": 15
+        },
+        "HNHD01": {
+            "routeId": "HAIDUONG",
+            "name": "FPT - Hải Dương",
+            "time": "8:30",
+            "date": "13/01/2025",
+            "price": "145.000",
+            "ticketsLeft": 20
+        },
+    },
+    "users": {
+        "USER12345": {
+            "sex": "1",
+            "name": "Nguyen Van A",
+            "mail": "nguyenvana@example.com",
+            "phone": "0123456789"
+        },
+        "USER67890": {
+            "sex": "2",
+            "name": "Tran Thi B",
+            "mail": "tranthib@example.com",
+            "phone": "0987654321"
+        },
+        "USER11223": {
+            "sex": "1",
+            "name": "Le Van C",
+            "mail": "levanc@example.com",
+            "phone": "0912345678"
+        }
+    },
+    "bookings": {
+        "H6JB9": {
+            "tripId": "HNQN01",
+            "userId": "USER12345"
+        },
+        "G7K5L": {
+            "tripId": "HNHL01",
+            "userId": "USER67890"
+        },
+        "F4B7C": {
+            "tripId": "HNQN02",
+            "userId": "USER11223"
+        }
+    }
+}
