@@ -15,7 +15,8 @@ import { PROVINCES } from '@/lib/constants/provinces'
 function SearchContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [currentStep] = useState(1)
+    const [currentStep, setCurrentStep] = useState(1)
+    const [selectedTripId, setSelectedTripId] = useState<string>('')
     const [provinceId, setProvinceId] = useState<string>('')
     const [provinceName, setProvinceName] = useState<string>('')
     
@@ -28,6 +29,21 @@ function SearchContent() {
         }
     }, [searchParams])
 
+    const handleTripSelect = (tripId: string) => {
+        if (tripId === selectedTripId && currentStep === 2) {
+            setCurrentStep(1)
+            setSelectedTripId('')
+        } else {
+            setSelectedTripId(tripId)
+            setCurrentStep(2)
+        }
+    }
+
+    const handleBackButton = () => {
+        setCurrentStep(1)
+        setSelectedTripId('')
+    }
+
     const handleFormSubmit = () => {
         router.push('/payment')
     }
@@ -38,22 +54,30 @@ function SearchContent() {
             <div className="mb-16 mx-auto md:w-4/5">
                 <ProgressSteps currentStep={currentStep} />
             </div>
-            <SearchHeader provinceName={provinceName} />
-            <div className="mb-8">
-                {currentStep === 1 && provinceId && (
-                    <BusResults provinceId={provinceId} provinceName={provinceName} />
-                )}
-                {currentStep === 2 && provinceId && (
-                    <div className="space-y-6">
-                        <div className="rounded-3xl bg-white p-6">
-                            <BusResults provinceId={provinceId} provinceName={provinceName} />
-                        </div>
-                        <PassengerForm onSubmit={handleFormSubmit} />
-                    </div>
-                )}
-                {currentStep === 3 && provinceId && (
-                    <BusResults provinceId={provinceId} provinceName={provinceName} />
-                )}
+            
+            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out ${
+                currentStep === 1 ? 'max-h-[500px] overflow-visible' : 'max-h-0 overflow-hidden' 
+            }`}>
+                <SearchHeader provinceName={provinceName} />
+            </div>
+            
+            {provinceId && (
+                <BusResults 
+                    provinceId={provinceId} 
+                    provinceName={provinceName}
+                    selectedTripId={selectedTripId}
+                    onTripSelect={handleTripSelect}
+                    currentStep={currentStep}
+                />
+            )}
+            
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+                currentStep === 2 ? 'max-h-[1000px]' : 'max-h-0'
+            }`}>
+                <PassengerForm 
+                    onSubmit={handleFormSubmit} 
+                    onBack={handleBackButton}
+                />
             </div>
         </div>
     )
