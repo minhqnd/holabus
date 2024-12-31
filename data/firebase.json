@@ -21,7 +21,6 @@
             ],
             "price": "145.000",
             "available": true
-            
         },
         "NINHBINH": {
             "name": "Ninh Bình",
@@ -32,7 +31,7 @@
                 "BX Kim Sơn"
             ],
             "price": "160.000",
-            "available": true
+            "available": false
         },
         "HAIDUONG": {
             "name": "Hải Dương",
@@ -55,7 +54,7 @@
                 "Cây xăng Hải An (TT Phố Mới)"
             ],
             "price": "135.000",
-            "available": true
+            "available": false
         },
         "BACGIANG": {
             "name": "Bắc Giang",
@@ -117,7 +116,7 @@
                 "BX Bãi Cháy"
             ],
             "price": "150.000",
-            "available": false
+            "available": true
         },
         "THAIBINH": {
             "name": "Thái Bình",
@@ -141,37 +140,30 @@
         }
     },
     "trips": {
-        "HNQN01": {
-            "routeId": "QUANGNINH",
-            "name": "FPT - Quảng Ninh",
-            "time": "7:35",
-            "date": "13/01/2025",
-            "price": "189.000",
-            "ticketsLeft": 10
+        "QUANGNINH": {
+            "HNQN01": {
+                "name": "FPT - Quảng Ninh",
+                "time": "7:35",
+                "date": "13/01/2025",
+                "price": "189.000",
+                "ticketsLeft": 10
+            },
+            "HNQN02": {
+                "name": "FPT - Quảng Ninh",
+                "time": "13:05",
+                "date": "13/01/2025",
+                "price": "189.000",
+                "ticketsLeft": 10
+            }
         },
-        "HNQN02": {
-            "routeId": "QUANGNINH",
-            "name": "FPT - Quảng Ninh",
-            "time": "13:05",
-            "date": "13/01/2025",
-            "price": "189.000",
-            "ticketsLeft": 10
-        },
-        "HNHL01": {
-            "routeId": "HALONG",
-            "name": "FPT - Hạ Long",
-            "time": "8:00",
-            "date": "13/01/2025",
-            "price": "165.000",
-            "ticketsLeft": 15
-        },
-        "HNHD01": {
-            "routeId": "HAIDUONG",
-            "name": "FPT - Hải Dương",
-            "time": "8:30",
-            "date": "13/01/2025",
-            "price": "145.000",
-            "ticketsLeft": 20
+        "HAIDUONG": {
+            "HNHD01": {
+                "name": "FPT - Hải Dương",
+                "time": "8:30",
+                "date": "13/01/2025",
+                "price": "145.000",
+                "ticketsLeft": 20
+            }
         }
     },
     "users": {
