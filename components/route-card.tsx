@@ -9,11 +9,11 @@ interface RouteCardProps {
   title: string
   locations: string[]
   price: string
-  // ticketsLeft?: number
+  available: boolean
   id: string
 }
 
-export function RouteCard({ title, locations, price, id }: RouteCardProps) {
+export function RouteCard({ title, locations, price, id, available }: RouteCardProps) {
   const router = useRouter()
   const [showAllStops, setShowAllStops] = useState(false)
 
@@ -70,9 +70,10 @@ export function RouteCard({ title, locations, price, id }: RouteCardProps) {
           <div className="text-xl font-bold text-red-700 md:text-2xl">{price} VND</div>
           <Button 
             className="rounded-full bg-red-600 px-6 py-2 text-base font-medium text-white hover:bg-red-700"
-            onClick={() => router.push(`/search?tinh=${id}`)}
-          >
-            Đặt ngay
+            onClick={() => available && router.push(`/search?tinh=${id}`)}
+            disabled={!available}
+          > 
+            {available ? 'Đặt ngay' : 'Hết vé'}
           </Button>
         </div>
       </Card>

@@ -32,9 +32,11 @@ export default function Home() {
           id,
           title: route.name,
           locations: route.locations,
-          price: route.price
-        }))
+          price: route.price,
+          available: route.available
+        })).sort((a, b) => b.available - a.available)
 
+        console.log('Transformed data:', transformedData)
         setProvinces(transformedData)
         setLoading(false)
       } catch (error) {
@@ -117,6 +119,7 @@ export default function Home() {
                       locations={province.locations}
                       price={province.price}
                       id={province.id}
+                      available={province.available}
                     />
                   </div>
                 </div>
