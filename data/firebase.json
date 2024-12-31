@@ -8,7 +8,8 @@
                 "BigC Thăng Long",
                 "Mỹ Đình"
             ],
-            "price": "135.000"
+            "price": "135.000",
+            "available": true
         },
         "HAIPHONG": {
             "name": "Hải Phòng",
@@ -18,7 +19,9 @@
                 "Bến xe Thượng Lý",
                 "Bến xe Lạc Long"
             ],
-            "price": "145.000"
+            "price": "145.000",
+            "available": true
+            
         },
         "NINHBINH": {
             "name": "Ninh Bình",
@@ -28,7 +31,8 @@
                 "TP. Ninh Bình",
                 "BX Kim Sơn"
             ],
-            "price": "160.000"
+            "price": "160.000",
+            "available": true
         },
         "HAIDUONG": {
             "name": "Hải Dương",
@@ -39,7 +43,8 @@
                 "Hải Tân",
                 "Tứ Kỳ"
             ],
-            "price": "140.000"
+            "price": "140.000",
+            "available": true
         },
         "BACNINH": {
             "name": "Bắc Ninh",
@@ -49,7 +54,8 @@
                 "Cầu Đại Phúc (QL1A)",
                 "Cây xăng Hải An (TT Phố Mới)"
             ],
-            "price": "135.000"
+            "price": "135.000",
+            "available": true
         },
         "BACGIANG": {
             "name": "Bắc Giang",
@@ -60,7 +66,8 @@
                 "KCN Đình Trám (BG)",
                 "BigC Bắc Giang"
             ],
-            "price": "145.000"
+            "price": "145.000",
+            "available": true
         },
         "HUNGYEN": {
             "name": "Hưng Yên",
@@ -71,7 +78,8 @@
                 "Ân Thi",
                 "Chợ Gạo"
             ],
-            "price": "135.000"
+            "price": "135.000",
+            "available": true
         },
         "NAMDINH": {
             "name": "Nam Định",
@@ -83,7 +91,8 @@
                 "Cổ Lễ",
                 "Hải Hậu"
             ],
-            "price": "145.000"
+            "price": "145.000",
+            "available": true
         },
         "THANHHOA": {
             "name": "Thanh Hóa",
@@ -93,7 +102,8 @@
                 "BigC Thanh Hóa",
                 "BX Thanh Hóa (phía Bắc mới)"
             ],
-            "price": "160.000"
+            "price": "160.000",
+            "available": true
         },
         "QUANGNINH": {
             "name": "Quảng Ninh",
@@ -106,7 +116,8 @@
                 "Tuần Châu",
                 "BX Bãi Cháy"
             ],
-            "price": "150.000"
+            "price": "150.000",
+            "available": false
         },
         "THAIBINH": {
             "name": "Thái Bình",
@@ -115,7 +126,8 @@
                 "TP. Phủ Lý (Hà Nam)",
                 "BX TP. Thái Bình"
             ],
-            "price": "140.000"
+            "price": "140.000",
+            "available": true
         },
         "HANAM": {
             "name": "Hà Nam",
@@ -124,7 +136,8 @@
                 "QL1A",
                 "Bến xe Phủ Lý Hà Nam"
             ],
-            "price": "130.000"
+            "price": "130.000",
+            "available": true
         }
     },
     "trips": {

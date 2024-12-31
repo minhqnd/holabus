@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/navbar'
 import { HeroSearch } from '@/components/hero-search'
 import { RouteCard } from '@/components/route-card'
@@ -9,96 +9,42 @@ import { ChevronDown } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import Image from 'next/image'
 
-const provinces = [
-  {
-    id: "HANOI",
-    title: "Hà Nội",
-    locations: ["Đại học FPT", "TBDS", "BigC Thăng Long", "Mỹ Đình"],
-    price: "135.000",
-    ticketsLeft: 29
-  },
-  {
-    id: "HAIPHONG",
-    title: "Hải Phòng", 
-    locations: ["Đại học FPT", "QL5", "Bến xe Thượng Lý", "Bến xe Lạc Long"],
-    price: "145.000",
-    ticketsLeft: 24
-  },
-  {
-    id: "NINHBINH",
-    title: "Ninh Bình",
-    locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "TP. Ninh Bình", "BX Kim Sơn"],
-    price: "160.000",
-    ticketsLeft: 25
-  },
-  {
-    id: "HAIDUONG",
-    title: "Hải Dương",
-    locations: ["Đại học FPT", "QL5", "Gia Lộc", "Hải Tân", "Tứ Kỳ"],
-    price: "140.000",
-    ticketsLeft: 28
-  },
-  {
-    id: "BACNINH",
-    title: "Bắc Ninh",
-    locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "Cây xăng Hải An (TT Phố Mới)"],
-    price: "135.000",
-    ticketsLeft: 30
-  },
-  {
-    id: "BACGIANG",
-    title: "Bắc Giang",
-    locations: ["Đại học FPT", "KCN VISIP Bắc Ninh", "Cầu Đại Phúc (QL1A)", "KCN Đình Trám (BG)", "BigC Bắc Giang"],
-    price: "145.000",
-    ticketsLeft: 26
-  },
-  {
-    id: "HUNGYEN",
-    title: "Hưng Yên",
-    locations: ["Đại học FPT", "QL5", "Cầu vượt Tân Tiến (Văn Giang)", "Ân Thi", "Chợ Gạo"],
-    price: "135.000",
-    ticketsLeft: 32
-  },
-  {
-    id: "NAMDINH",
-    title: "Nam Định",
-    locations: ["Đại học FPT", "BigC Nam Định", "Nam Trực", "Trực Ninh", "Cổ Lễ", "Hải Hậu"],
-    price: "145.000",
-    ticketsLeft: 29
-  },
-  {
-    id: "THANHHOA",
-    title: "Thanh Hóa",
-    locations: ["Đại học FPT", "TP. Ninh Bình", "BigC Thanh Hóa", "BX Thanh Hóa (phía Bắc mới)"],
-    price: "160.000",
-    ticketsLeft: 22
-  },
-  {
-    id: "QUANGNINH",
-    title: "Quảng Ninh",
-    locations: ["Đại học FPT", "Cầu Đại Phúc (QL18)", "Sao Đỏ (Hải Dương)", "Ngã 6 Đông Triều", "Uông Bí", "Tuần Châu", "BX Bãi Cháy"],
-    price: "150.000",
-    ticketsLeft: 21
-  },
-  {
-    id: "THAIBINH",
-    title: "Thái Bình",
-    locations: ["Đại học FPT", "TP. Phủ Lý (Hà Nam)", "BX TP. Thái Bình"],
-    price: "140.000",
-    ticketsLeft: 27
-  },
-  {
-    id: "HANAM",
-    title: "Hà Nam",
-    locations: ["Đại học FPT", "QL1A", "Bến xe Phủ Lý Hà Nam"],
-    price: "130.000",
-    ticketsLeft: 33
-  }
-]
+interface Province {
+  id: string
+  name: string 
+  locations: string[]
+  price: string
+}
 
 export default function Home() {
   const [showAll, setShowAll] = useState(false)
-  // const displayedProvinces = showAll ? provinces : provinces.slice(0, 8)
+  const [provinces, setProvinces] = useState<Province[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await fetch('https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app/routes.json')
+        const data = await response.json()
+        
+        // Transform data từ object sang array với id
+        const transformedData = Object.entries(data).map(([id, route]: [string, any]) => ({
+          id,
+          title: route.name,
+          locations: route.locations,
+          price: route.price
+        }))
+
+        setProvinces(transformedData)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching provinces:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchProvinces()
+  }, [])
 
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
@@ -130,55 +76,70 @@ export default function Home() {
       </div>
 
       <div className="w-full relative z-0">
-        <Image src="/img/maidao.png"
+        <Image 
+          src="/img/maidao.png"
           width={0}
           height={0}
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
-          alt="maidao" />
+          alt="maidao" 
+        />
         <div className="container pb-12 mx-auto px-4 w-full xl:-mt-[256px]">
           <div className="mb-8 text-center">
-            <Image src="/img/lotrinhholabus.png" width={0}
+            <Image 
+              src="/img/lotrinhholabus.png" 
+              width={0}
               height={0}
               sizes="100vw"
               style={{ height: 'auto' }}
-              alt="Lộ Trình HolaBus" className="h-auto mx-auto w-full md:w-4/5" />
+              alt="Lộ Trình HolaBus" 
+              className="h-auto mx-auto w-full md:w-4/5" 
+            />
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {provinces.map((province, index) => (
-              <div 
-                key={index} 
-                className={`
-                  grid transition-all duration-300 ease-in-out
-                  ${index >= 8 && !showAll ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}
-                `}
-              >
-                <div className="overflow-hidden">
-                  <RouteCard
-                    title={province.title}
-                    locations={province.locations}
-                    price={province.price}
-                    id={province.id}
-                  />
+
+          {loading ? (
+            <div className="text-center py-8">
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {provinces.map((province, index) => (
+                <div 
+                  key={province.id} 
+                  className={`
+                    grid transition-all duration-300 ease-in-out
+                    ${index >= 8 && !showAll ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}
+                  `}
+                >
+                  <div className="overflow-hidden">
+                    <RouteCard
+                      title={province.title}
+                      locations={province.locations}
+                      price={province.price}
+                      id={province.id}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className={` text-center ${!showAll ? '-mt-20 sm:-mt-0' : 'mt-8'}`}>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShowAll(!showAll)}
-              className="group border-2 rounded-full border-red-600 text-red-600 hover:bg-red-50"
-            >
-              {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
-              <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />
-            </Button>
-          </div>
+              ))}
+            </div>
+          )}
+
+          {!loading && provinces.length > 8 && (
+            <div className={`text-center ${!showAll ? '-mt-20 sm:-mt-0' : 'mt-8'}`}>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setShowAll(!showAll)}
+                className="group border-2 rounded-full border-red-600 text-red-600 hover:bg-red-50"
+              >
+                {showAll ? 'Thu gọn' : 'Xem tất cả các tuyến'}
+                <ChevronDown className={`ml-2 h-5 w-5 transition-transform ${showAll ? 'rotate-180' : ''}`} />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       <Footer />
     </main>
   )
 }
-
