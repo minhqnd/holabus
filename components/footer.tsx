@@ -51,7 +51,7 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-semibold">Hỗ trợ</h3>
             <ul className="space-y-2">
               <li><Link href="/help">Trung tâm trợ giúp</Link></li>
-              <li><Link href="/contact">Liên hệ</Link></li>
+              <li><Link href="https://www.facebook.com/HolaBusFPTU.CSKH/">Liên hệ</Link></li>
               <li><Link href="/faq">Câu hỏi thường gặp</Link></li>
             </ul>
           </div>
