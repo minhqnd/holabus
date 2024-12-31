@@ -146,14 +146,16 @@
                 "time": "7:35",
                 "date": "13/01/2025",
                 "price": "189.000",
-                "ticketsLeft": 10
+                "ticketsLeft": 10,
+                "slot": 29
             },
             "HNQN02": {
                 "name": "FPT - Quảng Ninh",
                 "time": "13:05",
                 "date": "13/01/2025",
                 "price": "189.000",
-                "ticketsLeft": 10
+                "ticketsLeft": 10,
+                "slot": 29
             }
         },
         "HAIDUONG": {
@@ -162,7 +164,8 @@
                 "time": "8:30",
                 "date": "13/01/2025",
                 "price": "145.000",
-                "ticketsLeft": 20
+                "ticketsLeft": 20,
+                "slot": 29
             }
         }
     },

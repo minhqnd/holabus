@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { BusCard } from '@/components/bus-card'
-import busRoutes from '@/data/bus-routes.json'
+import { getTripsByProvince } from '@/lib/api/trips'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getRouteByProvince } from '@/lib/api/routes'
 // import { getProvinceNameById } from '@/lib/utils/province'
 
 interface BusResultsProps {
@@ -38,7 +39,6 @@ interface BusRoutes {
 }
 
 // Thêm kiểu cho busRoutes
-const typedBusRoutes = busRoutes as BusRoutes;
 
 export function BusResults({ provinceId, provinceName, selectedTripId, onTripSelect, currentStep }: BusResultsProps) {
     const [trips, setTrips] = useState<Trip[]>([])
@@ -48,14 +48,15 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
         const fetchData = async () => {
             setLoading(true)
             // Giả lập delay API
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            await new Promise(resolve => setTimeout(resolve, 50))
             
-            const routeData = typedBusRoutes.routes[provinceId]
-            if (routeData) {
-                setTrips(routeData.trips)
-            } else {
-                setTrips([])
-            }
+            const fetchedTrips = await getTripsByProvince(provinceId)
+            const routeData = await getRouteByProvince(provinceId)
+            const finalTrips = fetchedTrips.map((trip: any) => ({
+                ...trip,
+                location: routeData?.locations || []
+            }))
+            setTrips(finalTrips.filter((t: any) => Number(t.slot) > 0))
             setLoading(false)
         }
 
@@ -107,7 +108,13 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                         displayedTrips.map((trip) => (
                             <BusCard 
                                 key={trip.id} 
-                                {...trip} 
+                                id={trip.id}
+                                name={trip.name}
+                                time={trip.time}
+                                date={trip.date}
+                                price={trip.price}
+                                slot={trip.slot}
+                                location={trip.location}
                                 isSelected={trip.id === selectedTripId}
                                 onSelect={() => onTripSelect(trip.id)}
                             />
