@@ -140,33 +140,30 @@
         }
     },
     "trips": {
-        "QUANGNINH": {
-            "HNQN01": {
-                "name": "FPT - Quảng Ninh",
-                "time": "7:35",
-                "date": "13/01/2025",
-                "price": "189.000",
-                "ticketsLeft": 10,
-                "slot": 29
-            },
-            "HNQN02": {
-                "name": "FPT - Quảng Ninh",
-                "time": "13:05",
-                "date": "13/01/2025",
-                "price": "189.000",
-                "ticketsLeft": 10,
-                "slot": 29
-            }
+        "HNQN01": {
+            "routeId": "QUANGNINH",
+            "name": "FPT - Quảng Ninh",
+            "time": "7:35",
+            "date": "13/01/2025",
+            "price": "189.000",
+            "slots": 29
         },
-        "HAIDUONG": {
-            "HNHD01": {
-                "name": "FPT - Hải Dương",
-                "time": "8:30",
-                "date": "13/01/2025",
-                "price": "145.000",
-                "ticketsLeft": 20,
-                "slot": 29
-            }
+        "HNQN02": {
+            "routeId": "QUANGNINH",
+            "name": "FPT - Quảng Ninh",
+            "time": "13:05",
+            "date": "13/01/2025",
+            "price": "189.000",
+            "slots": 29
+
+        },
+        "HNHD01": {
+            "routeId": "HAIDUONG",
+            "name": "FPT - Hải Dương",
+            "time": "8:30",
+            "date": "13/01/2025",
+            "price": "145.000",
+            "slots": 29
         }
     },
     "users": {

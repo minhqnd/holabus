@@ -11,6 +11,8 @@ import { SearchHeader } from '@/components/search-header'
 import { PassengerForm } from '@/components/passenger-form'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PROVINCES } from '@/lib/constants/provinces'
+import { saveUserData } from '@/utils/user'
+import { saveBookingData } from '@/utils/booking'
 
 function SearchContent() {
     const router = useRouter()
@@ -44,9 +46,26 @@ function SearchContent() {
         setSelectedTripId('')
     }
 
-    const handleFormSubmit = () => {
-        router.push('/payment')
-    }
+    const handleFormSubmit = async (bookingId: string, userData: any) => {
+        try {
+            console.log('Starting form submission process');
+            
+            // Save user data and get userId
+            const userId = await saveUserData(userData);
+            console.log('User saved with ID:', userId);
+            
+            // Save booking data
+            await saveBookingData(bookingId, selectedTripId, userId);
+            console.log('Booking saved with ID:', bookingId);
+            
+            // Navigate to payment page with booking ID
+            router.push(`/payment?booking=${bookingId}`);
+        } catch (error) {
+            console.error('Error in form submission:', error);
+            // Add user feedback here
+            alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.');
+        }
+    };
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen">

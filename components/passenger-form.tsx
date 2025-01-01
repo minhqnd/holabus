@@ -10,12 +10,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import Image from 'next/image'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
-import { app } from '@/firebase'
+import { generateUniqueBookingId } from '@/utils/booking'
 
 interface PassengerFormProps {
-  onSubmit: () => void
+  onSubmit: (bookingId: string, userData: any) => void
   onBack: () => void
 }
 
@@ -33,19 +31,6 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     mail: '',
     phone: '',
   })
-
-  const [user, setUser] = useState<any>(null)
-  const [shake, setShake] = useState(false)
-
-  // Khôi phục thông tin người dùng từ localStorage khi render lại
-  useEffect(() => {
-    const savedUser = localStorage.getItem('user')
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser)
-      setUser(parsedUser)
-      setFormData((prev) => ({ ...prev, mail: parsedUser.email || '' }))
-    }
-  }, [])
 
   const validateForm = () => {
     let isValid = true
@@ -83,58 +68,15 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     return isValid
   }
 
-  const handleGoogleSignIn = async (auth: any, provider: any) => {
-    try {
-      const result = await signInWithPopup(auth, provider)
-      const loggedInUser = result.user
-      setUser(loggedInUser)
-      setFormData((prev) => ({ ...prev, mail: loggedInUser.email || '' }))
-
-      // Lưu thông tin người dùng vào localStorage
-      localStorage.setItem('user', JSON.stringify(loggedInUser))
-    } catch (error) {
-      console.error('Error during Google Sign-In:', error)
-    }
-  }
-
-  const handleGoogleSignInClick = () => {
-    if (!formData.name.trim()) {
-      setErrors((prev) => ({ ...prev, name: 'Vui lòng nhập họ và tên' }))
-      setShake(true)
-      setTimeout(() => setShake(false), 500)
-      return
-    }
-    if (!formData.phone.trim()) {
-      setErrors((prev) => ({ ...prev, phone: 'Vui lòng nhập số điện thoại' }))
-      setShake(true)
-      setTimeout(() => setShake(false), 500)
-      return
-    }
-    const auth = getAuth(app)
-    const provider = new GoogleAuthProvider()
-    handleGoogleSignIn(auth, provider)
-  }
-
-  const handleSignOut = async (e: React.MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
-    try {
-      const auth = getAuth(app)
-      await signOut(auth)
-      setUser(null)
-      setFormData((prev) => ({ ...prev, mail: '' }))
-
-      // Xóa thông tin người dùng khỏi localStorage
-      localStorage.removeItem('user')
-    } catch (error) {
-      console.error('Error during Sign-Out:', error)
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      onSubmit()
+      try {
+        const bookingId = await generateUniqueBookingId()
+        onSubmit(bookingId, formData)
+      } catch (error) {
+        console.error('Error generating booking ID:', error)
+      }
     }
   }
 
@@ -194,41 +136,16 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           </div>
           <div>
             <Label>Email</Label>
-            {!user ? (
-              <div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className={`w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center ${shake ? 'animate-shake' : ''}`}
-                  onClick={handleGoogleSignInClick}
-                >
-                  <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
-                  Xác thực bằng Gmail
-                </Button>
-                {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
-              </div>
-
-
-            ) : (
-              <div className="flex gap-2 items-center">
-                <Input
-                  type="text"
-                  placeholder="Email đã xác thực"
-                  className="mt-1"
-                  height='3rem'
-                  borderRadius='9999px'
-                  value={user.email}
-                  readOnly
-                />
-                <Button
-                  variant="outline"
-                  className="rounded-full text-red-600 border-red-600 hover:bg-red-50 h-12"
-                  onClick={(e) => handleSignOut(e)}
-                >
-                  Đăng xuất
-                </Button>
-              </div>
-            )}
+            <Input
+              type="email"
+              placeholder="Nhập email"
+              className="mt-1"
+              height='3rem'
+              borderRadius='9999px'
+              value={formData.mail}
+              onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
+            />
+            {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
           </div>
         </div>
         <div className="flex justify-between pt-6">

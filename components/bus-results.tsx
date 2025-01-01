@@ -51,11 +51,14 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
             await new Promise(resolve => setTimeout(resolve, 50))
             
             const fetchedTrips = await getTripsByProvince(provinceId)
+            console.log('Fetched trips:', fetchedTrips)
             const routeData = await getRouteByProvince(provinceId)
+            console.log('Route data:', routeData)
             const finalTrips = fetchedTrips.map((trip: any) => ({
                 ...trip,
                 location: routeData?.locations || []
             }))
+            console.log('Final trips:', finalTrips)
             setTrips(finalTrips.filter((t: any) => Number(t.slot) > 0))
             setLoading(false)
         }
