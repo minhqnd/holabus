@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { subscribeToCollection, updateDocument, setDocument } from '@/lib/firebase'
+import { subscribeToCollection, updateDocument, setDocument, deleteDocument } from '@/lib/firebase'
 
 interface Route {
   name: string;
@@ -30,6 +30,7 @@ export function RoutesList() {
   const [editingRoute, setEditingRoute] = useState<string | null>(null)
   const [editedRoute, setEditedRoute] = useState<any | null>(null)
   const [isAddingRoute, setIsAddingRoute] = useState(false)
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
 
   useEffect(() => {
     const unsubscribe = subscribeToCollection('routes', (data) => {
@@ -69,6 +70,15 @@ export function RoutesList() {
     }
   }
 
+  const handleDeleteUser = async (id: string) => {
+    try {
+      await deleteDocument(`users/${id}`)
+      setDeletingUserId(null)
+    } catch (error) {
+      console.error('Lỗi khi xóa người dùng:', error)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -92,9 +102,19 @@ export function RoutesList() {
                 <p className="text-sm text-muted-foreground">Mã tuyến: {id}</p>
                 <p className="font-semibold">{route.price} VND</p>
               </div>
-              <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                <Pencil className="h-4 w-4" />
-              </Button>
+              <div className="space-x-2">
+                <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setDeletingUserId(id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             <div className="mt-4">
               <Button
@@ -213,6 +233,28 @@ export function RoutesList() {
               <Button type="submit">Thêm tuyến xe</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!deletingUserId} onOpenChange={() => setDeletingUserId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Xác nhận xóa tuyến xe</DialogTitle>
+            <DialogDescription>
+              Bạn có chắc chắn muốn xóa tuyến xe này? Hành động này không thể hoàn tác.
+              Lưu ý: Việc xóa tuyến xe sẽ ảnh hưởng đến các vé đã đặt của họ.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingUserId(null)}>
+              Hủy
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => deletingUserId && handleDeleteUser(deletingUserId)}
+            >
+              Xóa
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
