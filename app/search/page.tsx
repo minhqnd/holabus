@@ -55,7 +55,7 @@ function SearchContent() {
             console.log('User saved with ID:', userId);
             
             // Save booking data
-            await saveBookingData(bookingId, selectedTripId, userId);
+            await saveBookingData(bookingId, selectedTripId, userId, false);
             console.log('Booking saved with ID:', bookingId);
             
             // Navigate to payment page with booking ID
