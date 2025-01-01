@@ -79,7 +79,12 @@ export function TripsList() {
   const handleSaveEdit = async () => {
     if (editingTrip && editedTrip) {
       try {
-        await updateDocument(`trips/${editingTrip}`, editedTrip)
+        if (editingTrip !== editedTrip.id) {
+          await setDocument(`trips/${editedTrip.id}`, editedTrip)
+          await deleteDocument(`trips/${editingTrip}`)
+        } else {
+          await updateDocument(`trips/${editingTrip}`, editedTrip)
+        }
         setEditingTrip(null)
         setEditedTrip(null)
       } catch (error) {
@@ -177,10 +182,33 @@ export function TripsList() {
       {editingTrip && editedTrip && (
         <EditModal
           isOpen={true}
-          onClose={() => setEditingTrip(null)}
+          onClose={() => {
+            setEditingTrip(null)
+            setEditedTrip(null)
+          }}
           title="Chỉnh sửa chuyến xe"
         >
           <form onSubmit={(e) => { e.preventDefault(); handleSaveEdit(); }} className="space-y-4">
+            <div>
+              <label htmlFor="tripId" className="block text-sm font-medium text-gray-700">
+                Mã chuyến xe (tối đa 6 ký tự)
+              </label>
+              <Input 
+                id="tripId" 
+                value={editedTrip.id}
+                maxLength={6}
+                pattern="^[A-Za-z0-9]{1,6}$"
+                className="mt-1 uppercase"
+                placeholder="VD: TR001"
+                onChange={(e) => {
+                  const newId = e.target.value.toUpperCase().slice(0, 6);
+                  setEditedTrip({ ...editedTrip, id: newId })
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Chỉ cho phép chữ và số, tự động chuyển thành chữ in hoa
+              </p>
+            </div>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên chuyến</label>
               <Input
