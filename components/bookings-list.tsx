@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Filter, Search, Plus, Check, Trash2, ChevronRight, ChevronDown } from 'lucide-react'
+import { Pencil, Mail, Filter, Search, Plus, Check, Trash2, ChevronRight, ChevronDown, X } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
@@ -166,10 +166,39 @@ export function BookingsList() {
 
   const handleConfirmPayment = async (id: string) => {
     try {
+      const booking = bookings[id]
+      const trip = trips[booking.tripId]
+      
+      // Cập nhật trạng thái thanh toán của booking
       await updateDocument(`bookings/${id}`, { paid: true })
+      
+      // Cập nhật số slot của trip
+      if (trip) {
+        const newSlot = trip.slot - 1
+        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
+      }
+      
       setConfirmPaymentId(null)
     } catch (error) {
       console.error('Lỗi khi xác nhận thanh toán:', error)
+    }
+  }
+
+  const handleCancelPayment = async (id: string) => {
+    try {
+      const booking = bookings[id]
+      const trip = trips[booking.tripId]
+      
+      // Cập nhật trạng thái thanh toán của booking
+      await updateDocument(`bookings/${id}`, { paid: false })
+      
+      // Cập nhật số slot của trip
+      if (trip) {
+        const newSlot = trip.slot + 1
+        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
+      }
+    } catch (error) {
+      console.error('Lỗi khi hủy thanh toán:', error)
     }
   }
 
@@ -250,9 +279,14 @@ export function BookingsList() {
                 const trip = trips[tripId]
                 return (
                   <div key={tripId}>
-                    <h3 className="mb-4 text-lg font-medium break-words">
-                      ({trip?.name || `Trip ${tripId}`})
-                    </h3>
+                    <div className="flex items-center mb-4">
+                      <h3 className="text-lg font-medium break-words mr-2">
+                        ({trip?.name || `Trip ${tripId}`}) 
+                      </h3>
+                      <Badge variant={trip?.slot > 0 ? "default" : "destructive"} className="text-base">
+                        {trip?.slot > 0 ? `Còn ${trip?.slot} vé` : "Hết vé"}
+                      </Badge>
+                    </div>
                     <div className="space-y-4">
                       {bookings.map(([id, booking]: [string, Booking], index: number) => (
                         <Card key={id}>
@@ -303,7 +337,16 @@ export function BookingsList() {
                                 {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
                               </Button>
                               <div className="space-x-2">
-                                {!booking.paid && (
+                                {booking.paid ? (
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => handleCancelPayment(id)}
+                                  >
+                                    <X className="mr-2 h-4 w-4" />
+                                    Hủy thanh toán
+                                  </Button>
+                                ) : (
                                   <Button
                                     variant="default"
                                     size="sm"
