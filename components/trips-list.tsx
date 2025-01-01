@@ -38,9 +38,13 @@ interface Trip {
   slot: number;
 }
 
+interface EditableTrip extends Trip {
+  id: string
+}
+
 export function TripsList() {
-  const [trips, setTrips] = useState<any>({})
-  const [routes, setRoutes] = useState<any>({})
+  const [trips, setTrips] = useState<Record<string, Trip>>({})
+  const [routes, setRoutes] = useState<Record<string, Route>>({})
   const [expandedTrip, setExpandedTrip] = useState<string | null>(null)
   const [editingTrip, setEditingTrip] = useState<string | null>(null)
   const [editedTrip, setEditedTrip] = useState<typeof trips[keyof typeof trips] | null>(null)
@@ -48,12 +52,12 @@ export function TripsList() {
   const [deletingTripId, setDeletingTripId] = useState<string | null>(null)
 
   useEffect(() => {
-    const unsubscribeTrips = subscribeToCollection('trips', (data) => {
-      setTrips(data || {})
+    const unsubscribeTrips = subscribeToCollection<Record<string, Trip>>('trips', (data) => {
+      setTrips(data || {} as Record<string, Trip>)
     })
     
-    const unsubscribeRoutes = subscribeToCollection('routes', (data) => {
-      setRoutes(data || {})
+    const unsubscribeRoutes = subscribeToCollection<Record<string, Route>>('routes', (data) => {
+      setRoutes(data || {} as Record<string, Route>)
     })
 
     return () => {
@@ -62,25 +66,25 @@ export function TripsList() {
     }
   }, [])
 
-  const groupedTrips = Object.entries(trips as Record<string, Trip>).reduce((acc, [id, trip]) => {
+  const groupedTrips = Object.entries(trips).reduce((acc, [id, trip]) => {
     if (!acc[trip.routeId]) {
       acc[trip.routeId] = []
     }
-    acc[trip.routeId].push({ id, ...trip })
+    acc[trip.routeId].push({ ...trip, id })
     return acc
-  }, {} as Record<string, Array<{ id: string } & typeof trips[keyof typeof trips]>>)
+  }, {} as Record<string, EditableTrip[]>)
 
   const handleEditClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     setEditingTrip(id)
-    setEditedTrip(trips[id as keyof typeof trips])
+    setEditedTrip({ ...trips[id], id } as EditableTrip)
   }
 
   const handleSaveEdit = async () => {
     if (editingTrip && editedTrip) {
       try {
-        if (editingTrip !== editedTrip.id) {
-          await setDocument(`trips/${editedTrip.id}`, editedTrip)
+        if (editingTrip !== (editedTrip as EditableTrip).id) {
+          await setDocument(`trips/${(editedTrip as EditableTrip).id}`, editedTrip)
           await deleteDocument(`trips/${editingTrip}`)
         } else {
           await updateDocument(`trips/${editingTrip}`, editedTrip)
@@ -93,7 +97,7 @@ export function TripsList() {
     }
   }
 
-  const handleAddTrip = async (newTrip: any) => {
+  const handleAddTrip = async (newTrip: Trip & { id: string }) => {
     try {
       await setDocument(`trips/${newTrip.id}`, newTrip)
       setIsAddingTrip(false)
@@ -126,7 +130,7 @@ export function TripsList() {
             {routes[routeId]?.name || routeId}
           </h2>
           <div className="space-y-4">
-            {routeTrips.map((trip) => (
+            {routeTrips.map((trip: EditableTrip) => (
               <Card key={trip.id} className="cursor-pointer hover:shadow-md transition-shadow duration-200">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">{trip.name}</CardTitle>
@@ -195,14 +199,14 @@ export function TripsList() {
               </label>
               <Input 
                 id="tripId" 
-                value={editedTrip.id}
+                value={(editedTrip as EditableTrip).id}
                 maxLength={6}
                 pattern="^[A-Za-z0-9]{1,6}$"
                 className="mt-1 uppercase"
                 placeholder="VD: TR001"
                 onChange={(e) => {
                   const newId = e.target.value.toUpperCase().slice(0, 6);
-                  setEditedTrip({ ...editedTrip, id: newId })
+                  setEditedTrip({ ...editedTrip, id: newId } as EditableTrip)
                 }}
               />
               <p className="text-xs text-gray-500 mt-1">

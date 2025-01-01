@@ -28,7 +28,7 @@ export function RoutesList() {
   const [routes, setRoutes] = useState<Record<string, Route>>({})
   const [expandedRoute, setExpandedRoute] = useState<string | null>(null)
   const [editingRoute, setEditingRoute] = useState<string | null>(null)
-  const [editedRoute, setEditedRoute] = useState<any | null>(null)
+  const [editedRoute, setEditedRoute] = useState<Route | null>(null)
   const [isAddingRoute, setIsAddingRoute] = useState(false)
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
 
@@ -57,7 +57,7 @@ export function RoutesList() {
     }
   }
 
-  const handleAddRoute = async (newRoute: any) => {
+  const handleAddRoute = async (newRoute: Omit<Route, 'available'>) => {
     try {
       const routeId = newRoute.name.toUpperCase().replace(/\s+/g, '')
       await setDocument(`routes/${routeId}`, {

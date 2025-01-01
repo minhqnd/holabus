@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
@@ -12,7 +12,7 @@ import { getTripsById } from '@/lib/api/trips'
 
 const currentPage = 'Thanh toán'
 
-export default function PaymentPage() {
+const PaymentContent = () => {
   const searchParams = useSearchParams()
   const bookingId = searchParams.get('booking')
   const [amount, setAmount] = useState<number | null>(null)
@@ -56,29 +56,37 @@ export default function PaymentPage() {
   }, [bookingId])
 
   return (
+    <>
+      {loading ? (
+        <div className="text-center">Đang tải...</div>
+      ) : amount !== null && tripId !== null ? (
+        <PaymentDetails
+          amount={amount}
+          referenceId={`HOLABUS-${bookingId}`}
+          accountName="NGUYEN DUC QUANG MINH"
+          accountNumber="MINHQND"
+        />
+      ) : (
+        <div className="text-center text-red-500">
+          Không tìm thấy thông tin thanh toán. Vui lòng kiểm tra lại.
+        </div>
+      )}
+    </>
+  )
+}
+
+export default function PaymentPage() {
+  return (
     <main className="min-h-screen h-full bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">
       <Navbar />
-      <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen ">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen">
         <Breadcrumbs currentPage={currentPage} />
-
         <div className="mb-8 mx-auto md:w-4/5">
           <ProgressSteps currentStep={3} />
         </div>
-
-        {loading ? (
-          <div className="text-center">Đang tải...</div>
-        ) : amount !== null && tripId !== null ? (
-          <PaymentDetails
-            amount={amount}
-            referenceId={`HOLABUS-${bookingId}`}
-            accountName="NGUYEN DUC QUANG MINH"
-            accountNumber="MINHQND"
-          />
-        ) : (
-          <div className="text-center text-red-500">
-            Không tìm thấy thông tin thanh toán. Vui lòng kiểm tra lại.
-          </div>
-        )}
+        <Suspense fallback={<div className="text-center">Đang tải...</div>}>
+          <PaymentContent />
+        </Suspense>
       </div>
       <Footer />
     </main>

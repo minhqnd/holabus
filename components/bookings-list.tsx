@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Filter, Search, Plus, Check, Trash2, ChevronRight, ChevronDown, X } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Pencil, Mail, Check, Trash2, ChevronRight, ChevronDown, X } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -40,6 +40,15 @@ interface User {
   sex: string;
 }
 
+interface Trip {
+  name: string
+  routeId: string
+  slot: number
+  date: string
+  time: string
+  price: string
+}
+
 export function BookingsList() {
   const [activeTab, setActiveTab] = useState<'pending' | 'paid'>('pending')
   const [editingBooking, setEditingBooking] = useState<string | null>(null)
@@ -48,25 +57,25 @@ export function BookingsList() {
   const [filterRouteId, setFilterRouteId] = useState<string | null>(null)
   const [filterDate, setFilterDate] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [bookings, setBookings] = useState<any>({})
-  const [users, setUsers] = useState<any>({})
-  const [trips, setTrips] = useState<any>({})
-  const [routes, setRoutes] = useState<Record<string, Route>>({})
+  const [bookings, setBookings] = useState<Record<string, Booking>>({})
+  const [users, setUsers] = useState<Record<string, User>>({})
+  const [trips, setTrips] = useState<Record<string, Trip>>({})
+  const [routes] = useState<Record<string, Route>>({})
   const [deletingBookingId, setDeletingBookingId] = useState<string | null>(null)
   const [editedUser, setEditedUser] = useState<User | null>(null)
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    const unsubscribeBookings = subscribeToCollection('bookings', (data) => {
-      setBookings(data || {})
+    const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
+      setBookings(data || {} as Record<string, Booking>)
     })
     
-    const unsubscribeUsers = subscribeToCollection('users', (data) => {
-      setUsers(data || {})
+    const unsubscribeUsers = subscribeToCollection<Record<string, User>>('users', (data) => {
+      setUsers(data || {} as Record<string, User>)
     })
     
-    const unsubscribeTrips = subscribeToCollection('trips', (data) => {
-      setTrips(data || {})
+    const unsubscribeTrips = subscribeToCollection<Record<string, Trip>>('trips', (data) => {
+      setTrips(data || {} as Record<string, Trip>)
     })
 
     return () => {

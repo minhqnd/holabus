@@ -25,17 +25,14 @@ interface Trip {
     location: string[];
 }
 
-interface RouteData {
-    name: string;
-    trips: Trip[];
-}
 
-interface Routes {
-    [key: string]: RouteData;
-}
-
-interface BusRoutes {
-    routes: Routes;
+interface RawTrip {
+    id: string
+    name: string
+    time: string
+    date: string
+    price: string
+    slot: number
 }
 
 // Thêm kiểu cho busRoutes
@@ -62,8 +59,8 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                 const today = new Date()
                 today.setHours(0, 0, 0, 0)
                 
-                const availableTrips = fetchedTrips
-                    .map((trip: any) => ({
+                const availableTrips = (fetchedTrips as RawTrip[])
+                    .map((trip: RawTrip) => ({
                         ...trip,
                         location: routeData?.locations || []
                     }))

@@ -39,15 +39,16 @@ export default function AdminDashboard() {
       let completedCount = 0
       let todayCount = 0
 
-      Object.values(bookings).forEach((booking: any) => {
-        if (booking.paid) {
-          // totalRevenue += parseInt(booking.price || '0')
+      Object.values(bookings).forEach((booking: unknown) => {
+        const typedBooking = booking as { paid: boolean; price?: string; createdAt?: string }
+        if (typedBooking.paid) {
+          // totalRevenue += parseInt(typedBooking.price || '0')
           completedCount++
         } else {
           pendingCount++
         }
         
-        if (booking.createdAt?.startsWith(today)) {
+        if (typedBooking.createdAt?.startsWith(today)) {
           todayCount++
         }
       })
