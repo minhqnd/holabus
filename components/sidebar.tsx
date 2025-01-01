@@ -3,12 +3,14 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Bus, Calendar, FileText, LogOut, Menu } from 'lucide-react'
+import { Bus, CakeSlice, Calendar, FileText, LogOut, Menu } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Image from 'next/image'
 
 const navItems = [
+  { href: '/admin', label: 'Tổng quan', icon: CakeSlice },
   { href: '/admin/routes', label: 'Tuyến xe', icon: Bus },
   { href: '/admin/trips', label: 'Chuyến xe', icon: Calendar },
   { href: '/admin/bookings', label: 'Đặt vé', icon: FileText },
@@ -45,7 +47,8 @@ export function Sidebar() {
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex h-16 items-center justify-center border-b">
-          <h1 className="text-xl font-bold text-red-600">HolaBus Admin</h1>
+          {/* <h1 className="text-xl font-bold text-red-600">HolaBus Admin</h1> */}
+          <Image src="/red-logo.png" alt="HolaBus" className="w-auto h-[90%]" width={100} height={100} />
         </div>
         <nav className="flex-1 space-y-1 p-4">
           {navItems.map((item) => (
@@ -54,7 +57,7 @@ export function Sidebar() {
               href={item.href}
               className={cn(
                 "flex items-center rounded-lg px-4 py-2 text-sm font-medium",
-                pathname.startsWith(item.href)
+                pathname === item.href
                   ? "bg-red-100 text-red-600"
                   : "text-gray-600 hover:bg-gray-100"
               )}
