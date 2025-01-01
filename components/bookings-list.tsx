@@ -25,76 +25,12 @@ interface Booking {
   createdAt: string;
 }
 
-const bookings = {
-"4K6K4": {
-  "createdAt": "2025-01-01T17:01:05.794Z",
-  "paid": false,
-  "tripId": "HNQN01",
-  "userId": "USERDTACO"
-},
-"7M6EG": {
-  "createdAt": "2025-01-01T18:15:22.803Z",
-  "paid": false,
-  "tripId": "HNQN01",
-  "userId": "USERDVXIE"
-},
-"EPFMI": {
-  "createdAt": "2025-01-01T17:22:33.527Z",
-  "paid": true,
-  "tripId": "HNHD01",
-  "userId": "USERTVUOB"
+interface Route {
+  name: string;
+  price: string;
+  available: boolean;
+  locations: string[];
 }
-}
-
-const users = {
-"USERDTACO": {
-  "mail": "12341234234@12312312.123123123",
-  "name": "moi testst",
-  "phone": "1234123412",
-  "sex": "1"
-},
-"USERDVXIE": {
-  "mail": "123123123@123123123.123123123",
-  "name": "123123123",
-  "phone": "1231231231",
-  "sex": "1"
-},
-"USERTVUOB": {
-  "mail": "12341234@12341234123.123412341234",
-  "name": "1234123412341",
-  "phone": "2341234123",
-  "sex": "1"
-}
-}
-
-const trips = {
-"HNHD01": {
-  "date": "13/01/2025",
-  "name": "FPT - Hải Dương",
-  "price": "145.000",
-  "routeId": "HAIDUONG",
-  "slot": 29,
-  "time": "8:30"
-},
-"HNQN01": {
-  "date": "13/01/2025",
-  "name": "FPT - Quảng Ninh",
-  "price": "189.000",
-  "routeId": "QUANGNINH",
-  "slot": 29,
-  "time": "7:35"
-}
-}
-
-const routes = {
-"HAIDUONG": "Hải Dương",
-"QUANGNINH": "Quảng Ninh"
-}
-
-const routeOptions = Object.entries(routes).map(([value, label]) => ({
-  value,
-  label
-}))
 
 export function BookingsList() {
   const [activeTab, setActiveTab] = useState<'pending' | 'paid'>('pending')
@@ -107,6 +43,7 @@ export function BookingsList() {
   const [bookings, setBookings] = useState<any>({})
   const [users, setUsers] = useState<any>({})
   const [trips, setTrips] = useState<any>({})
+  const [routes, setRoutes] = useState<Record<string, Route>>({})
 
   useEffect(() => {
     const unsubscribeBookings = subscribeToCollection('bookings', (data) => {
@@ -143,9 +80,9 @@ export function BookingsList() {
       <SelectContent>
         <SelectGroup>
           <SelectItem value="all">All routes</SelectItem>
-          {routeOptions.map(({ value, label }) => (
+          {Object.entries(routes).map(([value, route]) => (
             <SelectItem key={value} value={value}>
-              {label}
+              {route.name}
             </SelectItem>
           ))}
         </SelectGroup>
@@ -170,13 +107,14 @@ export function BookingsList() {
   })
 
   const groupedBookings = filteredBookings.reduce((acc, [id, booking]) => {
-    const trip = trips[(booking as Booking).tripId]
+    const trip = trips[booking.tripId]
     if (!trip) return acc
     
-    if (!acc[trip.routeId]) {
-      acc[trip.routeId] = []
+    const key = `${trip.routeId}-${booking.tripId}`
+    if (!acc[key]) {
+      acc[key] = []
     }
-    acc[trip.routeId].push([id, booking])
+    acc[key].push([id, booking])
     return acc
   }, {} as Record<string, typeof filteredBookings>)
 
@@ -249,30 +187,44 @@ export function BookingsList() {
           </div>
         </div>
       </div>
-      {Object.entries(groupedBookings).map(([routeId, bookings]) => (
-        <div key={routeId} className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{routes[routeId as keyof typeof routes]}</h2>
-          <div className="space-y-4">
-            {bookings.map(([id, booking]) => {
-              const user = users[booking.userId as keyof typeof users]
-              const trip = trips[booking.tripId as keyof typeof trips]
-              return (
-                <Card key={id} className="hover:shadow-md transition-shadow duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Mã đặt vé: {id}</CardTitle>
-                    <Badge variant={booking.paid ? "default" : "destructive"}>
-                      {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                    </Badge>
-                  </CardHeader>
+      {Object.entries(groupedBookings).map(([key, bookings]) => {
+        const [routeId, tripId] = key.split('-')
+        const route = routes[routeId]
+        const trip = trips[tripId]
+
+        // console.log('Debug:', { routeId, tripId, route, trip, routes, trips })
+
+        return (
+          <div key={key}>
+            <h2 className="my-4 text-xl font-semibold">
+            {routeId || 'Unknown Route'}<span className="text-base font-normal"> ({trip?.name || 'Unknown Trip'})</span> 
+            </h2>
+            <div className="space-y-4">
+              {bookings.map(([id, booking], index) => (
+                <Card key={id}>
                   <CardContent>
+                    <div className="flex items-center justify-between my-4">
+                      <Badge>{index + 1}</Badge>
+                      <Badge variant={booking.paid ? "default" : "destructive"}>
+                        {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+                      </Badge>
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm font-medium">Khách hàng</p>
-                        <p className="text-sm">{user.name}</p>
+                        <p className="text-sm">{users[booking.userId].name}</p>
+                        <p className="text-sm text-gray-500">Email: {users[booking.userId].mail}</p>
+                        <p className="text-sm text-gray-500">SĐT: {users[booking.userId].phone}</p>
+                        <p className="text-sm text-gray-500">
+                          Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm font-medium">Chuyến xe</p>
-                        <p className="text-sm">{trip.name}</p>
+                        <p className="text-sm">{trip?.name}</p>
+                        <p className="text-sm text-gray-500">Mã chuyến: {booking.tripId}</p>
+                        <p className="text-sm text-gray-500">Ngày khởi hành: {trip?.date}</p>
+                        <p className="text-sm text-gray-500">Giờ khởi hành: {trip?.time}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium">Ngày tạo</p>
@@ -280,7 +232,7 @@ export function BookingsList() {
                       </div>
                       <div>
                         <p className="text-sm font-medium">Giá</p>
-                        <p className="text-sm font-semibold">{trip.price} VND</p>
+                        <p className="text-sm font-semibold">{trip?.price} VND</p>
                       </div>
                     </div>
                     <div className="mt-4 flex justify-between">
@@ -310,11 +262,11 @@ export function BookingsList() {
                     </div>
                   </CardContent>
                 </Card>
-              )
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
       {editingBooking && editedBooking && (
         <EditModal
           isOpen={true}
