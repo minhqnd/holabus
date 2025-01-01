@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Plus } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { subscribeToCollection, updateDocument, setDocument } from '@/lib/firebase'
+import { subscribeToCollection, updateDocument, setDocument, deleteDocument } from '@/lib/firebase'
 
 interface Route {
   name: string;
@@ -45,6 +45,7 @@ export function TripsList() {
   const [editingTrip, setEditingTrip] = useState<string | null>(null)
   const [editedTrip, setEditedTrip] = useState<typeof trips[keyof typeof trips] | null>(null)
   const [isAddingTrip, setIsAddingTrip] = useState(false)
+  const [deletingTripId, setDeletingTripId] = useState<string | null>(null)
 
   useEffect(() => {
     const unsubscribeTrips = subscribeToCollection('trips', (data) => {
@@ -97,6 +98,15 @@ export function TripsList() {
     }
   }
 
+  const handleDeleteTrip = async (id: string) => {
+    try {
+      await deleteDocument(`trips/${id}`)
+      setDeletingTripId(null)
+    } catch (error) {
+      console.error('Lỗi khi xóa chuyến xe:', error)
+    }
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -127,9 +137,19 @@ export function TripsList() {
                       <p className="font-semibold">{trip.price} VND</p>
                       <p className="text-sm">{trip.date} - {trip.time}</p>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(trip.id, e)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                    <div className="space-x-2">
+                      <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(trip.id, e)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setDeletingTripId(trip.id)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   <div className="mt-4">
                     <Button
@@ -262,6 +282,28 @@ export function TripsList() {
               <Button type="submit">Thêm chuyến xe</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!deletingTripId} onOpenChange={() => setDeletingTripId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Xác nhận xóa chuyến xe</DialogTitle>
+            <DialogDescription>
+              Bạn có chắc chắn muốn xóa chuyến xe này? Hành động này không thể hoàn tác.
+              Lưu ý: Việc xóa chuyến xe sẽ ảnh hưởng đến các vé đã đặt.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingTripId(null)}>
+              Hủy
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => deletingTripId && handleDeleteTrip(deletingTripId)}
+            >
+              Xóa
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
