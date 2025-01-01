@@ -16,4 +16,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
 
+// Add this to verify connection
+if (process.env.NODE_ENV === 'development') {
+    console.log('Firebase initialized with database:', database)
+}
+
 export { app, database }
