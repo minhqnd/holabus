@@ -12,7 +12,7 @@ import { PassengerForm } from '@/components/passenger-form'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PROVINCES } from '@/lib/constants/provinces'
 import { saveUserData } from '@/utils/user'
-import { generateUniqueBookingId, saveBookingData } from '@/utils/booking'
+import { saveBookingData } from '@/utils/booking'
 
 function SearchContent() {
     const router = useRouter()
