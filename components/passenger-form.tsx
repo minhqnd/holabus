@@ -9,8 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import Image from 'next/image'
+// import Image from 'next/image'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { generateUniqueBookingId } from '@/utils/booking'
 
 interface UserData {
   sex: string
