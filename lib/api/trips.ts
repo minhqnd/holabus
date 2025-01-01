@@ -1,14 +1,13 @@
-
-export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app'
+export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 export async function getTripsByProvince(provinceId: string) {
-    const res = await fetch(`${BASE_URL}/trips/${provinceId.toUpperCase()}.json`)
+    const res = await fetch(`${BASE_URL}/trips.json?orderBy=%22routeId%22&equalTo=%22${provinceId.toUpperCase()}%22`);
     if (!res.ok) {
-        return []
+        return [];
     }
-    const data = await res.json()
+    const data = await res.json();
     return Object.entries(data || {}).map(([id, item]) => ({
         id,
         ...(typeof item === 'object' && item !== null ? item : {})
-    }))
+    }));
 }
