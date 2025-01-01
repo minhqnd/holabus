@@ -90,8 +90,7 @@ export function TripsList() {
 
   const handleAddTrip = async (newTrip: any) => {
     try {
-      const tripId = `${newTrip.routeId}${Date.now()}`
-      await setDocument(`trips/${tripId}`, newTrip)
+      await setDocument(`trips/${newTrip.id}`, newTrip)
       setIsAddingTrip(false)
     } catch (error) {
       console.error('Lỗi khi thêm mới:', error)
@@ -241,6 +240,7 @@ export function TripsList() {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
             const newTrip = {
+              id: formData.get('tripId') as string,
               name: formData.get('name') as string,
               date: formData.get('date') as string,
               time: formData.get('time') as string,
@@ -250,6 +250,27 @@ export function TripsList() {
             };
             handleAddTrip(newTrip);
           }} className="space-y-4">
+            <div>
+              <label htmlFor="tripId" className="block text-sm font-medium text-gray-700">
+                Mã chuyến xe (tối đa 6 ký tự)
+              </label>
+              <Input 
+                id="tripId" 
+                name="tripId" 
+                required 
+                maxLength={6}
+                pattern="^[A-Za-z0-9]{1,6}$"
+                className="mt-1 uppercase"
+                placeholder="VD: TR001"
+                onInput={(e) => {
+                  const input = e.currentTarget;
+                  input.value = input.value.toUpperCase().slice(0, 6);
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Chỉ cho phép chữ và số, tự động chuyển thành chữ in hoa
+              </p>
+            </div>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên chuyến</label>
               <Input id="name" name="name" required className="mt-1" />
