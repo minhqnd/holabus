@@ -47,19 +47,39 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            // Giả lập delay API
-            await new Promise(resolve => setTimeout(resolve, 50))
-            
-            const fetchedTrips = await getTripsByProvince(provinceId)
-            console.log('Fetched trips:', fetchedTrips)
-            const routeData = await getRouteByProvince(provinceId)
-            console.log('Route data:', routeData)
-            const finalTrips = fetchedTrips.map((trip: any) => ({
-                ...trip,
-                location: routeData?.locations || []
-            }))
-            console.log('Final trips:', finalTrips)
-            setTrips(finalTrips.filter((t: any) => Number(t.slot) > 0))
+            try {
+                const routeData = await getRouteByProvince(provinceId)
+                
+                // Kiểm tra route có available không
+                if (!routeData?.available) {
+                    setTrips([])
+                    setLoading(false)
+                    return
+                }
+
+                const fetchedTrips = await getTripsByProvince(provinceId)
+                
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+                
+                const availableTrips = fetchedTrips
+                    .map((trip: any) => ({
+                        ...trip,
+                        location: routeData?.locations || []
+                    }))
+                    .filter((trip: Trip) => {
+                        const [day, month, year] = trip.date.split('/')
+                        const tripDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+                        tripDate.setHours(0, 0, 0, 0)
+                        
+                        return Number(trip.slot) > 0 && tripDate >= today
+                    })
+
+                setTrips(availableTrips)
+            } catch (error) {
+                console.error('Error fetching trips:', error)
+                setTrips([])
+            }
             setLoading(false)
         }
 
@@ -103,9 +123,9 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                                 </div>
                             </div>
                         ))
-                    ) : displayedTrips.length === 0 ? (
+                    ) : trips.length === 0 ? (
                         <div className="text-center py-8">
-                            <p className="text-gray-600">Rất tiếc địa điểm bạn chọn HolaBus đã hết vé hoặc không có tuyến rồi 😿</p>
+                            <p className="text-gray-600">Rất tiếc tuyến xe này hiện không hoạt động hoặc đã hết vé 😿</p>
                         </div>
                     ) : (
                         displayedTrips.map((trip) => (
