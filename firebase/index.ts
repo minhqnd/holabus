@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
+// import { getAnalytics } from 'firebase/analytics'
 import { getDatabase, ref, get, query, orderByChild, equalTo } from 'firebase/database'
 
 const firebaseConfig = {
