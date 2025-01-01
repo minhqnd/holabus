@@ -267,10 +267,16 @@ export function TripsList() {
           <form onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
+            
+            // Chuyển đổi định dạng ngày từ yyyy-mm-dd sang dd/mm/yyyy
+            const rawDate = formData.get('date') as string;
+            const [year, month, day] = rawDate.split('-');
+            const formattedDate = `${day}/${month}/${year}`;
+            
             const newTrip = {
               id: formData.get('tripId') as string,
               name: formData.get('name') as string,
-              date: formData.get('date') as string,
+              date: formattedDate, // Sử dụng ngày đã định dạng
               time: formData.get('time') as string,
               price: formData.get('price') as string,
               routeId: formData.get('routeId') as string,
@@ -305,7 +311,14 @@ export function TripsList() {
             </div>
             <div>
               <label htmlFor="date" className="block text-sm font-medium text-gray-700">Ngày</label>
-              <Input id="date" name="date" type="date" required className="mt-1" />
+              <Input 
+                id="date" 
+                name="date" 
+                type="date" 
+                required 
+                className="mt-1"
+                min={new Date().toISOString().split('T')[0]} // Chỉ cho phép chọn từ ngày hiện tại trở đi
+              />
             </div>
             <div>
               <label htmlFor="time" className="block text-sm font-medium text-gray-700">Giờ</label>
