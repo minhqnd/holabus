@@ -10,6 +10,7 @@ import { Footer } from '@/components/footer'
 import Image from 'next/image'
 
 interface Province {
+  available: boolean
   id: string
   name: string 
   locations: string[]
@@ -26,11 +27,10 @@ export default function Home() {
       try {
         const response = await fetch('https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app/routes.json')
         const data = await response.json()
-        
-        // Transform data từ object sang array với id
+        console.log('Fetched data:', data)
         const transformedData = Object.entries(data).map(([id, route]: [string, any]) => ({
           id,
-          title: route.name,
+          name: route.name,     // Use 'name' instead of 'title'
           locations: route.locations,
           price: route.price,
           available: route.available
@@ -115,7 +115,7 @@ export default function Home() {
                 >
                   <div className="overflow-hidden">
                     <RouteCard
-                      title={province.title}
+                      title={province.name}
                       locations={province.locations}
                       price={province.price}
                       id={province.id}
