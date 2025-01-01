@@ -1,6 +1,4 @@
-'use client'
-
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,10 +36,14 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
 
   const [user, setUser] = useState<any>(null)
 
-  const lastNameInputRef = useRef<HTMLInputElement>(null)
-
+  // Khôi phục thông tin người dùng từ localStorage khi render lại
   useEffect(() => {
-    lastNameInputRef.current?.focus()
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser)
+      setUser(parsedUser)
+      setFormData((prev) => ({ ...prev, mail: parsedUser.email || '' }))
+    }
   }, [])
 
   const validateForm = () => {
@@ -64,7 +66,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     }
 
     if (!formData.mail.trim()) {
-      newErrors.mail = 'Vui lòng nhập email'
+      newErrors.mail = 'Vui lòng xác nhận email'
       isValid = false
     }
 
@@ -80,22 +82,19 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     return isValid
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (validateForm()) {
-      onSubmit()
-    }
-  }
-
   const handleGoogleSignIn = async () => {
     try {
       const auth = getAuth(app)
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
-      setUser(result.user)
-      setFormData({ ...formData, mail: result.user.email || '' })
+      const loggedInUser = result.user
+      setUser(loggedInUser)
+      setFormData((prev) => ({ ...prev, mail: loggedInUser.email || '' }))
+
+      // Lưu thông tin người dùng vào localStorage
+      localStorage.setItem('user', JSON.stringify(loggedInUser))
     } catch (error) {
-      console.error(error)
+      console.error('Error during Google Sign-In:', error)
     }
   }
 
@@ -104,9 +103,19 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
       const auth = getAuth(app)
       await signOut(auth)
       setUser(null)
-      setFormData({ ...formData, mail: '' })
+      setFormData((prev) => ({ ...prev, mail: '' }))
+
+      // Xóa thông tin người dùng khỏi localStorage
+      localStorage.removeItem('user')
     } catch (error) {
-      console.error(error)
+      console.error('Error during Sign-Out:', error)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (validateForm()) {
+      onSubmit()
     }
   }
 
@@ -137,6 +146,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             <Input
               type="text"
               placeholder="Nhập đầy đủ họ và tên"
+              height='3rem'
+              borderRadius='9999px'
               className="mt-1"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -152,6 +163,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
               placeholder="Nhập số điện thoại"
               className="mt-1"
               value={formData.phone}
+              height='3rem'
+              borderRadius='9999px'
               onChange={(e) => {
                 const value = e.target.value.replace(/[^0-9]/g, '')
                 setFormData({ ...formData, phone: value })
@@ -163,21 +176,34 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           <div>
             <Label>Email</Label>
             {!user ? (
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center"
-                onClick={handleGoogleSignIn}
-              >
-                <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
-                Xác thực bằng Gmail
-              </Button>
+              <div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center"
+                  onClick={handleGoogleSignIn}
+                >
+                  <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
+                  Xác thực bằng Gmail
+                </Button>
+                {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
+              </div>
+
+
             ) : (
               <div className="flex gap-2 items-center">
-                <span className="text-gray-700">{user.email}</span>
+                <Input
+                  type="text"
+                  placeholder="Email đã xác thực"
+                  className="mt-1"
+                  height='3rem'
+                  borderRadius='9999px'
+                  value={user.email}
+                  readOnly
+                />
                 <Button
                   variant="outline"
-                  className="rounded-full text-red-600 border-red-600 hover:bg-red-50"
+                  className="rounded-full text-red-600 border-red-600 hover:bg-red-50 h-12"
                   onClick={handleSignOut}
                 >
                   Đăng xuất
