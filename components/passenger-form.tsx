@@ -11,8 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, ArrowRight, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Image from 'next/image'
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { app } from '@/firebase'
 
 interface PassengerFormProps {
   onSubmit: () => void
@@ -24,7 +26,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     sex: '1',
     name: '',
     mail: '',
-    phone: 'moimoi@duck.com',
+    phone: '',
   })
 
   const [errors, setErrors] = useState({
@@ -33,6 +35,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     mail: '',
     phone: '',
   })
+
+  const [user, setUser] = useState<any>(null)
 
   const lastNameInputRef = useRef<HTMLInputElement>(null)
 
@@ -55,12 +59,12 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     }
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Vui lòng nhập họ và tên đệm'
+      newErrors.name = 'Vui lòng nhập họ và tên'
       isValid = false
     }
 
     if (!formData.mail.trim()) {
-      newErrors.mail = 'Vui lòng nhập tên'
+      newErrors.mail = 'Vui lòng nhập email'
       isValid = false
     }
 
@@ -80,6 +84,29 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     e.preventDefault()
     if (validateForm()) {
       onSubmit()
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const auth = getAuth(app)
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      setUser(result.user)
+      setFormData({ ...formData, mail: result.user.email || '' })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleSignOut = async () => {
+    try {
+      const auth = getAuth(app)
+      await signOut(auth)
+      setUser(null)
+      setFormData({ ...formData, mail: '' })
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -111,24 +138,19 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
               type="text"
               placeholder="Nhập đầy đủ họ và tên"
               className="mt-1"
-              height='3rem'
-              borderRadius='9999px'
-              value={formData.mail}
-              onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
-            {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
+            {errors.name && <span className="text-sm text-red-500 mt-1">{errors.name}</span>}
           </div>
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-
           <div>
             <Label>Điện thoại</Label>
             <Input
               type="tel"
-              placeholder="Nhập điện thoại"
+              placeholder="Nhập số điện thoại"
               className="mt-1"
-              height='3rem'
-              borderRadius='9999px'
               value={formData.phone}
               onChange={(e) => {
                 const value = e.target.value.replace(/[^0-9]/g, '')
@@ -140,19 +162,29 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
           </div>
           <div>
             <Label>Email</Label>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12"
-            >
-              <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
-              Xác thực bằng gmail
-            </Button>
+            {!user ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center"
+                onClick={handleGoogleSignIn}
+              >
+                <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
+                Xác thực bằng Gmail
+              </Button>
+            ) : (
+              <div className="flex gap-2 items-center">
+                <span className="text-gray-700">{user.email}</span>
+                <Button
+                  variant="outline"
+                  className="rounded-full text-red-600 border-red-600 hover:bg-red-50"
+                  onClick={handleSignOut}
+                >
+                  Đăng xuất
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-
-          <div></div>
         </div>
         <div className="flex justify-between pt-6">
           <Button
@@ -161,7 +193,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             className="rounded-full"
             onClick={onBack}
           >
-            <ArrowLeft className="1-2 h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Quay lại
           </Button>
           <Button
@@ -176,4 +208,3 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     </div>
   )
 }
-
