@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
 import { subscribeToCollection, updateDocument } from '@/lib/firebase'
+import { getProvinceNameById } from '@/lib/utils/province'
 
 interface Booking {
   userId: string;
@@ -110,13 +111,15 @@ export function BookingsList() {
     const trip = trips[booking.tripId]
     if (!trip) return acc
     
-    const key = `${trip.routeId}-${booking.tripId}`
-    if (!acc[key]) {
-      acc[key] = []
+    if (!acc[trip.routeId]) {
+      acc[trip.routeId] = {}
     }
-    acc[key].push([id, booking])
+    if (!acc[trip.routeId][booking.tripId]) {
+      acc[trip.routeId][booking.tripId] = []
+    }
+    acc[trip.routeId][booking.tripId].push([id, booking])
     return acc
-  }, {} as Record<string, typeof filteredBookings>)
+  }, {} as Record<string, Record<string, typeof filteredBookings>>)
 
   const handleSendEmail = (bookingId: string, type: 'payment' | 'ticket', e: React.MouseEvent) => {
     e.stopPropagation()
@@ -187,86 +190,90 @@ export function BookingsList() {
           </div>
         </div>
       </div>
-      {Object.entries(groupedBookings).map(([key, bookings]) => {
-        const [routeId, tripId] = key.split('-')
-        const route = routes[routeId]
-        const trip = trips[tripId]
-
-        // console.log('Debug:', { routeId, tripId, route, trip, routes, trips })
-
-        return (
-          <div key={key}>
-            <h2 className="my-4 text-xl font-semibold">
-            {routeId || 'Unknown Route'}<span className="text-base font-normal"> ({trip?.name || 'Unknown Trip'})</span> 
-            </h2>
-            <div className="space-y-4">
-              {bookings.map(([id, booking], index) => (
-                <Card key={id}>
-                  <CardContent>
-                    <div className="flex items-center justify-between my-4">
-                      <Badge>{index + 1}</Badge>
-                      <Badge variant={booking.paid ? "default" : "destructive"}>
-                        {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-medium">Khách hàng</p>
-                        <p className="text-sm">{users[booking.userId].name}</p>
-                        <p className="text-sm text-gray-500">Email: {users[booking.userId].mail}</p>
-                        <p className="text-sm text-gray-500">SĐT: {users[booking.userId].phone}</p>
-                        <p className="text-sm text-gray-500">
-                          Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Chuyến xe</p>
-                        <p className="text-sm">{trip?.name}</p>
-                        <p className="text-sm text-gray-500">Mã chuyến: {booking.tripId}</p>
-                        <p className="text-sm text-gray-500">Ngày khởi hành: {trip?.date}</p>
-                        <p className="text-sm text-gray-500">Giờ khởi hành: {trip?.time}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Ngày tạo</p>
-                        <p className="text-sm">{new Date(booking.createdAt).toLocaleString('vi-VN')}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Giá</p>
-                        <p className="text-sm font-semibold">{trip?.price} VND</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex justify-between">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
-                      >
-                        <Mail className="mr-2 h-4 w-4" />
-                        {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
-                      </Button>
-                      <div className="space-x-2">
-                        {!booking.paid && (
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() => setConfirmPaymentId(id)}
-                          >
-                            <Check className="mr-2 h-4 w-4" />
-                            Đã thanh toán
-                          </Button>
-                        )}
-                        <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+      {Object.entries(groupedBookings).map(([routeId, tripGroups]) => (
+        <div key={routeId}>
+          <h2 className="my-4 text-xl font-semibold break-words">
+            {getProvinceNameById(routeId)}
+          </h2>
+          <div className="space-y-8">
+            {Object.entries(tripGroups).map(([tripId, bookings]) => {
+              const trip = trips[tripId]
+              return (
+                <div key={tripId}>
+                  <h3 className="mb-4 text-lg font-medium break-words">
+                    ({trip?.name || `Trip ${tripId}`})
+                  </h3>
+                  <div className="space-y-4">
+                    {bookings.map(([id, booking], index) => (
+                      <Card key={id}>
+                        <CardContent>
+                          <div className="flex items-center justify-between my-4">
+                            <Badge>{index + 1}</Badge>
+                            <Badge variant={booking.paid ? "default" : "destructive"}>
+                              {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+                            </Badge>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm font-medium break-words">Khách hàng</p>
+                              <p className="text-sm break-words">{users[booking.userId].name}</p>
+                              <p className="text-sm text-gray-500 break-words">Email: {users[booking.userId].mail}</p>
+                              <p className="text-sm text-gray-500 break-words">SĐT: {users[booking.userId].phone}</p>
+                              <p className="text-sm text-gray-500 break-words">
+                                Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium break-words">Chuyến xe</p>
+                              <p className="text-sm break-words">{trip?.name}</p>
+                              <p className="text-sm text-gray-500 break-words">Mã chuyến: {booking.tripId}</p>
+                              <p className="text-sm text-gray-500 break-words">Ngày khởi hành: {trip?.date}</p>
+                              <p className="text-sm text-gray-500 break-words">Giờ khởi hành: {trip?.time}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium break-words">Ngày tạo</p>
+                              <p className="text-sm break-words">{new Date(booking.createdAt).toLocaleString('vi-VN')}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium break-words">Giá</p>
+                              <p className="text-sm font-semibold break-words">{trip?.price} VND</p>
+                            </div>
+                          </div>
+                          <div className="mt-4 flex justify-between">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
+                            >
+                              <Mail className="mr-2 h-4 w-4" />
+                              {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
+                            </Button>
+                            <div className="space-x-2">
+                              {!booking.paid && (
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() => setConfirmPaymentId(id)}
+                                >
+                                  <Check className="mr-2 h-4 w-4" />
+                                  Đã thanh toán
+                                </Button>
+                              )}
+                              <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
           </div>
-        )
-      })}
+        </div>
+      ))}
       {editingBooking && editedBooking && (
         <EditModal
           isOpen={true}
