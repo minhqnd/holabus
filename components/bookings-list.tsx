@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +16,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
+import { subscribeToCollection, updateDocument } from '@/lib/firebase'
+
+interface Booking {
+  userId: string;
+  tripId: string;
+  paid: boolean;
+  createdAt: string;
+}
 
 const bookings = {
 "4K6K4": {
@@ -96,6 +104,29 @@ export function BookingsList() {
   const [filterRouteId, setFilterRouteId] = useState<string | null>(null)
   const [filterDate, setFilterDate] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [bookings, setBookings] = useState<any>({})
+  const [users, setUsers] = useState<any>({})
+  const [trips, setTrips] = useState<any>({})
+
+  useEffect(() => {
+    const unsubscribeBookings = subscribeToCollection('bookings', (data) => {
+      setBookings(data || {})
+    })
+    
+    const unsubscribeUsers = subscribeToCollection('users', (data) => {
+      setUsers(data || {})
+    })
+    
+    const unsubscribeTrips = subscribeToCollection('trips', (data) => {
+      setTrips(data || {})
+    })
+
+    return () => {
+      unsubscribeBookings()
+      unsubscribeUsers()
+      unsubscribeTrips()
+    }
+  }, [])
 
   const handleRouteChange = (value: string) => {
     setFilterRouteId(value === "all" ? null : value)
@@ -122,9 +153,9 @@ export function BookingsList() {
     </Select>
   )
 
-  const filteredBookings = Object.entries(bookings).filter(([id, booking]) => {
-    const user = users[booking.userId as keyof typeof users]
-    const trip = trips[booking.tripId as keyof typeof trips]
+  const filteredBookings = Object.entries(bookings as Record<string, Booking>).filter(([id, booking]) => {
+    const user = users[booking.userId]
+    const trip = trips[booking.tripId]
     
     return (
       (activeTab === 'pending' ? !booking.paid : booking.paid) &&
@@ -139,7 +170,9 @@ export function BookingsList() {
   })
 
   const groupedBookings = filteredBookings.reduce((acc, [id, booking]) => {
-    const trip = trips[booking.tripId as keyof typeof trips]
+    const trip = trips[(booking as Booking).tripId]
+    if (!trip) return acc
+    
     if (!acc[trip.routeId]) {
       acc[trip.routeId] = []
     }
@@ -159,22 +192,25 @@ export function BookingsList() {
     setEditedBooking(bookings[id as keyof typeof bookings])
   }
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editingBooking && editedBooking) {
-      // In a real application, you would update the backend here
-      console.log('Saving edited booking:', editingBooking, editedBooking)
-      // Update the local state to reflect the changes
-      bookings[editingBooking as keyof typeof bookings] = editedBooking
-      setEditingBooking(null)
-      setEditedBooking(null)
+      try {
+        await updateDocument(`bookings/${editingBooking}`, editedBooking)
+        setEditingBooking(null)
+        setEditedBooking(null)
+      } catch (error) {
+        console.error('Lỗi khi cập nhật:', error)
+      }
     }
   }
 
-  const handleConfirmPayment = (id: string) => {
-    // In a real application, you would update the backend here
-    console.log('Confirming payment for booking:', id)
-    bookings[id as keyof typeof bookings].paid = true
-    setConfirmPaymentId(null)
+  const handleConfirmPayment = async (id: string) => {
+    try {
+      await updateDocument(`bookings/${id}`, { paid: true })
+      setConfirmPaymentId(null)
+    } catch (error) {
+      console.error('Lỗi khi xác nhận thanh toán:', error)
+    }
   }
 
   return (
