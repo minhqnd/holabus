@@ -21,7 +21,8 @@ export function PaymentDetails({
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="rounded-3xl bg-white p-6">
-        <h2 className="mb-6 text-center text-2xl font-bold">Đặt vé thành công!</h2>
+        <h2 className="  text-center text-2xl font-bold">Đặt vé thành công!</h2>
+        <h3 className='mb-6 text-center text-gray-700'>Hệ thống sẽ gửi thông tin thanh toán về mail của bạn</h3>
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 h-64 w-64">
             <Image
@@ -63,16 +64,17 @@ export function PaymentDetails({
           <li>Quét mã QR hiển thị trên màn hình hoặc nhập thủ công</li>
           <li>Kiểm tra thông tin và xác nhận thanh toán <b>chính xác số tiền và nội dung</b></li>
           <li>Bạn sẽ nhận được mail vé điện tử khi hệ thống xác nhận thành công (30p-6h)</li>
+          <li> <b>Chỉ sau khi thanh toán bạn mới nhận được vé online</b></li>
         </ol>
       </div>
       <div className="flex justify-between">
         <Button
-          variant="ghost"
-          className="rounded-full"
-          onClick={() => window.history.back()}
+          variant="outline"
+          className="rounded-full h-10"
+          onClick={() => window.location.href = '/search'}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Quay lại
+          Đặt vé mới
         </Button>
       </div>
     </div>
