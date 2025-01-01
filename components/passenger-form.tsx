@@ -10,9 +10,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { generateUniqueBookingId } from '@/utils/booking'
 
 interface PassengerFormProps {
-  onSubmit: () => void
+  onSubmit: (bookingId: string, userData: any) => void
   onBack: () => void
 }
 
@@ -67,10 +68,15 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     return isValid
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      onSubmit()
+      try {
+        const bookingId = await generateUniqueBookingId()
+        onSubmit(bookingId, formData)
+      } catch (error) {
+        console.error('Error generating booking ID:', error)
+      }
     }
   }
 

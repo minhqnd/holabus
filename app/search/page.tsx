@@ -44,9 +44,11 @@ function SearchContent() {
         setSelectedTripId('')
     }
 
-    const handleFormSubmit = () => {
-        router.push('/payment')
-    }
+    const handleFormSubmit = async (bookingId: string, userData: any) => {
+        // Save the booking data to your state/context if needed
+        // Navigate to payment page with booking ID
+        router.push(`/payment?booking=${bookingId}`);
+    };
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen">
