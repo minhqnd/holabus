@@ -35,6 +35,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   })
 
   const [user, setUser] = useState<any>(null)
+  const [shake, setShake] = useState(false)
 
   // Khôi phục thông tin người dùng từ localStorage khi render lại
   useEffect(() => {
@@ -82,10 +83,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     return isValid
   }
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async (auth: any, provider: any) => {
     try {
-      const auth = getAuth(app)
-      const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
       const loggedInUser = result.user
       setUser(loggedInUser)
@@ -98,7 +97,27 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     }
   }
 
-  const handleSignOut = async () => {
+  const handleGoogleSignInClick = () => {
+    if (!formData.name.trim()) {
+      setErrors((prev) => ({ ...prev, name: 'Vui lòng nhập họ và tên' }))
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
+      return
+    }
+    if (!formData.phone.trim()) {
+      setErrors((prev) => ({ ...prev, phone: 'Vui lòng nhập số điện thoại' }))
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
+      return
+    }
+    const auth = getAuth(app)
+    const provider = new GoogleAuthProvider()
+    handleGoogleSignIn(auth, provider)
+  }
+
+  const handleSignOut = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     try {
       const auth = getAuth(app)
       await signOut(auth)
@@ -180,8 +199,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center"
-                  onClick={handleGoogleSignIn}
+                  className={`w-full mt-1 rounded-full border-2 border-red-600 bg-white text-red-600 hover:bg-red-50 h-12 flex items-center justify-center ${shake ? 'animate-shake' : ''}`}
+                  onClick={handleGoogleSignInClick}
                 >
                   <Image src="/img/gmail.png" alt="gmail" width={20} height={20} />
                   Xác thực bằng Gmail
@@ -204,7 +223,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
                 <Button
                   variant="outline"
                   className="rounded-full text-red-600 border-red-600 hover:bg-red-50 h-12"
-                  onClick={handleSignOut}
+                  onClick={(e) => handleSignOut(e)}
                 >
                   Đăng xuất
                 </Button>
