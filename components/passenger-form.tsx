@@ -24,7 +24,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     sex: '1',
     name: '',
     mail: '',
-    phone: '',
+    phone: 'moimoi@duck.com',
   })
 
   const [errors, setErrors] = useState({
