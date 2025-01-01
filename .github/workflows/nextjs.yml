@@ -31,6 +31,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: 'Create env file'
+        run: |
+          touch .env.local
+          echo NEXT_PUBLIC_FIREBASE_API_KEY= CCCCC >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN= Cccc >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_PROJECT_ID= CCCCC >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_DATABASE_URL= CCCCC >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET= CCCCC >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID= CCCCCCC >> .env.local
+          echo NEXT_PUBLIC_FIREBASE_APP_ID= CCCCCCCC >> .env.local
       - name: Detect package manager
         id: detect-package-manager
         run: |
