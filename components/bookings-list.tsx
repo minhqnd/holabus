@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Filter, Search, Plus, Check } from 'lucide-react'
+import { Pencil, Mail, Filter, Search, Plus, Check, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
-import { subscribeToCollection, updateDocument } from '@/lib/firebase'
+import { subscribeToCollection, updateDocument, deleteDocument } from '@/lib/firebase'
 import { getProvinceNameById } from '@/lib/utils/province'
 
 interface Booking {
@@ -45,6 +45,7 @@ export function BookingsList() {
   const [users, setUsers] = useState<any>({})
   const [trips, setTrips] = useState<any>({})
   const [routes, setRoutes] = useState<Record<string, Route>>({})
+  const [deletingBookingId, setDeletingBookingId] = useState<string | null>(null)
 
   useEffect(() => {
     const unsubscribeBookings = subscribeToCollection('bookings', (data) => {
@@ -151,6 +152,15 @@ export function BookingsList() {
       setConfirmPaymentId(null)
     } catch (error) {
       console.error('Lỗi khi xác nhận thanh toán:', error)
+    }
+  }
+
+  const handleDeleteBooking = async (id: string) => {
+    try {
+      await deleteDocument(`bookings/${id}`)
+      setDeletingBookingId(null)
+    } catch (error) {
+      console.error('Lỗi khi xóa vé:', error)
     }
   }
 
@@ -262,6 +272,14 @@ export function BookingsList() {
                               <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
                                 <Pencil className="h-4 w-4" />
                               </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => setDeletingBookingId(id)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </div>
                           </div>
                         </CardContent>
@@ -326,6 +344,25 @@ export function BookingsList() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirmPaymentId(null)}>Hủy</Button>
             <Button onClick={() => confirmPaymentId && handleConfirmPayment(confirmPaymentId)}>Xác nhận</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!deletingBookingId} onOpenChange={() => setDeletingBookingId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Xác nhận xóa vé</DialogTitle>
+            <DialogDescription>
+              Bạn có chắc chắn muốn xóa vé này? Hành động này không thể hoàn tác.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeletingBookingId(null)}>Hủy</Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => deletingBookingId && handleDeleteBooking(deletingBookingId)}
+            >
+              Xóa
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

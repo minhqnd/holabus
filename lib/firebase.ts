@@ -1,4 +1,4 @@
-import { ref, onValue, set, update } from 'firebase/database';
+import { ref, onValue, set, update, remove } from 'firebase/database';
 import { database } from '@/firebase';
 
 export const subscribeToCollection = (path: string, callback: (data: any) => void) => {
@@ -16,4 +16,9 @@ export const updateDocument = async (path: string, data: any) => {
 export const setDocument = async (path: string, data: any) => {
   const dbRef = ref(database, path);
   return set(dbRef, data);
+};
+
+export const deleteDocument = async (path: string) => {
+  const dbRef = ref(database, path);
+  return remove(dbRef);
 }; 
