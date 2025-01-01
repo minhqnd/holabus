@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
-import { getDatabase } from 'firebase/database'
+import { getDatabase, ref, get, query, orderByChild, equalTo } from 'firebase/database'
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -21,4 +21,4 @@ if (process.env.NODE_ENV === 'development') {
     console.log('Firebase initialized with database:', database)
 }
 
-export { app, database }
+export { app, database, ref, get, query, orderByChild, equalTo }
