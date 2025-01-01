@@ -63,10 +63,13 @@ jobs:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Debug - Check Environment Variables
+        env:
+          FIREBASE_DATABASE_URL: ${{ secrets.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}
+          FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
         run: |
           echo "Checking for Firebase environment variables..."
-          echo "NEXT_PUBLIC_FIREBASE_DATABASE_URL: ${{ env.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}"
-          echo "NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ env.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}"
+          echo "NEXT_PUBLIC_FIREBASE_DATABASE_URL: $FIREBASE_DATABASE_URL"
+          echo "NEXT_PUBLIC_FIREBASE_PROJECT_ID: $FIREBASE_PROJECT_ID"
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
