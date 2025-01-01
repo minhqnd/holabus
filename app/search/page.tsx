@@ -14,6 +14,14 @@ import { PROVINCES } from '@/lib/constants/provinces'
 import { saveUserData } from '@/utils/user'
 import { saveBookingData } from '@/utils/booking'
 
+interface UserData {
+    sex: string
+    name: string
+    mail: string
+    phone: string
+    address?: string
+}
+
 function SearchContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -46,7 +54,7 @@ function SearchContent() {
         setSelectedTripId('')
     }
 
-    const handleFormSubmit = async (bookingId: string, userData: any) => {
+    const handleFormSubmit = async (bookingId: string, userData: UserData) => {
         try {
             console.log('Starting form submission process');
             
@@ -55,7 +63,7 @@ function SearchContent() {
             console.log('User saved with ID:', userId);
             
             // Save booking data
-            await saveBookingData(bookingId, selectedTripId, userId);
+            await saveBookingData(bookingId, selectedTripId, userId, false);
             console.log('Booking saved with ID:', bookingId);
             
             // Navigate to payment page with booking ID

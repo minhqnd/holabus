@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,8 +12,15 @@ import {
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { generateUniqueBookingId } from '@/utils/booking'
 
+interface UserData {
+  sex: string
+  name: string
+  mail: string
+  phone: string
+}
+
 interface PassengerFormProps {
-  onSubmit: (bookingId: string, userData: any) => void
+  onSubmit: (bookingId: string, userData: UserData) => void
   onBack: () => void
 }
 
