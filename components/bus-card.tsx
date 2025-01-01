@@ -41,9 +41,9 @@ export function BusCard({
       onClick={() => setIsExpanded(!isExpanded)}
     >
       <div className="p-6">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            <div className="relative h-12 w-12 overflow-hidden rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          <div className="flex items-center gap-4">
+            <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg">
               <Image
                 src="/modal-icon.png"
                 alt={'hanoi'}
@@ -52,43 +52,43 @@ export function BusCard({
                 className="object-cover"
               />
             </div>
-            <div>
-              <div className="font-medium">{name}</div>
-              <div className="text-sm text-gray-500">{id}</div>
+            <div className="min-w-0">
+              <div className="font-medium truncate">{name}</div>
+              <div className="text-sm text-gray-500 truncate">{id}</div>
             </div>
           </div>
-          <div className="w-full md:w-auto mt-4 md:mt-0">
+          <div className="text-center">
             <div className="text-lg font-bold">{time} · {date}</div>
             <div className="text-sm text-gray-500">Giờ xuất phát</div>
           </div>
-          {/* <div className="text-center w-full md:w-auto mt-4 md:mt-0">
-            <div className="h-0.5 w-16 bg-gray-300" />
-          </div> */}
-          <div className="w-full md:w-auto mt-4 md:mt-0">
+          <div className="text-center">
             <div className="text-lg font-bold">{slot}</div>
             <div className="text-sm text-gray-500">Vé còn lại</div>
           </div>
-          <div className="w-full md:w-auto mt-4 md:mt-0">
+          <div className="text-center">
             <div className="text-lg font-bold text-red-600">{price}</div>
             <div className="text-sm text-gray-500">VND</div>
           </div>
-          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-4 md:mt-0 justify-center items-center">
+          <div className="flex justify-center gap-2">
             <Button 
-                className={`rounded-full ${isSelected ? 'border-[1px] border-red-600 hover:bg-gray-100 bg-white text-red-600' : 'hover:bg-red-700 bg-red-600 text-white'}  w-full md:w-32`}
-                onClick={(e) => {
-                    e.stopPropagation()
-                    onSelect()
-                }}
+              className={`rounded-full ${
+                isSelected 
+                  ? 'border-[1px] border-red-600 hover:bg-gray-100 bg-white text-red-600' 
+                  : 'hover:bg-red-700 bg-red-600 text-white'
+              } w-32`}
+              onClick={(e) => {
+                e.stopPropagation()
+                onSelect()
+              }}
             >
-                {isSelected ? 'Chọn lại' : 'Chọn'}
+              {isSelected ? 'Chọn lại' : 'Chọn'}
             </Button>
             <Button
               variant="outline"
               size="default"
-              className="rounded-full "
+              className="rounded-full"
               onClick={() => setIsExpanded(!isExpanded)}
             >
-            <div className="text-sm text-gray-500 block md:hidden">Chi tiết</div>
               <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
             </Button>
           </div>
