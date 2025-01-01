@@ -9,6 +9,6 @@ export async function getTripsByProvince(provinceId: string) {
     const data = await res.json()
     return Object.entries(data || {}).map(([id, item]) => ({
         id,
-        ...item
+        ...(typeof item === 'object' && item !== null ? item : {})
     }))
 }
