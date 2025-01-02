@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Image from 'next/image'
+import { useAuth } from '@/hooks/useAuth'
 
 const navItems = [
   { href: '/admin', label: 'Tổng quan', icon: CakeSlice },
@@ -19,12 +20,7 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-
-  // This would typically come from your authentication system
-  const user = {
-    name: 'Admin User',
-    email: 'admin@example.com',
-  }
+  const { user, logout } = useAuth()
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -52,7 +48,7 @@ export function Sidebar() {
               <Image src="/red-logo.png" alt="HolaBus" className="w-auto h-[90%]" width={100} height={100} />
             </div>
           </div>
-          
+
           <nav className="flex-1 space-y-1 p-4">
             {navItems.map((item) => (
               <Link
@@ -74,18 +70,18 @@ export function Sidebar() {
           <div className="sticky bottom-0 bg-white border-t p-4">
             <div className="flex items-center space-x-3">
               <Avatar>
-                <AvatarImage src="/placeholder-avatar.jpg" alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={user?.photoURL || "/modal-icon.png"} alt={user?.displayName || ''} />
+                <AvatarFallback>{user?.displayName?.charAt(0) || '?'}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className="text-sm font-medium">{user?.displayName || 'Chưa đăng nhập'}</p>
+                <p className="text-xs text-gray-500">{user?.email || ''}</p>
               </div>
             </div>
             <Button
               variant="outline"
               className="mt-4 w-full"
-              onClick={handleLogout}
+              onClick={logout}
             >
               <LogOut className="mr-2 h-4 w-4" />
               Đăng xuất
