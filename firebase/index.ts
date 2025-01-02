@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
-// import { getAnalytics } from 'firebase/analytics'
 import { getDatabase, ref, get, query, orderByChild, equalTo } from 'firebase/database'
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,10 +15,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
+const auth = getAuth(app)
+const googleProvider = new GoogleAuthProvider()
 
 // Add this to verify connection
 if (process.env.NODE_ENV === 'development') {
     console.log('Firebase initialized with database:', database)
 }
 
-export { app, database, ref, get, query, orderByChild, equalTo }
+export { app, database, auth, googleProvider, ref, get, query, orderByChild, equalTo, signInWithPopup, signOut }

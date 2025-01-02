@@ -254,8 +254,12 @@ export function TripsList() {
               <Input
                 id="slot"
                 type="number"
-                value={editedTrip.slot}
-                onChange={(e) => setEditedTrip({ ...editedTrip, slot: parseInt(e.target.value) })}
+                min="0"
+                value={editedTrip.slot || 0}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 0;
+                  setEditedTrip({ ...editedTrip, slot: value })
+                }}
                 className="mt-1"
               />
             </div>
@@ -342,7 +346,15 @@ export function TripsList() {
             </div>
             <div>
               <label htmlFor="slot" className="block text-sm font-medium text-gray-700">Số chỗ trống</label>
-              <Input id="slot" name="slot" type="number" required className="mt-1" />
+              <Input 
+                id="slot" 
+                name="slot" 
+                type="number"
+                min="0"
+                defaultValue="29"
+                required 
+                className="mt-1" 
+              />
             </div>
             <DialogFooter>
               <Button type="submit">Thêm chuyến xe</Button>
