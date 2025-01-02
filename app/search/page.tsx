@@ -34,6 +34,7 @@ function SearchContent() {
     const [provinceName, setProvinceName] = useState<string>('')
     const [userData, setUserData] = useState<UserData | null>(null)
     const [tripData, setTripData] = useState<any>(null)
+    const [isProcessing, setIsProcessing] = useState(false)
     
     useEffect(() => {
         const tinh = searchParams.get('tinh')
@@ -84,14 +85,14 @@ function SearchContent() {
     }
 
     const handleConfirm = async () => {
+        if (!userData || isProcessing) return
+        
+        setIsProcessing(true)
         try {
-            if (!userData) return
-
             const bookingId = await generateUniqueBookingId()
             const userId = await saveUserData(userData)
-            await saveBookingData(bookingId, selectedTripId, userId, false)
-
-            // Chuẩn bị và gửi email
+            
+            // Chuẩn bị và gửi email với timeout
             const emailData = {
                 bookingId,
                 tripId: selectedTripId,
@@ -102,20 +103,39 @@ function SearchContent() {
                 userInfo: userData
             }
 
-            const emailResponse = await fetch('https://api.minhqnd.me/mail', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(emailData)
-            })
+            let emailSent = true;
+            let note = '';
 
-            if (!emailResponse.ok) {
-                throw new Error('Lỗi khi gửi email')
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const emailResponse = await fetch('https://api.minhqnd.me/mail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(emailData),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!emailResponse.ok) {
+                    throw new Error('Lỗi khi gửi email');
+                }
+            } catch (error) {
+                emailSent = false;
+                note = 'Không gửi được mail, vui lòng kiểm tra lại!';
             }
+
+            // Lưu booking với trạng thái gửi email
+            await saveBookingData(bookingId, selectedTripId, userId, false, note)
 
             router.push(`/payment?booking=${bookingId}`)
         } catch (error) {
             console.error('Lỗi trong quá trình xử lý:', error)
             alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.')
+        } finally {
+            setIsProcessing(false)
         }
     }
 

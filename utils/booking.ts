@@ -41,18 +41,18 @@ export const saveBookingData = async (
   bookingId: string,
   tripId: string,
   userId: string,
-  paid: boolean
+  paid: boolean,
+  note: string = ''
 ): Promise<void> => {
   try {
     const bookingRef = ref(database, `bookings/${bookingId}`);
-    console.log('Saving booking data:', { bookingId, tripId, userId });
     await set(bookingRef, {
       tripId,
       userId,
-      createdAt: new Date().toISOString(), // Add timestamp
-      paid: false 
+      createdAt: new Date().toISOString(),
+      paid: false,
+      note
     });
-    console.log('Booking saved successfully');
   } catch (error) {
     console.error('Error saving booking:', error);
     throw error;
