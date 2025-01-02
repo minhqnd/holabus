@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Bus, Calendar, FileText, Users, DollarSign, Clock } from 'lucide-react'
 import { subscribeToCollection } from '@/lib/firebase'
 import { useEffect, useState } from 'react'
+import { withAuth } from '@/components/auth-guard'
 
-export default function AdminDashboard() {
+function AdminDashboard() {
   const [stats, setStats] = useState({
     totalRoutes: 0,
     totalTrips: 0,
@@ -147,4 +148,6 @@ export default function AdminDashboard() {
     </div>
   )
 }
+
+export default withAuth(AdminDashboard)
 

@@ -1,10 +1,14 @@
+'use client'
 import { RoutesList } from '@/components/routes-list'
+import { withAuth } from '@/components/auth-guard'
 
-export default function RoutesPage() {
+function RoutesPage() {
   return (
     <div>
       <RoutesList />
     </div>
   )
 }
+
+export default withAuth(RoutesPage)
 

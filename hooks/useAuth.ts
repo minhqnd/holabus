@@ -20,8 +20,8 @@ export function useAuth() {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider)
-            const email = result.user.email?.replace(/[@.]/g, '_')
-            
+            const email = result.user.email?.replace('.', '_')
+
             // Kiểm tra trong database
             const adminRef = ref(database, `admin/${email}`)
             const snapshot = await get(adminRef)

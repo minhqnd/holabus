@@ -1,6 +1,8 @@
+'use client'
 import { TripsList } from '@/components/trips-list'
+import { withAuth } from '@/components/auth-guard'
 
-export default function TripsPage() {
+function TripsPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold">Chuyến xe</h1>
@@ -8,4 +10,6 @@ export default function TripsPage() {
     </div>
   )
 }
+
+export default withAuth(TripsPage)
 
