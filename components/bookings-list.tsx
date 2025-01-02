@@ -24,6 +24,7 @@ interface Booking {
   tripId: string;
   paid: boolean;
   createdAt: string;
+  note?: string;
 }
 
 interface Route {
@@ -49,6 +50,13 @@ interface Trip {
   price: string
 }
 
+interface EditableBooking {
+    tripId: string;
+    userId: string;
+    paid: boolean;
+    note: string;
+}
+
 export function BookingsList() {
   const [activeTab, setActiveTab] = useState<'pending' | 'paid'>('pending')
   const [editingBooking, setEditingBooking] = useState<string | null>(null)
@@ -64,6 +72,8 @@ export function BookingsList() {
   const [deletingBookingId, setDeletingBookingId] = useState<string | null>(null)
   const [editedUser, setEditedUser] = useState<User | null>(null)
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
+  const [editingNote, setEditingNote] = useState<string | null>(null);
+  const [noteText, setNoteText] = useState('');
 
   useEffect(() => {
     const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
@@ -227,6 +237,20 @@ export function BookingsList() {
     }))
   }
 
+  const handleEditNote = (id: string, currentNote: string) => {
+    setEditingNote(id);
+    setNoteText(currentNote || '');
+  };
+
+  const handleSaveNote = async (id: string) => {
+    try {
+      await updateDocument(`bookings/${id}`, { note: noteText });
+      setEditingNote(null);
+    } catch (error) {
+      console.error('Lỗi khi cập nhật ghi chú:', error);
+    }
+  };
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap gap-2 items-center justify-between">
@@ -376,6 +400,39 @@ export function BookingsList() {
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
+                              </div>
+                            </div>
+                            <div className="mt-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-600">Ghi chú:</span>
+                                {editingNote === id ? (
+                                  <div className="flex gap-2">
+                                    <Input
+                                      value={noteText}
+                                      onChange={(e) => setNoteText(e.target.value)}
+                                      className="text-sm"
+                                    />
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleSaveNote(id)}
+                                    >
+                                      Lưu
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm">
+                                      {booking.note || 'Không có ghi chú'}
+                                    </span>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleEditNote(id, booking.note ?? '')}
+                                    >
+                                      <Pencil className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </CardContent>

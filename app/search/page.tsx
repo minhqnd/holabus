@@ -12,7 +12,10 @@ import { PassengerForm } from '@/components/passenger-form'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PROVINCES } from '@/lib/constants/provinces'
 import { saveUserData } from '@/utils/user'
-import { saveBookingData } from '@/utils/booking'
+import { generateUniqueBookingId, saveBookingData } from '@/utils/booking'
+import { getTripsById } from '@/lib/api/trips'
+import { getRouteByProvince } from '@/lib/api/routes'
+import { Confirm } from '@/components/confirm'
 
 interface UserData {
     sex: string
@@ -29,6 +32,9 @@ function SearchContent() {
     const [selectedTripId, setSelectedTripId] = useState<string>('')
     const [provinceId, setProvinceId] = useState<string>('')
     const [provinceName, setProvinceName] = useState<string>('')
+    const [userData, setUserData] = useState<UserData | null>(null)
+    const [tripData, setTripData] = useState<any>(null)
+    const [isProcessing, setIsProcessing] = useState(false)
     
     useEffect(() => {
         const tinh = searchParams.get('tinh')
@@ -54,26 +60,84 @@ function SearchContent() {
         setSelectedTripId('')
     }
 
-    const handleFormSubmit = async (bookingId: string, userData: UserData) => {
+    const handleFormSubmit = async (userData: UserData) => {
+        setUserData(userData)
+        
         try {
-            console.log('Starting form submission process');
+            // Lấy thông tin trip
+            const tripData = await getTripsById(selectedTripId)
+            // Lấy thông tin route
+            const routeData = await getRouteByProvince(provinceId)
             
-            // Save user data and get userId
-            const userId = await saveUserData(userData);
-            console.log('User saved with ID:', userId);
+            setTripData({
+                name: tripData?.name,
+                time: tripData?.time,
+                date: tripData?.date,
+                price: tripData?.price,
+                location: routeData?.locations || []
+            })
             
-            // Save booking data
-            await saveBookingData(bookingId, selectedTripId, userId, false);
-            console.log('Booking saved with ID:', bookingId);
-            
-            // Navigate to payment page with booking ID
-            router.push(`/payment?booking=${bookingId}`);
+            setCurrentStep(3)
         } catch (error) {
-            console.error('Error in form submission:', error);
-            // Add user feedback here
-            alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.');
+            console.error('Lỗi khi lấy thông tin:', error)
+            alert('Có lỗi xảy ra. Vui lòng thử lại.')
         }
-    };
+    }
+
+    const handleConfirm = async () => {
+        if (!userData || isProcessing) return
+        
+        setIsProcessing(true)
+        try {
+            const bookingId = await generateUniqueBookingId()
+            const userId = await saveUserData(userData)
+            
+            // Chuẩn bị và gửi email với timeout
+            const emailData = {
+                bookingId,
+                tripId: selectedTripId,
+                price: tripData?.price,
+                createdAt: new Date().toISOString(),
+                locations: tripData?.location || [],
+                tripInfo: tripData,
+                userInfo: userData
+            }
+
+            let emailSent = true;
+            let note = '';
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const emailResponse = await fetch('https://api.minhqnd.me/mail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(emailData),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!emailResponse.ok) {
+                    throw new Error('Lỗi khi gửi email');
+                }
+            } catch (error) {
+                emailSent = false;
+                note = 'Không gửi được mail, vui lòng kiểm tra lại!';
+            }
+
+            // Lưu booking với trạng thái gửi email
+            await saveBookingData(bookingId, selectedTripId, userId, false, note)
+
+            router.push(`/payment?booking=${bookingId}`)
+        } catch (error) {
+            console.error('Lỗi trong quá trình xử lý:', error)
+            alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.')
+        } finally {
+            setIsProcessing(false)
+        }
+    }
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen">
@@ -105,6 +169,19 @@ function SearchContent() {
                     onSubmit={handleFormSubmit} 
                     onBack={handleBackButton}
                 />
+            </div>
+
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+                currentStep === 3 ? 'max-h-[1000px]' : 'max-h-0'
+            }`}>
+                {userData && tripData && (
+                    <Confirm
+                        tripData={tripData}
+                        userData={userData}
+                        onBack={() => setCurrentStep(2)}
+                        onConfirm={handleConfirm}
+                    />
+                )}
             </div>
         </div>
     )

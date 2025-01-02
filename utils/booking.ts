@@ -20,15 +20,12 @@ export const isBookingIdUnique = async (id: string): Promise<boolean> => {
         return false;
     }
 
-    // Check in ticketpools
-    const ticketpoolsRef = ref(database, 'ticketpools/tickets');
-    const ticketpoolsSnapshot = await get(ticketpoolsRef);
-
-    if (ticketpoolsSnapshot.exists()) {
-        const tickets = ticketpoolsSnapshot.val();
-        return !tickets.includes(id);
+    // Check in ticketpools from local json file
+    const ticketpools = require('@/data/ticketpools.json');
+    const tickets = ticketpools.tickets;
+    if (tickets.includes(id)) {
+        return false;
     }
-
     return true;
 };
 
@@ -44,18 +41,18 @@ export const saveBookingData = async (
   bookingId: string,
   tripId: string,
   userId: string,
-  paid: boolean
+  paid: boolean,
+  note: string = ''
 ): Promise<void> => {
   try {
     const bookingRef = ref(database, `bookings/${bookingId}`);
-    console.log('Saving booking data:', { bookingId, tripId, userId });
     await set(bookingRef, {
       tripId,
       userId,
-      createdAt: new Date().toISOString(), // Add timestamp
-      paid: false 
+      createdAt: new Date().toISOString(),
+      paid: false,
+      note
     });
-    console.log('Booking saved successfully');
   } catch (error) {
     console.error('Error saving booking:', error);
     throw error;
