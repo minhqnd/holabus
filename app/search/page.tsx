@@ -115,7 +115,7 @@ function SearchContent() {
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                const timeoutId = setTimeout(() => controller.abort(), 50);
 
                 const emailResponse = await fetch('https://api.minhqnd.me/mail', {
                     method: 'POST',

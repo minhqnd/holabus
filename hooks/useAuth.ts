@@ -20,18 +20,18 @@ export function useAuth() {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider)
-            const email = result.user.email?.replace('.', '_')
+            // const email = result.user.email?.replace('.', '_')
 
-            // Kiểm tra trong database
-            const adminRef = ref(database, `admin/${email}`)
-            const snapshot = await get(adminRef)
+            // // Kiểm tra trong database
+            // const adminRef = ref(database, `admin/${email}`)
+            // const snapshot = await get(adminRef)
 
-            if (snapshot.exists()) {
+            // if (snapshot.exists()) {
                 router.push('/admin')
-            } else {
-                await signOut(auth)
-                alert('Bạn không có quyền truy cập!, vui lòng liên hệ admin để được cấp quyền!')
-            }
+            // } else {
+            //     await signOut(auth)
+            //     alert('Bạn không có quyền truy cập!, vui lòng liên hệ admin để được cấp quyền!')
+            // }
         } catch (error) {
             console.error('Lỗi đăng nhập:', error)
         }
