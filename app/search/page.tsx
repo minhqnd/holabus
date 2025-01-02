@@ -12,9 +12,10 @@ import { PassengerForm } from '@/components/passenger-form'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PROVINCES } from '@/lib/constants/provinces'
 import { saveUserData } from '@/utils/user'
-import { saveBookingData } from '@/utils/booking'
+import { generateUniqueBookingId, saveBookingData } from '@/utils/booking'
 import { getTripsById } from '@/lib/api/trips'
 import { getRouteByProvince } from '@/lib/api/routes'
+import { Confirm } from '@/components/confirm'
 
 interface UserData {
     sex: string
@@ -31,6 +32,8 @@ function SearchContent() {
     const [selectedTripId, setSelectedTripId] = useState<string>('')
     const [provinceId, setProvinceId] = useState<string>('')
     const [provinceName, setProvinceName] = useState<string>('')
+    const [userData, setUserData] = useState<UserData | null>(null)
+    const [tripData, setTripData] = useState<any>(null)
     
     useEffect(() => {
         const tinh = searchParams.get('tinh')
@@ -56,68 +59,65 @@ function SearchContent() {
         setSelectedTripId('')
     }
 
-    const handleFormSubmit = async (bookingId: string, userData: UserData) => {
+    const handleFormSubmit = async (userData: UserData) => {
+        setUserData(userData)
+        
         try {
-            console.log('1. Bắt đầu quá trình gửi form');
-            
-            // Lưu user data và lấy userId
-            const userId = await saveUserData(userData);
-            console.log('2. Đã lưu user data, userId:', userId);
-            
-            // Lưu booking data
-            await saveBookingData(bookingId, selectedTripId, userId, false);
-            console.log('3. Đã lưu booking data');
-            
             // Lấy thông tin trip
-            const tripData = await getTripsById(selectedTripId);
-            console.log('4. Trip data:', tripData);
-            
+            const tripData = await getTripsById(selectedTripId)
             // Lấy thông tin route
-            const routeData = await getRouteByProvince(provinceId);
-            console.log('5. Route data:', routeData);
+            const routeData = await getRouteByProvince(provinceId)
+            
+            setTripData({
+                name: tripData?.name,
+                time: tripData?.time,
+                date: tripData?.date,
+                price: tripData?.price,
+                location: routeData?.locations || []
+            })
+            
+            setCurrentStep(3)
+        } catch (error) {
+            console.error('Lỗi khi lấy thông tin:', error)
+            alert('Có lỗi xảy ra. Vui lòng thử lại.')
+        }
+    }
 
-            // Chuẩn bị data để gửi email
+    const handleConfirm = async () => {
+        try {
+            if (!userData) return
+
+            const bookingId = await generateUniqueBookingId()
+            const userId = await saveUserData(userData)
+            await saveBookingData(bookingId, selectedTripId, userId, false)
+
+            // Chuẩn bị và gửi email
             const emailData = {
-                bookingId: bookingId,
+                bookingId,
                 tripId: selectedTripId,
                 price: tripData?.price,
                 createdAt: new Date().toISOString(),
-                locations: routeData?.locations || [],
-                tripInfo: {
-                    name: tripData?.name,
-                    time: tripData?.time,
-                    date: tripData?.date,
-                    slot: tripData?.slot
-                },
-                userInfo: {
-                    name: userData.name,
-                    email: userData.mail,
-                    phone: userData.phone
-                }
-            };
-            console.log('6. Email data chuẩn bị gửi:', emailData);
-
-            // Gửi request đến API email
-            const emailResponse = await fetch('https://api.minhqnd.me/mail', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(emailData)
-            });
-            console.log('7. Email response:', await emailResponse.json());
-
-            if (!emailResponse.ok) {
-                throw new Error('Lỗi khi gửi email');
+                locations: tripData?.location || [],
+                tripInfo: tripData,
+                userInfo: userData
             }
 
-            console.log('8. Hoàn tất, chuyển hướng đến trang thanh toán');
-            // router.push(`/payment?booking=${bookingId}`);
+            const emailResponse = await fetch('https://api.minhqnd.me/mail', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(emailData)
+            })
+
+            if (!emailResponse.ok) {
+                throw new Error('Lỗi khi gửi email')
+            }
+
+            router.push(`/payment?booking=${bookingId}`)
         } catch (error) {
-            console.error('Lỗi trong quá trình xử lý:', error);
-            alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.');
+            console.error('Lỗi trong quá trình xử lý:', error)
+            alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.')
         }
-    };
+    }
 
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-16 py-6 min-h-screen">
@@ -149,6 +149,19 @@ function SearchContent() {
                     onSubmit={handleFormSubmit} 
                     onBack={handleBackButton}
                 />
+            </div>
+
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
+                currentStep === 3 ? 'max-h-[1000px]' : 'max-h-0'
+            }`}>
+                {userData && tripData && (
+                    <Confirm
+                        tripData={tripData}
+                        userData={userData}
+                        onBack={() => setCurrentStep(2)}
+                        onConfirm={handleConfirm}
+                    />
+                )}
             </div>
         </div>
     )

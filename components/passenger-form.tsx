@@ -21,7 +21,7 @@ interface UserData {
 }
 
 interface PassengerFormProps {
-  onSubmit: (bookingId: string, userData: UserData) => void
+  onSubmit: (userData: UserData) => void
   onBack: () => void
 }
 
@@ -79,12 +79,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      try {
-        const bookingId = await generateUniqueBookingId()
-        onSubmit(bookingId, formData)
-      } catch (error) {
-        console.error('Error generating booking ID:', error)
-      }
+        onSubmit(formData)
     }
   }
 
