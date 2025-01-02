@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
 
 interface ConfirmProps {
     tripData: {
@@ -18,10 +19,23 @@ interface ConfirmProps {
         phone: string;
     };
     onBack: () => void;
-    onConfirm: () => void;
+    onConfirm: () => Promise<void>;
 }
 
 export function Confirm({ tripData, userData, onBack, onConfirm }: ConfirmProps) {
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleConfirm = async () => {
+        setIsLoading(true)
+        try {
+            await onConfirm()
+        } catch (error) {
+            console.error('Lỗi:', error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className="rounded-3xl bg-white p-6 mb-16">
             <h2 className="mb-6 text-2xl font-bold">Xác nhận thông tin</h2>
@@ -92,6 +106,7 @@ export function Confirm({ tripData, userData, onBack, onConfirm }: ConfirmProps)
                         variant="ghost"
                         className="rounded-full"
                         onClick={onBack}
+                        disabled={isLoading}
                     >
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Quay lại
@@ -99,10 +114,20 @@ export function Confirm({ tripData, userData, onBack, onConfirm }: ConfirmProps)
                     <Button
                         type="button"
                         className="rounded-full bg-red-600 text-white hover:bg-red-700"
-                        onClick={onConfirm}
+                        onClick={handleConfirm}
+                        disabled={isLoading}
                     >
-                        Xác nhận đặt vé
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Đang xử lý...
+                            </>
+                        ) : (
+                            <>
+                                Xác nhận đặt vé
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </>
+                        )}
                     </Button>
                 </div>
             </div>
