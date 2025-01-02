@@ -59,11 +59,14 @@ export function Footer() {
             <h3 className="mb-4 text-lg font-semibold">Liên hệ</h3>
             <ul className="space-y-2">
               <li className="text-base font-bold">Đỗ Bá Trung - Chịu trách nhiệm nội dung</li>
-              <li className="text-base">SDT: 0944355789</li>
-              <li className="text-base">Email: Trungdbhs186524@fpt.edu.vn</li>
+              <li className="text-base">SDT: <a href="tel:0944355789" className="hover:underline">0944355789</a></li>
+              <li className="text-base">Email: <a href="mailto:Trungdbhs186524@fpt.edu.vn" className="hover:underline">Trungdbhs186524@fpt.edu.vn</a></li>
               <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Quản lý dự án</li>
-              <li className="text-base">SDT: 0929343780</li>
-              <li className="text-base">Email: kyvkhe182094@fpt.edu.vn</li>
+              <li className="text-base">SDT: <a href="tel:0929343780" className="hover:underline">0929343780</a></li>
+              <li className="text-base">Email: <a href="mailto:kyvkhe182094@fpt.edu.vn" className="hover:underline">kyvkhe182094@fpt.edu.vn</a></li>
+              <li className="mt-8 text-base font-bold">Nguyễn Đức Quang Minh - Web Developer</li>
+              <li className="text-base">SDT: <a href="tel:0366884844" className="hover:underline">0366884844</a></li>
+              <li className="text-base">Email: <a href="mailto:moimoi@duck.com" className="hover:underline">moimoi@duck.com</a></li>
             </ul>
           </div>
         </div>
@@ -71,7 +74,7 @@ export function Footer() {
       </div>
       <div className="w-full bg-red-800 text-gray-200">
         <div className="mx-auto py-4 text-center">
-          <p>&copy; 2025 HolaBus. Made with ❤️ by moi.</p>
+          <p>&copy; 2025 HolaBus. Made with ❤️ by <a href="https://fb.com/minhqnd" className="hover:underline">MINHQND</a>.</p>
         </div>
       </div>
     </footer>
