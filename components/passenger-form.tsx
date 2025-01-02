@@ -170,7 +170,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
           </div>
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex">
           <ReCAPTCHA
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
             onChange={handleCaptchaChange}
