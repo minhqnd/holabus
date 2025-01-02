@@ -50,12 +50,12 @@ interface Trip {
   price: string
 }
 
-interface EditableBooking {
-    tripId: string;
-    userId: string;
-    paid: boolean;
-    note: string;
-}
+// interface EditableBooking {
+//     tripId: string;
+//     userId: string;
+//     paid: boolean;
+//     note: string;
+// }
 
 export function BookingsList() {
   const [activeTab, setActiveTab] = useState<'pending' | 'paid'>('pending')

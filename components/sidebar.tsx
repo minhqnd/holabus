@@ -24,10 +24,10 @@ export function Sidebar() {
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
-  const handleLogout = () => {
-    // Implement logout logic here
-    console.log('Logging out...')
-  }
+  // const handleLogout = () => {
+  //   // Implement logout logic here
+  //   console.log('Logging out...')
+  // }
 
   return (
     <>

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/select'
 // import Image from 'next/image'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { generateUniqueBookingId } from '@/utils/booking'
+// import { generateUniqueBookingId } from '@/utils/booking'
 import ReCAPTCHA from 'react-google-recaptcha'
 
 interface UserData {

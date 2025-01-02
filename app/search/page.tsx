@@ -25,6 +25,14 @@ interface UserData {
     address?: string
 }
 
+interface TripData {
+    name: string;
+    time: string;
+    date: string;
+    price: string;
+    location: string[];
+}
+
 function SearchContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -33,7 +41,7 @@ function SearchContent() {
     const [provinceId, setProvinceId] = useState<string>('')
     const [provinceName, setProvinceName] = useState<string>('')
     const [userData, setUserData] = useState<UserData | null>(null)
-    const [tripData, setTripData] = useState<any>(null)
+    const [tripData, setTripData] = useState<TripData | null>(null)
     const [isProcessing, setIsProcessing] = useState(false)
     
     useEffect(() => {
@@ -103,7 +111,6 @@ function SearchContent() {
                 userInfo: userData
             }
 
-            let emailSent = true;
             let note = '';
 
             try {
@@ -122,8 +129,7 @@ function SearchContent() {
                 if (!emailResponse.ok) {
                     throw new Error('Lỗi khi gửi email');
                 }
-            } catch (error) {
-                emailSent = false;
+            } catch {
                 note = 'Không gửi được mail, vui lòng kiểm tra lại!';
             }
 
