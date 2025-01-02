@@ -12,6 +12,7 @@ import {
 // import Image from 'next/image'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { generateUniqueBookingId } from '@/utils/booking'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 interface UserData {
   sex: string
@@ -39,6 +40,9 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     mail: '',
     phone: '',
   })
+
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null)
+  const [captchaError, setCaptchaError] = useState('')
 
   const validateForm = () => {
     let isValid = true
@@ -72,6 +76,11 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
       isValid = false
     }
 
+    if (!captchaValue) {
+      setCaptchaError('Vui lòng xác nhận captcha')
+      isValid = false
+    }
+
     setErrors(newErrors)
     return isValid
   }
@@ -86,6 +95,11 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
         console.error('Error generating booking ID:', error)
       }
     }
+  }
+
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaValue(value)
+    setCaptchaError('')
   }
 
   return (
@@ -155,6 +169,15 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             />
             {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
           </div>
+        </div>
+        <div className="flex">
+          <ReCAPTCHA
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
+            onChange={handleCaptchaChange}
+          />
+          {captchaError && (
+            <span className="text-sm text-red-500 mt-1">{captchaError}</span>
+          )}
         </div>
         <div className="flex justify-between pt-6">
           <Button
