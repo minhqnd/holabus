@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronDown } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import Image from 'next/image'
+import { SakuraEffect } from '@/components/SakuraEffect'
 
 interface Province {
   available: boolean
@@ -58,6 +59,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
+      <SakuraEffect />
       <Navbar />
       {/* Phần hero và search */}
       <div className="w-full relative z-10">

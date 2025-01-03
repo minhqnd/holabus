@@ -88,3 +88,26 @@ main {
     font-size: 95%; /* Giảm kích thước font xuống 75% trên mobile */
   }
 }
+
+.sakura {
+  position: fixed;
+  top: -10%;
+  z-index: 999;
+  background-image: url('/img/sakura-petal.png'); /* Thêm ảnh lá đào của bạn */
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  animation: sakuraFall 10s linear forwards;
+}
+
+@keyframes sakuraFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
