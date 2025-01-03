@@ -115,9 +115,9 @@ function SearchContent() {
 
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 50);
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-                const emailResponse = await fetch('https://api.minhqnd.me/mail', {
+                const emailResponse = await fetch('https://api.holabus.com.vn', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(emailData),
@@ -136,7 +136,7 @@ function SearchContent() {
             // Lưu booking với trạng thái gửi email
             await saveBookingData(bookingId, selectedTripId, userId, false, note)
 
-            router.push(`/payment?booking=${bookingId}`)
+            // router.push(`/payment?booking=${bookingId}`)
         } catch (error) {
             console.error('Lỗi trong quá trình xử lý:', error)
             alert('Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại.')
