@@ -45,7 +45,9 @@ export function Sidebar() {
         <div className="h-screen overflow-y-auto">
           <div className="sticky top-0 bg-white z-10">
             <div className="flex h-16 items-center justify-center border-b">
-              <Image src="/red-logo.png" alt="HolaBus" className="w-auto h-[90%]" width={100} height={100} />
+              <Link href="/" className="w-auto h-[90%]">
+                <Image src="/red-logo.png" alt="HolaBus" className="w-auto h-[100%]" width={100} height={100} />
+              </Link>
             </div>
           </div>
 
