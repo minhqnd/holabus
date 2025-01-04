@@ -58,7 +58,7 @@ export function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Liên hệ</h3>
             <ul className="space-y-2">
-              <li className="text-base font-bold">Đỗ Bá Trung - Chịu trách nhiệm nội dung</li>
+              <li className="text-base font-bold">Đỗ Bá Trung - Quản lý dự án</li>
               <li className="text-base">SDT: <a href="tel:0944355789" className="hover:underline">0944355789</a></li>
               <li className="text-base">Email: <a href="mailto:Trungdbhs186524@fpt.edu.vn" className="hover:underline">Trungdbhs186524@fpt.edu.vn</a></li>
               <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Quản lý dự án</li>
