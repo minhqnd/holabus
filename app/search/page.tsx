@@ -114,28 +114,23 @@ function SearchContent() {
             let note = '';
 
             try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 50);
-
-                const emailResponse = await fetch('https://api.minhqnd.me/mail', {
+                const emailResponse = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(emailData),
-                    signal: controller.signal
+                    body: JSON.stringify(emailData)
                 });
-
-                clearTimeout(timeoutId);
 
                 if (!emailResponse.ok) {
                     throw new Error('Lỗi khi gửi email');
                 }
-            } catch {
-                note = 'Không gửi được mail, vui lòng kiểm tra lại!';
+            } catch (error) {
+                note = 'Không gửi được mail, vui lòng kiểm tra lại! ' + error;
             }
 
             // Lưu booking với trạng thái gửi email
             await saveBookingData(bookingId, selectedTripId, userId, false, note)
 
+            // Chuyển hướng sau khi gửi email
             router.push(`/payment?booking=${bookingId}`)
         } catch (error) {
             console.error('Lỗi trong quá trình xử lý:', error)

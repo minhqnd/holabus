@@ -62,9 +62,9 @@ const PaymentContent = () => {
       ) : amount !== null && tripId !== null ? (
         <PaymentDetails
           amount={amount}
-          referenceId={`HOLABUS-${bookingId}`}
-          accountName="NGUYEN DUC QUANG MINH"
-          accountNumber="MINHQND"
+          referenceId={`HOLABUS ${bookingId}`}
+          accountName="DO BA TRUNG"
+          accountNumber="0944355789"
         />
       ) : (
         <div className="text-center text-red-500">

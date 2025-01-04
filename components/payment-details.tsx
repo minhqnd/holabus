@@ -16,7 +16,7 @@ export function PaymentDetails({
   accountNumber = "MINHQND"
 }: PaymentDetailsProps) {
   // Tạo URL QR động
-  const qrUrl = `https://img.vietqr.io/image/VCB-${accountNumber}-qr_only.png?amount=${amount}&addInfo=${referenceId}&accountName=${encodeURIComponent(accountName)}`;
+  const qrUrl = `https://img.vietqr.io/image/MB-${accountNumber}-qr_only.png?amount=${amount.toString().replace('.', '')}&addInfo=${referenceId}&accountName=${encodeURIComponent(accountName)}`;
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -55,6 +55,9 @@ export function PaymentDetails({
             <span className="text-gray-600">Nội dung:</span>
             <span className="font-bold text-red-600">{referenceId}</span>
           </div>
+        </div>
+        <div className="mx-12 mt-4 text-center">
+          <p className="text-base font-medium">Vui lòng thanh toán sớm để nhận vé, HolaBus sẽ hoàn tiền cho trường hợp hết vé do thanh toán muộn.</p>
         </div>
       </div>
       <div className="rounded-3xl bg-white p-6">
