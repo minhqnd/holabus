@@ -9,7 +9,7 @@ interface PaymentDetailsProps {
   accountNumber: string;
 }
 
-export function PaymentDetails({ 
+export function PaymentDetails({
   amount = 189000,
   referenceId = "RU8BF",
   accountName = "NGUYEN DUC QUANG MINH",
@@ -38,12 +38,8 @@ export function PaymentDetails({
         </div>
         <div className="space-y-4 rounded-xl bg-gray-50 p-4">
           <div className="flex justify-between">
-            <span className="text-gray-600">Tài khoản:</span>
-            <span className="font-medium">{accountNumber}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Tên chủ tài khoản:</span>
-            <span className="font-medium">{accountName}</span>
+            <span className="text-gray-600">Ngân hàng:</span>
+            <span className="font-medium">MBBank</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Số tiền:</span>
@@ -54,6 +50,14 @@ export function PaymentDetails({
           <div className="flex justify-between">
             <span className="text-gray-600">Nội dung:</span>
             <span className="font-bold text-red-600">{referenceId}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Tài khoản:</span>
+            <span className="font-medium">{accountNumber}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Tên chủ tài khoản:</span>
+            <span className="font-medium">{accountName}</span>
           </div>
         </div>
         <div className="mx-12 mt-4 text-center">
