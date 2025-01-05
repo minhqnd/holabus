@@ -19,6 +19,8 @@ interface UserData {
   name: string
   mail: string
   phone: string
+  confirmEmail: string
+  destination: string
 }
 
 interface PassengerFormProps {
@@ -32,6 +34,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     name: '',
     mail: '',
     phone: '',
+    confirmEmail: '',
+    destination: '',
   })
 
   const [errors, setErrors] = useState({
@@ -39,6 +43,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     name: '',
     mail: '',
     phone: '',
+    confirmEmail: '',
+    destination: '',
   })
 
   const [captchaValue, setCaptchaValue] = useState<string | null>(null)
@@ -51,6 +57,8 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
       name: '',
       mail: '',
       phone: '',
+      confirmEmail: '',
+      destination: '',
     }
 
     if (!formData.sex) {
@@ -76,6 +84,19 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
       isValid = false
     }
 
+    if (!formData.confirmEmail.trim()) {
+      newErrors.confirmEmail = 'Vui lòng xác nhận email'
+      isValid = false
+    } else if (formData.confirmEmail !== formData.mail) {
+      newErrors.confirmEmail = 'Email xác nhận không khớp'
+      isValid = false
+    }
+
+    if (!formData.destination.trim()) {
+      newErrors.destination = 'Vui lòng nhập điểm đến'
+      isValid = false
+    }
+
     if (!captchaValue) {
       setCaptchaError('Vui lòng xác nhận captcha')
       isValid = false
@@ -88,7 +109,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-        onSubmit(formData)
+      onSubmit(formData)
     }
   }
 
@@ -152,6 +173,21 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             {errors.phone && <span className="text-sm text-red-500 mt-1">{errors.phone}</span>}
           </div>
           <div>
+            <Label>Điểm đến</Label>
+            <Input
+              type="text"
+              placeholder="Nhập điểm đến của bạn"
+              height='3rem'
+              borderRadius='9999px'
+              className="mt-1"
+              value={formData.destination}
+              onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
+            />
+            {errors.destination && <span className="text-sm text-red-500 mt-1">{errors.destination}</span>}
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div>
             <Label>Email</Label>
             <Input
               type="email"
@@ -164,8 +200,23 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             />
             {errors.mail && <span className="text-sm text-red-500 mt-1">{errors.mail}</span>}
           </div>
+          <div>
+            <Label>Xác nhận Email</Label>
+            <Input
+              type="email"
+              placeholder="Nhập lại địa chỉ email"
+              className="mt-1"
+              height='3rem'
+              borderRadius='9999px'
+              value={formData.confirmEmail}
+              onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+            />
+            {errors.confirmEmail && (
+              <span className="text-sm text-red-500 mt-1">{errors.confirmEmail}</span>
+            )}
+          </div>
         </div>
-        <div className="flex">
+        <div>
           <ReCAPTCHA
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
             onChange={handleCaptchaChange}
