@@ -25,6 +25,7 @@ interface Booking {
   paid: boolean;
   createdAt: string;
   note?: string;
+  destination: string;
 }
 
 interface Route {
@@ -35,6 +36,7 @@ interface Route {
 }
 
 interface User {
+  destination: string
   name: string;
   mail: string;
   phone: string;
@@ -74,6 +76,7 @@ export function BookingsList() {
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [flashingBookings, setFlashingBookings] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
@@ -94,6 +97,18 @@ export function BookingsList() {
       unsubscribeTrips()
     }
   }, [])
+
+  useEffect(() => {
+    Object.entries(bookings).forEach(([id, booking]) => {
+      const isNewBooking = (Date.now() - new Date(booking.createdAt).getTime()) < 5 * 60_000;
+      if (isNewBooking && !flashingBookings[id]) {
+        setFlashingBookings((prev) => ({ ...prev, [id]: true }));
+        setTimeout(() => {
+          setFlashingBookings((prev) => ({ ...prev, [id]: false }));
+        }, 2000);
+      }
+    });
+  }, [bookings]); // Always include the same dependencies here
 
   const handleRouteChange = (value: string) => {
     setFilterRouteId(value === "all" ? null : value)
@@ -120,23 +135,25 @@ export function BookingsList() {
     </Select>
   )
 
-  const filteredBookings = Object.entries(bookings as Record<string, Booking>).filter(([id, booking]) => {
-    const user = users[booking.userId]
-    const trip = trips[booking.tripId]
-    
-    return (
-      (activeTab === 'pending' ? !booking.paid : booking.paid) &&
-      (!filterRouteId || trip?.routeId === filterRouteId) &&
-      (!filterDate || booking.createdAt.startsWith(filterDate)) &&
-      (!searchTerm || 
-        id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredBookings = Object.entries(bookings as Record<string, Booking>)
+    .filter(([, booking]) => {
+      const user = users[booking.userId]
+      const trip = trips[booking.tripId]
+      
+      const matchesSearch = 
+        searchTerm === '' || 
+        booking.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user?.phone?.includes(searchTerm) ||
-        user?.mail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        trip?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        user?.phone?.includes(searchTerm);
+
+      return (
+        (activeTab === 'pending' ? !booking.paid : booking.paid) &&
+        (!filterRouteId || trip?.routeId === filterRouteId) &&
+        (!filterDate || booking.createdAt.startsWith(filterDate)) &&
+        matchesSearch
       )
-    )
-  })
+    })
+    .sort(([, a], [, b]) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const groupedBookings = filteredBookings.reduce((acc, [id, booking]) => {
     const trip = trips[booking.tripId]
@@ -321,123 +338,132 @@ export function BookingsList() {
                       </Badge>
                     </div>
                     <div className="space-y-4">
-                      {bookings.map(([id, booking]: [string, Booking], index: number) => (
-                        <Card key={id}>
-                          <CardContent>
-                            
-                            <div className="flex items-center justify-between my-4">
-                              <div className="flex items-center gap-2">
-                                <Badge>{index + 1}</Badge>
-                                <span className="text-xl font-semibold break-words">{id}</span>
+                      {bookings.map(([id, booking]: [string, Booking], index: number) => {
+                        return (
+                          <Card
+                            key={id}
+                            className={`${flashingBookings[id] ? 'animate-pulse ring-2 ring-blue-500' : ''}`}
+                          >
+                            <CardContent>
+                              
+                              <div className="flex items-center justify-between my-4">
+                                <div className="flex items-center gap-2">
+                                  <Badge>{index + 1}</Badge>
+                                  <span className="text-xl font-semibold break-words">{id}</span>
+                                </div>
+                                <Badge variant={booking.paid ? "default" : "destructive"}>
+                                  {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+                                </Badge>
                               </div>
-                              <Badge variant={booking.paid ? "default" : "destructive"}>
-                                {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                              </Badge>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <p className="text-sm font-medium break-words">Khách hàng</p>
-                                <p className="text-sm break-words">{users[booking.userId].name}</p>
-                                <p className="text-sm text-gray-500 break-words">Email: {users[booking.userId].mail}</p>
-                                <p className="text-sm text-gray-500 break-words">SĐT: {users[booking.userId].phone}</p>
-                                <p className="text-sm text-gray-500 break-words">
-                                  Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
-                                </p>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-sm font-medium break-words">Khách hàng</p>
+                                  <p className="text-sm break-words">{users[booking.userId].name}</p>
+                                  <p className="text-sm text-gray-500 break-words">Email: {users[booking.userId].mail}</p>
+                                  <p className="text-sm text-gray-500 break-words">SĐT: {users[booking.userId].phone}</p>
+                                  <p className="text-sm text-gray-500 break-words">
+                                    Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium break-words">Chuyến xe</p>
+                                  <p className="text-sm break-words">{trip?.name}</p>
+                                  <p className="text-sm text-gray-500 break-words">Mã chuyến: {booking.tripId}</p>
+                                  <p className="text-sm text-gray-500 break-words">Ngày khởi hành: {trip?.date}</p>
+                                  <p className="text-sm text-gray-500 break-words">Giờ khởi hành: {trip?.time}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium break-words">Ngày tạo</p>
+                                  <p className="text-sm break-words">{new Date(booking.createdAt).toLocaleString('vi-VN')}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium break-words">Giá</p>
+                                  <p className="text-sm font-semibold break-words">{trip?.price} VND</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium break-words">Điểm đến</p>
+                                  <p className="text-sm break-words">{users[booking.userId].destination || 'N/A'}</p>
+                                </div>
                               </div>
-                              <div>
-                                <p className="text-sm font-medium break-words">Chuyến xe</p>
-                                <p className="text-sm break-words">{trip?.name}</p>
-                                <p className="text-sm text-gray-500 break-words">Mã chuyến: {booking.tripId}</p>
-                                <p className="text-sm text-gray-500 break-words">Ngày khởi hành: {trip?.date}</p>
-                                <p className="text-sm text-gray-500 break-words">Giờ khởi hành: {trip?.time}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium break-words">Ngày tạo</p>
-                                <p className="text-sm break-words">{new Date(booking.createdAt).toLocaleString('vi-VN')}</p>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium break-words">Giá</p>
-                                <p className="text-sm font-semibold break-words">{trip?.price} VND</p>
-                              </div>
-                            </div>
-                            <div className="mt-4 flex justify-between">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
-                              >
-                                <Mail className="mr-2 h-4 w-4" />
-                                {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
-                              </Button>
-                              <div className="space-x-2">
-                                {booking.paid ? (
-                                  <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() => handleCancelPayment(id)}
-                                  >
-                                    <X className="mr-2 h-4 w-4" />
-                                    Hủy thanh toán
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    variant="default"
-                                    size="sm"
-                                    onClick={() => setConfirmPaymentId(id)}
-                                  >
-                                    <Check className="mr-2 h-4 w-4" />
-                                    Đã thanh toán
-                                  </Button>
-                                )}
-                                <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  onClick={() => setDeletingBookingId(id)}
-                                  className="text-red-500 hover:text-red-700"
+                              <div className="mt-4 flex justify-between">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <Mail className="mr-2 h-4 w-4" />
+                                  {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
                                 </Button>
-                              </div>
-                            </div>
-                            <div className="mt-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm text-gray-600">Ghi chú:</span>
-                                {editingNote === id ? (
-                                  <div className="flex gap-2">
-                                    <Input
-                                      value={noteText}
-                                      onChange={(e) => setNoteText(e.target.value)}
-                                      className="text-sm"
-                                    />
+                                <div className="space-x-2">
+                                  {booking.paid ? (
                                     <Button
+                                      variant="destructive"
                                       size="sm"
-                                      onClick={() => handleSaveNote(id)}
+                                      onClick={() => handleCancelPayment(id)}
                                     >
-                                      Lưu
+                                      <X className="mr-2 h-4 w-4" />
+                                      Hủy thanh toán
                                     </Button>
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-sm">
-                                      {booking.note || 'Không có ghi chú'}
-                                    </span>
+                                  ) : (
                                     <Button
-                                      variant="ghost"
+                                      variant="default"
                                       size="sm"
-                                      onClick={() => handleEditNote(id, booking.note ?? '')}
+                                      onClick={() => setConfirmPaymentId(id)}
                                     >
-                                      <Pencil className="h-4 w-4" />
+                                      <Check className="mr-2 h-4 w-4" />
+                                      Đã thanh toán
                                     </Button>
-                                  </div>
-                                )}
+                                  )}
+                                  <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => setDeletingBookingId(id)}
+                                    className="text-red-500 hover:text-red-700"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              <div className="mt-2">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm text-gray-600">Ghi chú:</span>
+                                  {editingNote === id ? (
+                                    <div className="flex gap-2">
+                                      <Input
+                                        value={noteText}
+                                        onChange={(e) => setNoteText(e.target.value)}
+                                        className="text-sm"
+                                      />
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleSaveNote(id)}
+                                      >
+                                        Lưu
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm">
+                                        {booking.note || 'Không có ghi chú'}
+                                      </span>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleEditNote(id, booking.note ?? '')}
+                                      >
+                                        <Pencil className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        )
+                      })}
                     </div>
                   </div>
                 )

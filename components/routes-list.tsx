@@ -24,11 +24,15 @@ interface Route {
   locations: string[];
 }
 
+interface EditableRoute extends Route {
+  id: string
+}
+
 export function RoutesList() {
   const [routes, setRoutes] = useState<Record<string, Route>>({})
   const [expandedRoute, setExpandedRoute] = useState<string | null>(null)
   const [editingRoute, setEditingRoute] = useState<string | null>(null)
-  const [editedRoute, setEditedRoute] = useState<Route | null>(null)
+  const [editedRoute, setEditedRoute] = useState<EditableRoute | null>(null)
   const [isAddingRoute, setIsAddingRoute] = useState(false)
   const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
 
@@ -42,13 +46,28 @@ export function RoutesList() {
   const handleEditClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     setEditingRoute(id)
-    setEditedRoute(routes[id])
+    setEditedRoute({ ...routes[id], id } as EditableRoute)
   }
 
   const handleSaveEdit = async () => {
     if (editingRoute && editedRoute) {
       try {
-        await updateDocument(`routes/${editingRoute}`, editedRoute)
+        if (editingRoute !== editedRoute.id) {
+          await setDocument(`routes/${editedRoute.id}`, {
+            name: editedRoute.name,
+            price: editedRoute.price,
+            available: editedRoute.available,
+            locations: editedRoute.locations
+          })
+          await deleteDocument(`routes/${editingRoute}`)
+        } else {
+          await updateDocument(`routes/${editingRoute}`, {
+            name: editedRoute.name,
+            price: editedRoute.price,
+            available: editedRoute.available,
+            locations: editedRoute.locations
+          })
+        }
         setEditingRoute(null)
         setEditedRoute(null)
       } catch (error) {
@@ -57,12 +76,11 @@ export function RoutesList() {
     }
   }
 
-  const handleAddRoute = async (newRoute: Omit<Route, 'available'>) => {
+  const handleAddRoute = async (newRouteId: string, newRouteData: Omit<Route, 'available'>) => {
     try {
-      const routeId = newRoute.name.toUpperCase().replace(/\s+/g, '')
-      await setDocument(`routes/${routeId}`, {
-        ...newRoute,
-        available: true
+      await setDocument(`routes/${newRouteId}`, {
+        ...newRouteData,
+        available: true,
       })
       setIsAddingRoute(false)
     } catch (error) {
@@ -70,12 +88,12 @@ export function RoutesList() {
     }
   }
 
-  const handleDeleteUser = async (id: string) => {
+  const handleDeleteRoute = async (id: string) => {
     try {
-      await deleteDocument(`users/${id}`)
+      await deleteDocument(`routes/${id}`)
       setDeletingUserId(null)
     } catch (error) {
-      console.error('Lỗi khi xóa người dùng:', error)
+      console.error('Lỗi khi xóa tuyến xe:', error)
     }
   }
 
@@ -145,6 +163,15 @@ export function RoutesList() {
         >
           <form onSubmit={(e) => { e.preventDefault(); handleSaveEdit(); }} className="space-y-4">
             <div>
+              <label htmlFor="editRouteId" className="block text-sm font-medium text-gray-700">Mã tuyến</label>
+              <Input
+                id="editRouteId"
+                value={editedRoute.id}
+                onChange={(e) => setEditedRoute({ ...editedRoute, id: e.target.value.toUpperCase() })}
+                className="mt-1 uppercase"
+              />
+            </div>
+            <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên tuyến</label>
               <Input
                 id="name"
@@ -194,16 +221,27 @@ export function RoutesList() {
             <DialogTitle>Thêm tuyến xe mới</DialogTitle>
           </DialogHeader>
           <form onSubmit={(e) => {
-            e.preventDefault();
-            const formData = new FormData(e.currentTarget);
-            const newRoute = {
+            e.preventDefault()
+            const formData = new FormData(e.currentTarget)
+            const newRouteId = (formData.get('routeId') as string).toUpperCase()
+            const newRouteData = {
               name: formData.get('name') as string,
               price: formData.get('price') as string,
               available: formData.get('available') === 'true',
               locations: (formData.get('locations') as string).split('\n'),
-            };
-            handleAddRoute(newRoute);
+            }
+            handleAddRoute(newRouteId, newRouteData)
           }} className="space-y-4">
+            <div>
+              <label htmlFor="routeId" className="block text-sm font-medium text-gray-700">Mã tuyến</label>
+              <Input
+                id="routeId"
+                name="routeId"
+                required
+                className="mt-1 uppercase"
+                placeholder="VD: DN-HUE"
+              />
+            </div>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên tuyến</label>
               <Input id="name" name="name" required className="mt-1" />
@@ -250,7 +288,7 @@ export function RoutesList() {
             </Button>
             <Button 
               variant="destructive" 
-              onClick={() => deletingUserId && handleDeleteUser(deletingUserId)}
+              onClick={() => deletingUserId && handleDeleteRoute(deletingUserId)}
             >
               Xóa
             </Button>

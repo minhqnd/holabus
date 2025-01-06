@@ -66,5 +66,8 @@ export const PROVINCES: Province[] = [
     { id: "TUYENQUANG", name: "Tuyên Quang" },
     { id: "VINHLONG", name: "Vĩnh Long" },
     { id: "VINHPHUC", name: "Vĩnh Phúc" },
-    { id: "YENBAI", name: "Yên Bái" }
+    { id: "YENBAI", name: "Yên Bái" },
+    { id: "BENXEMYDINH", name: "Bến xe Mỹ Đình" },
+    { id: "BENXEGIAPBAT", name: "Bến xe Giáp Bát" },
+    { id: "BENXENUOCNGAM", name: "Bến xe Nước Ngầm" }
 ]; 

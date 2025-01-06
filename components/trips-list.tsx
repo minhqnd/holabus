@@ -263,6 +263,20 @@ export function TripsList() {
                 className="mt-1"
               />
             </div>
+            <div>
+              <label htmlFor="routeId" className="block text-sm font-medium text-gray-700">Tuyến xe</label>
+              <select
+                id="routeId"
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                value={editedTrip.routeId}
+                onChange={(e) => setEditedTrip({ ...editedTrip, routeId: e.target.value })}
+              >
+                {Object.entries(routes).map(([id, route]) => (
+                  <option key={id} value={id}>{route.name}</option>
+                ))}
+              </select>
+            </div>
             <Button type="submit">Lưu thay đổi</Button>
           </form>
         </EditModal>
