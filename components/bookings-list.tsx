@@ -50,6 +50,7 @@ interface Trip {
   date: string
   time: string
   price: string
+  locations: string[]
 }
 
 // interface EditableBooking {
@@ -70,7 +71,7 @@ export function BookingsList() {
   const [bookings, setBookings] = useState<Record<string, Booking>>({})
   const [users, setUsers] = useState<Record<string, User>>({})
   const [trips, setTrips] = useState<Record<string, Trip>>({})
-  const [routes] = useState<Record<string, Route>>({})
+  const [routes, setRoutes] = useState<Record<string, Route>>({})
   const [deletingBookingId, setDeletingBookingId] = useState<string | null>(null)
   const [editedUser, setEditedUser] = useState<User | null>(null)
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
@@ -91,10 +92,15 @@ export function BookingsList() {
       setTrips(data || {} as Record<string, Trip>)
     })
 
+    const unsubscribeRoutes = subscribeToCollection<Record<string, Route>>('routes', (data) => {
+      setRoutes(data || {} as Record<string, Route>)
+    })
+
     return () => {
       unsubscribeBookings()
       unsubscribeUsers()
       unsubscribeTrips()
+      unsubscribeRoutes()
     }
   }, [])
 
@@ -127,7 +133,7 @@ export function BookingsList() {
           <SelectItem value="all">All routes</SelectItem>
           {Object.entries(routes).map(([value, route]) => (
             <SelectItem key={value} value={value}>
-              {route.name}
+              {route.name} 
             </SelectItem>
           ))}
         </SelectGroup>
@@ -200,23 +206,78 @@ export function BookingsList() {
     }
   }
 
+  const handleSendTicket = async (id: string) => {
+    try {
+      const booking = bookings[id];
+      const user = users[booking.userId];
+      const trip = trips[booking.tripId];
+      const route = routes[trip.routeId];
+
+      if (!route) {
+        throw new Error('Không tìm thấy route cho chuyến xe này.');
+      }
+
+      const ticketData = {
+        bookingId: id,
+        tripId: booking.tripId,
+        price: trip.price,
+        createdAt: booking.createdAt,
+        locations: route.locations,
+        tripInfo: {
+          name: trip.name,
+          time: trip.time,
+          date: trip.date,
+          price: trip.price,
+          location: route.locations,
+        },
+        userInfo: {
+          sex: user.sex,
+          name: user.name,
+          mail: user.mail,
+          phone: user.phone,
+          destination: user.destination,
+        },
+      };
+
+      console.log(JSON.stringify(ticketData));
+      const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticketData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send ticket');
+      }
+
+      console.log('Ticket sent successfully');
+    } catch (error) {
+      console.error('Error sending ticket:', error);
+    }
+  }
+
   const handleConfirmPayment = async (id: string) => {
     try {
-      const booking = bookings[id]
-      const trip = trips[booking.tripId]
+      const booking = bookings[id];
+      const trip = trips[booking.tripId];
       
       // Cập nhật trạng thái thanh toán của booking
-      await updateDocument(`bookings/${id}`, { paid: true })
+      await updateDocument(`bookings/${id}`, { paid: true });
       
       // Cập nhật số slot của trip
       if (trip) {
-        const newSlot = trip.slot - 1
-        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
+        const newSlot = trip.slot - 1;
+        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
       }
-      
-      setConfirmPaymentId(null)
+
+      // Gửi vé sau khi xác nhận thanh toán
+      await handleSendTicket(id);
+
+      setConfirmPaymentId(null);
     } catch (error) {
-      console.error('Lỗi khi xác nhận thanh toán:', error)
+      console.error('Lỗi khi xác nhận thanh toán:', error);
     }
   }
 
