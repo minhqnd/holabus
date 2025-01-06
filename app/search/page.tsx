@@ -23,6 +23,7 @@ interface UserData {
     mail: string
     phone: string
     address?: string
+    transferPoint?: string
 }
 
 interface TripData {

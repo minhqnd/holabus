@@ -21,6 +21,7 @@ interface UserData {
   phone: string
   confirmEmail: string
   destination: string
+  transferPoint: string
 }
 
 interface PassengerFormProps {
@@ -36,6 +37,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     phone: '',
     confirmEmail: '',
     destination: '',
+    transferPoint: '',
   })
 
   const [errors, setErrors] = useState({
@@ -45,6 +47,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     phone: '',
     confirmEmail: '',
     destination: '',
+    transferPoint: '',
   })
 
   const [captchaValue, setCaptchaValue] = useState<string | null>(null)
@@ -59,6 +62,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
       phone: '',
       confirmEmail: '',
       destination: '',
+      transferPoint: '',
     }
 
     if (!formData.sex) {
@@ -94,6 +98,11 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
 
     if (!formData.destination.trim()) {
       newErrors.destination = 'Vui lòng nhập điểm đến'
+      isValid = false
+    }
+
+    if (!formData.transferPoint.trim()) {
+      newErrors.transferPoint = 'Vui lòng chọn điểm trung chuyển'
       isValid = false
     }
 
@@ -173,7 +182,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             {errors.phone && <span className="text-sm text-red-500 mt-1">{errors.phone}</span>}
           </div>
           <div>
-            <Label>Điểm đến</Label>
+            <Label>Điểm đến (vui lòng lòng xem lộ trình để tránh lệch điểm xuống)</Label>
             <Input
               type="text"
               placeholder="Nhập điểm đến của bạn"
@@ -214,6 +223,26 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             {errors.confirmEmail && (
               <span className="text-sm text-red-500 mt-1">{errors.confirmEmail}</span>
             )}
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div>
+            <Label>Điểm trung chuyển</Label>
+            <Select
+              value={formData.transferPoint}
+              onValueChange={(value) => setFormData({ ...formData, transferPoint: value })}
+            >
+              <SelectTrigger className="mt-1 rounded-full h-12">
+                <SelectValue placeholder="Chọn điểm trung chuyển" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Tu_di_den_truong">Tự đi đến trường</SelectItem>
+                <SelectItem value="Den_do_tan_xa">Đèn đỏ Tân Xã</SelectItem>
+                <SelectItem value="Cay_xang_39">Cây xăng 39</SelectItem>
+                <SelectItem value="Cay_xa_cu_phenikaa">Cây xà cừ (Phenikaa)</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.transferPoint && <span className="text-sm text-red-500 mt-1">{errors.transferPoint}</span>}
           </div>
         </div>
         <div>
