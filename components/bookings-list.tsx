@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Check, Trash2, ChevronRight, ChevronDown, X } from 'lucide-react'
+import { Pencil, Mail, Check, Trash2, ChevronDown, X } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
@@ -78,7 +78,7 @@ export function BookingsList() {
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
-  const [flashingBookings, setFlashingBookings] = useState<Record<string, boolean>>({});
+  const [flashingBookings] = useState<Record<string, boolean>>({});
   const [sendingEmails, setSendingEmails] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
