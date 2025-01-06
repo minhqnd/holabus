@@ -130,7 +130,7 @@ function SearchContent() {
             // Lưu booking với trạng thái gửi email
             await saveBookingData(bookingId, selectedTripId, userId, false, note)
 
-            // Chuyển hướng sau khi gửi email
+            // Chuyển hướng sau khi lưu booking thành công
             router.push(`/payment?booking=${bookingId}`)
         } catch (error) {
             console.error('Lỗi trong quá trình xử lý:', error)
