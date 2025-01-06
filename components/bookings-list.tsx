@@ -18,6 +18,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup } from "@/components/ui/select"
 import { subscribeToCollection, updateDocument, deleteDocument } from '@/lib/firebase'
 import { getProvinceNameById } from '@/lib/utils/province'
+import { Spinner } from '@/components/ui/spinner'
 
 interface Booking {
   userId: string;
@@ -78,6 +79,7 @@ export function BookingsList() {
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
   const [flashingBookings, setFlashingBookings] = useState<Record<string, boolean>>({});
+  const [sendingEmails, setSendingEmails] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
@@ -103,18 +105,6 @@ export function BookingsList() {
       unsubscribeRoutes()
     }
   }, [])
-
-  useEffect(() => {
-    Object.entries(bookings).forEach(([id, booking]) => {
-      const isNewBooking = (Date.now() - new Date(booking.createdAt).getTime()) < 5 * 60_000;
-      if (isNewBooking && !flashingBookings[id]) {
-        setFlashingBookings((prev) => ({ ...prev, [id]: true }));
-        setTimeout(() => {
-          setFlashingBookings((prev) => ({ ...prev, [id]: false }));
-        }, 2000);
-      }
-    });
-  }, [bookings]); // Always include the same dependencies here
 
   const handleRouteChange = (value: string) => {
     setFilterRouteId(value === "all" ? null : value)
@@ -175,10 +165,59 @@ export function BookingsList() {
     return acc
   }, {} as Record<string, Record<string, typeof filteredBookings>>)
 
-  const handleSendEmail = (bookingId: string, type: 'payment' | 'ticket', e: React.MouseEvent) => {
+  const handleSendEmail = async (bookingId: string, type: 'payment' | 'ticket', e: React.MouseEvent) => {
     e.stopPropagation()
-    console.log(`Sending ${type} email for booking ${bookingId}`)
-    // Implement email sending logic here
+    setSendingEmails(prev => ({ ...prev, [bookingId]: true }))
+    try {
+      console.log(`Sending ${type} email for booking ${bookingId}`)
+      const booking = bookings[bookingId]
+      const user = users[booking.userId]
+      const trip = trips[booking.tripId]
+      const route = routes[trip.routeId]
+      
+      if (!route) {
+        throw new Error('Không tìm thấy route cho chuyến xe này.')
+      }
+
+      const ticketData = {
+        bookingId: bookingId,
+        tripId: booking.tripId,
+        price: trip.price,
+        createdAt: booking.createdAt,
+        tripInfo: {
+          name: trip.name,
+          time: trip.time,
+          date: trip.date,
+          price: trip.price,
+          location: route.locations,
+        },
+        userInfo: {
+          sex: user.sex,
+          name: user.name,
+          mail: user.mail,
+          phone: user.phone,
+          destination: user.destination,
+        },
+      }
+
+      const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticketData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send ticket')
+      }
+
+      console.log('Ticket sent successfully')
+    } catch (error) {
+      console.error('Error sending ticket:', error)
+    } finally {
+      setSendingEmails(prev => ({ ...prev, [bookingId]: false }))
+    }
   }
 
   const handleEditClick = (id: string, e: React.MouseEvent) => {
@@ -259,25 +298,28 @@ export function BookingsList() {
   }
 
   const handleConfirmPayment = async (id: string) => {
+    setConfirmPaymentId(null)
+
+    setSendingEmails(prev => ({ ...prev, [id]: true }))
+
     try {
       const booking = bookings[id];
       const trip = trips[booking.tripId];
-      
-      // Cập nhật trạng thái thanh toán của booking
-      await updateDocument(`bookings/${id}`, { paid: true });
-      
-      // Cập nhật số slot của trip
-      if (trip) {
-        const newSlot = trip.slot - 1;
-        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
+
+      if (!trip) {
+        throw new Error('Không tìm thấy chuyến xe này.');
       }
+      await handleSendTicket(id)
+      
+      await updateDocument(`bookings/${id}`, { paid: true });
 
-      // Gửi vé sau khi xác nhận thanh toán
-      await handleSendTicket(id);
+      const newSlot = trip.slot - 1;
+      await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
 
-      setConfirmPaymentId(null);
     } catch (error) {
-      console.error('Lỗi khi xác nhận thanh toán:', error);
+      console.error('Lỗi khi xác nhận thanh toán:', error)
+    } finally {
+      setSendingEmails(prev => ({ ...prev, [id]: false }))
     }
   }
 
@@ -372,16 +414,11 @@ export function BookingsList() {
             onClick={() => toggleGroup(routeId)}
           >
             <Button variant="ghost" size="sm">
-              {collapsedGroups[routeId] ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronDown className="h-4 w-4" />
-              )}
+              <ChevronDown className="h-4 w-4" />
             </Button>
             <h2 className="text-xl font-semibold break-words">
               {getProvinceNameById(routeId)}
             </h2>
-            
           </div>
           
           {!collapsedGroups[routeId] && (
@@ -400,6 +437,7 @@ export function BookingsList() {
                     </div>
                     <div className="space-y-4">
                       {bookings.map(([id, booking]: [string, Booking], index: number) => {
+                        const isSending = sendingEmails[id]
                         return (
                           <Card
                             key={id}
@@ -451,9 +489,14 @@ export function BookingsList() {
                                   variant="outline"
                                   size="sm"
                                   onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
+                                  disabled={isSending}
                                 >
                                   <Mail className="mr-2 h-4 w-4" />
-                                  {booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"}
+                                  {isSending ? (
+                                    <Spinner className="mr-2 h-4 w-4" />
+                                  ) : (
+                                    booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"
+                                  )}
                                 </Button>
                                 <div className="space-x-2">
                                   {booking.paid ? (
@@ -533,6 +576,7 @@ export function BookingsList() {
           )}
         </div>
       ))}
+      
       {editingBooking && editedBooking && editedUser && (
         <EditModal
           isOpen={true}
@@ -597,6 +641,7 @@ export function BookingsList() {
           </form>
         </EditModal>
       )}
+      
       <Dialog open={!!confirmPaymentId} onOpenChange={() => setConfirmPaymentId(null)}>
         <DialogContent>
           <DialogHeader>
@@ -606,11 +651,14 @@ export function BookingsList() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmPaymentId(null)}>Hủy</Button>
-            <Button onClick={() => confirmPaymentId && handleConfirmPayment(confirmPaymentId)}>Xác nhận</Button>
+            <>
+              <Button variant="outline" onClick={() => setConfirmPaymentId(null)}>Hủy</Button>
+              <Button onClick={() => confirmPaymentId && handleConfirmPayment(confirmPaymentId)}>Xác nhận</Button>
+            </>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
       <Dialog open={!!deletingBookingId} onOpenChange={() => setDeletingBookingId(null)}>
         <DialogContent>
           <DialogHeader>
