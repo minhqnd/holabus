@@ -19,7 +19,7 @@ export function HeroSearch() {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/25 md:hidden h-lvh" />
+      <div className="absolute inset-0 md:hidden h-lvh" />
       <div className="container relative flex min-h-[600px] flex-col items-center justify-center text-center mx-auto px-4 md:hidden">
         <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
           Về nhà ăn tết thôi!

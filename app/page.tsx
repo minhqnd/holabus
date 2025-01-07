@@ -77,9 +77,10 @@ export default function Home() {
           <HeroSearch />
         </div>
 
-        <div className="relative h-lvh overflow-hidden w-full block shadow-2xl md:hidden">
+        <div className="relative h-[70lvh] min-h-[35rem] overflow-hidden w-full block md:hidden p2 ">
           <Image
-            src="/img/fpt.png"
+            className="w-full h-36 object-cover p-2 brightness-[0.8] rounded-[2rem]"
+            src="/img/fpt.avif"
             alt="Hero Background"
             layout="fill"
             objectFit="cover"
