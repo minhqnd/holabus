@@ -9,11 +9,12 @@ import { ChevronDown } from 'lucide-react'
 import { Footer } from '@/components/footer'
 import Image from 'next/image'
 import { SakuraEffect } from '@/components/SakuraEffect'
+import { FaqAccordion } from '@/components/faq-accordion'
 
 interface Province {
   available: boolean
   id: string
-  name: string 
+  name: string
   locations: string[]
   price: string
 }
@@ -88,24 +89,24 @@ export default function Home() {
       </div>
 
       <div className="w-full relative z-0">
-        <Image 
+        <Image
           src="/img/maidao.png"
           width={0}
           height={0}
           sizes="100vw"
           style={{ width: '100%', height: 'auto' }}
-          alt="maidao" 
+          alt="maidao"
         />
         <div className="container pb-12 mx-auto px-4 w-full xl:-mt-[256px]">
-          <div className="mb-8 text-center">
-            <Image 
-              src="/img/lotrinhholabus.png" 
+          <div className="mb-8 text-center scale-110 xl:scale-100">
+            <Image
+              src="/img/lotrinhholabus.png"
               width={0}
               height={0}
               sizes="100vw"
               style={{ height: 'auto' }}
-              alt="Lộ Trình HolaBus" 
-              className="h-auto mx-auto w-full md:w-4/5" 
+              alt="Lộ Trình HolaBus"
+              className="h-auto mx-auto w-full md:w-4/5"
             />
           </div>
 
@@ -116,8 +117,8 @@ export default function Home() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {provinces.map((province, index) => (
-                <div 
-                  key={province.id} 
+                <div
+                  key={province.id}
                   className={`
                     grid transition-all duration-300 ease-in-out
                     ${index >= 8 && !showAll ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'}
@@ -138,7 +139,7 @@ export default function Home() {
           )}
 
           {!loading && provinces.length > 8 && (
-            <div className={`text-center ${!showAll ? '-mt-20 sm:-mt-0' : 'mt-8'}`}>
+            <div className={`text-center ${!showAll ? '-mt-48 sm:-mt-0' : 'mt-8'}`}>
               <Button
                 variant="outline"
                 size="lg"
@@ -150,6 +151,12 @@ export default function Home() {
               </Button>
             </div>
           )}
+        </div>
+      </div>
+      <div className="container py-12">
+        <div className="mx-auto px-4 max-w-5xl">
+          <h1 className="mb-8 text-center text-3xl font-bold text-red-800">Câu hỏi thường gặp</h1>
+          <FaqAccordion />
         </div>
       </div>
       <Footer />
