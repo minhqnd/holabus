@@ -50,7 +50,6 @@ export function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Hỗ trợ</h3>
             <ul className="space-y-2">
-              <li><Link href="/help">Trung tâm trợ giúp</Link></li>
               <li><Link href="https://www.facebook.com/HolaBusFPTU.CSKH/">Liên hệ</Link></li>
               <li><Link href="/faq">Câu hỏi thường gặp</Link></li>
             </ul>
@@ -61,7 +60,7 @@ export function Footer() {
               <li className="text-base font-bold">Đỗ Bá Trung - Quản lý dự án</li>
               <li className="text-base">SDT: <a href="tel:0944355789" className="hover:underline">0944355789</a></li>
               <li className="text-base">Email: <a href="mailto:Trungdbhs186524@fpt.edu.vn" className="hover:underline">Trungdbhs186524@fpt.edu.vn</a></li>
-              <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Quản lý dự án</li>
+              <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Điều phối viên</li>
               <li className="text-base">SDT: <a href="tel:0929343780" className="hover:underline">0929343780</a></li>
               <li className="text-base">Email: <a href="mailto:kyvkhe182094@fpt.edu.vn" className="hover:underline">kyvkhe182094@fpt.edu.vn</a></li>
               <li className="mt-8 text-base font-bold">Nguyễn Đức Quang Minh - Web Developer</li>
