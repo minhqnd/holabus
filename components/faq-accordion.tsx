@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     question: 'Hành lý được phép mang theo là bao nhiêu?',
-    answer: 'Mỗi hành khách được phép mang theo một kiện hành lý xách tay không quá 7kg và một kiện hành lý ký gửi không quá 20kg. Các quy định cụ thể có thể khác nhau tùy theo tuyến đường.'
+    answer: 'Theo Thông tư 12/2020/TT-BGTVT, hành khách được mang theo hành lý lên xe buýt với trọng lượng không quá 10 kg và kích thước không quá 30x40x60 cm. Nếu hành lý vượt quá quy định, phụ xe có thể từ chối vận chuyển.'
   },
   {
     question: 'Tôi cần có mặt tại bến xe trước giờ khởi hành bao lâu?',
