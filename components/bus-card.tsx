@@ -78,6 +78,7 @@ export function BusCard({
                 onClick={(e) => {
                     e.stopPropagation()
                     onSelect()
+                    setIsExpanded(!isExpanded)
                 }}
             >
                 {isSelected ? 'Chọn lại' : 'Chọn'}

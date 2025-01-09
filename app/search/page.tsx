@@ -44,7 +44,8 @@ function SearchContent() {
     const [userData, setUserData] = useState<UserData | null>(null)
     const [tripData, setTripData] = useState<TripData | null>(null)
     const [isProcessing, setIsProcessing] = useState(false)
-    
+    const [price, setPrice] = useState<string>('')
+
     useEffect(() => {
         const tinh = searchParams.get('tinh')
         if (tinh) {
@@ -71,13 +72,13 @@ function SearchContent() {
 
     const handleFormSubmit = async (userData: UserData) => {
         setUserData(userData)
-        
+
         try {
             // Lấy thông tin trip
             const tripData = await getTripsById(selectedTripId)
             // Lấy thông tin route
             const routeData = await getRouteByProvince(provinceId)
-            
+
             setTripData({
                 name: tripData?.name,
                 time: tripData?.time,
@@ -85,7 +86,7 @@ function SearchContent() {
                 price: tripData?.price,
                 location: routeData?.locations || []
             })
-            
+
             setCurrentStep(3)
         } catch (error) {
             console.error('Lỗi khi lấy thông tin:', error)
@@ -95,12 +96,12 @@ function SearchContent() {
 
     const handleConfirm = async () => {
         if (!userData || isProcessing) return
-        
+
         setIsProcessing(true)
         try {
             const bookingId = await generateUniqueBookingId()
             const userId = await saveUserData(userData)
-            
+
             // Chuẩn bị và gửi email với timeout
             const emailData = {
                 bookingId,
@@ -147,35 +148,35 @@ function SearchContent() {
             <div className="mb-16 mx-auto md:w-4/5">
                 <ProgressSteps currentStep={currentStep} />
             </div>
-            
-            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out ${
-                currentStep === 1 ? 'max-h-[500px] overflow-visible' : 'max-h-0 overflow-hidden' 
-            }`}>
+
+            <div className={`relative mb-4 transition-[max-height] duration-500 ease-in-out ${currentStep === 1 ? 'max-h-[500px] overflow-visible' : 'max-h-0 overflow-hidden'
+                }`}>
                 <SearchHeader provinceName={provinceName} />
             </div>
-            
+
             {provinceId && (
-                <BusResults 
-                    provinceId={provinceId} 
+                <BusResults
+                    provinceId={provinceId}
                     provinceName={provinceName}
                     selectedTripId={selectedTripId}
                     onTripSelect={handleTripSelect}
                     currentStep={currentStep}
-                />
+                    price={function (price: string): void {
+                        setPrice(price)
+                    }} />
             )}
-            
-            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
-                currentStep === 2 ? 'max-h-[1000px]' : 'max-h-0'
-            }`}>
-                <PassengerForm 
-                    onSubmit={handleFormSubmit} 
+
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${currentStep === 2 ? 'max-h-[1000px]' : 'max-h-0'
+                }`}>
+                <PassengerForm
+                    price={price}
+                    onSubmit={handleFormSubmit}
                     onBack={handleBackButton}
                 />
             </div>
 
-            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${
-                currentStep === 3 ? 'max-h-[1000px]' : 'max-h-0'
-            }`}>
+            <div className={`relative transition-[max-height] duration-500 ease-in-out overflow-hidden ${currentStep === 3 ? 'max-h-[1000px]' : 'max-h-0'
+                }`}>
                 {userData && tripData && (
                     <Confirm
                         tripData={tripData}

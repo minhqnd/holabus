@@ -29,3 +29,13 @@ export async function getTripsById(tripId: string) {
     }
     return await res.json();
 }
+
+export async function getMapById(tripId: string) {
+    const res = await fetch(`${BASE_URL}/routeMaps/${tripId}.json`);
+    if (!res.ok) {
+        throw new Error('Failed to fetch trip data');
+    }
+    // return await res.json().iframeMap;
+    const data = await res.json();
+    return data.iframeMap;
+}

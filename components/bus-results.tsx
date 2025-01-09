@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { BusCard } from '@/components/bus-card'
-import { getTripsByProvince } from '@/lib/api/trips'
+import { getMapById, getTripsByProvince } from '@/lib/api/trips'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRouteByProvince } from '@/lib/api/routes'
 // import { getProvinceNameById } from '@/lib/utils/province'
@@ -12,6 +12,7 @@ interface BusResultsProps {
     provinceName: string;
     selectedTripId: string;
     onTripSelect: (tripId: string) => void;
+    price: (price: string) => void;
     currentStep: number;
 }
 
@@ -37,8 +38,9 @@ interface RawTrip {
 
 // Thêm kiểu cho busRoutes
 
-export function BusResults({ provinceId, provinceName, selectedTripId, onTripSelect, currentStep }: BusResultsProps) {
+export function BusResults({ provinceId, provinceName, selectedTripId, onTripSelect, currentStep, price }: BusResultsProps) {
     const [trips, setTrips] = useState<Trip[]>([])
+    const [map, setMap] = useState<string>('')
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -55,6 +57,8 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                 }
 
                 const fetchedTrips = await getTripsByProvince(provinceId)
+                const mapUrl = await getMapById(provinceId)
+                setMap(mapUrl)
                 
                 const today = new Date()
                 today.setHours(0, 0, 0, 0)
@@ -99,6 +103,9 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                             </h2>
                         </div>
                     </div>
+                    {map && (
+                        <div className="mt-4" dangerouslySetInnerHTML={{ __html: map }} />
+                    )}
                 </div>
 
                 <div className={`space-y-4 ${currentStep === 1 ? 'mb-8' : 'mb-0'}`}>
@@ -136,7 +143,10 @@ export function BusResults({ provinceId, provinceName, selectedTripId, onTripSel
                                 slot={trip.slot}
                                 location={trip.location}
                                 isSelected={trip.id === selectedTripId}
-                                onSelect={() => onTripSelect(trip.id)}
+                                onSelect={() => {
+                                    onTripSelect(trip.id)
+                                    price(trip.price)
+                                }}
                             />
                         ))
                     )}
