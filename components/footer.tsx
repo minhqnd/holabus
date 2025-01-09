@@ -60,12 +60,12 @@ export function Footer() {
               <li className="text-base font-bold">Đỗ Bá Trung - Quản lý dự án</li>
               <li className="text-base">SDT: <a href="tel:0944355789" className="hover:underline">0944355789</a></li>
               <li className="text-base">Email: <a href="mailto:Trungdbhs186524@fpt.edu.vn" className="hover:underline">Trungdbhs186524@fpt.edu.vn</a></li>
-              <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Điều phối viên</li>
+              {/* <li className="mt-8 text-base font-bold">Vũ Kim Kỳ - Điều phối viên</li>
               <li className="text-base">SDT: <a href="tel:0929343780" className="hover:underline">0929343780</a></li>
-              <li className="text-base">Email: <a href="mailto:kyvkhe182094@fpt.edu.vn" className="hover:underline">kyvkhe182094@fpt.edu.vn</a></li>
+              <li className="text-base">Email: <a href="mailto:kyvkhe182094@fpt.edu.vn" className="hover:underline">kyvkhe182094@fpt.edu.vn</a></li> */}
               <li className="mt-8 text-base font-bold">Nguyễn Đức Quang Minh - Web Developer</li>
               <li className="text-base">SDT: <a href="tel:0366884844" className="hover:underline">0366884844</a></li>
-              <li className="text-base">Email: <a href="mailto:moimoi@duck.com" className="hover:underline">moimoi@duck.com</a></li>
+              <li className="text-base">Facebook: <a href="https://fb.com/minhqnd" className="hover:underline">minhqnd</a></li>
             </ul>
           </div>
         </div>
