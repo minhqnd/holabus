@@ -37,6 +37,7 @@ interface Route {
 }
 
 interface User {
+  transferPoint: string
   destination: string
   name: string;
   mail: string;
@@ -437,6 +438,12 @@ export function BookingsList() {
                     <div className="space-y-4">
                       {bookings.map(([id, booking]: [string, Booking], index: number) => {
                         const isSending = sendingEmails[id]
+                            const transferPoints: Record<string, string> = {
+                              "Tu_di_den_truong": "Tự đi đến trường",
+                              "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+                              "Cay_xang_39": "Cây xăng 39",
+                              "Cay_xa_cu_phenikaa": "Cây xà cừ (Phenikaa)"
+                            };
                         return (
                           <Card
                             key={id}
@@ -481,6 +488,10 @@ export function BookingsList() {
                                 <div>
                                   <p className="text-sm font-medium break-words">Điểm đến</p>
                                   <p className="text-sm break-words">{users[booking.userId].destination || 'N/A'}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium break-words">Điểm trung chuyển</p>
+                                  <p className="text-sm break-words">{transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}</p>
                                 </div>
                               </div>
                               <div className="mt-4 flex justify-between">
