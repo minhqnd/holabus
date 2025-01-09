@@ -132,16 +132,15 @@ export function BookingsList() {
   )
 
   const filteredBookings = Object.entries(bookings as Record<string, Booking>)
-    .filter(([, booking]) => {
+    .filter(([key, booking]) => {
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
-      
+      console.log(key)
       const matchesSearch = 
         searchTerm === '' || 
-        booking.destination.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user?.phone?.includes(searchTerm);
-
+        key.includes(searchTerm) ||
+        (user?.name && user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        
       return (
         (activeTab === 'pending' ? !booking.paid : booking.paid) &&
         (!filterRouteId || trip?.routeId === filterRouteId) &&
