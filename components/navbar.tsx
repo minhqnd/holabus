@@ -30,9 +30,13 @@ export function Navbar() {
             <Phone className="h-4 w-4" />
             <span className="text-base font-medium">Hotline: 0944355789</span>
           </div>
-          <Button className="bg-red-600 hover:bg-red-700">
-            Liên hệ HolaBus
-          </Button>
+            <Link href="https://www.facebook.com/HolaBusFPTU.CSKH/" target="_blank" rel="noopener noreferrer">
+              <Button 
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Liên hệ HolaBus
+              </Button>
+            </Link>
           <Button 
             variant="ghost" 
             className="md:hidden"

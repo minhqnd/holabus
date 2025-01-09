@@ -50,7 +50,7 @@ export function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Hỗ trợ</h3>
             <ul className="space-y-2">
-              <li><Link href="https://www.facebook.com/HolaBusFPTU.CSKH/">Liên hệ</Link></li>
+                <li><Link href="https://www.facebook.com/HolaBusFPTU.CSKH/" target="_blank" rel="noopener noreferrer">Liên hệ</Link></li>
               <li><Link href="/faq">Câu hỏi thường gặp</Link></li>
             </ul>
           </div>
@@ -65,7 +65,7 @@ export function Footer() {
               <li className="text-base">Email: <a href="mailto:kyvkhe182094@fpt.edu.vn" className="hover:underline">kyvkhe182094@fpt.edu.vn</a></li> */}
               <li className="mt-8 text-base font-bold">Nguyễn Đức Quang Minh - Web Developer</li>
               <li className="text-base">SDT: <a href="tel:0366884844" className="hover:underline">0366884844</a></li>
-              <li className="text-base">Facebook: <a href="https://fb.com/minhqnd" className="hover:underline">minhqnd</a></li>
+              <li className="text-base">Facebook: <a href="https://fb.com/minhqnd" target="_blank" rel="noopener noreferrer" className="hover:underline">minhqnd</a></li>
             </ul>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function Footer() {
       </div>
       <div className="w-full bg-red-800 text-gray-200">
         <div className="mx-auto py-4 text-center">
-          <p>&copy; 2025 HolaBus. Made with ❤️ by <a href="https://fb.com/minhqnd" className="hover:underline">MINHQND</a>.</p>
+          <p>&copy; 2025 HolaBus. Made with ❤️ by <a href="https://fb.com/minhqnd" target="_blank" rel="noopener noreferrer" className="hover:underline">MINHQND</a>.</p>
         </div>
       </div>
     </footer>
