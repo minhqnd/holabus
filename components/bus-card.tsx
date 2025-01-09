@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
@@ -78,6 +78,7 @@ export function BusCard({
                 onClick={(e) => {
                     e.stopPropagation()
                     onSelect()
+                    setIsExpanded(!isExpanded)
                 }}
             >
                 {isSelected ? 'Chọn lại' : 'Chọn'}

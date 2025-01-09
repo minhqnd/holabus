@@ -26,9 +26,10 @@ interface UserData {
 interface PassengerFormProps {
   onSubmit: (userData: UserData) => void
   onBack: () => void
+  price: string
 }
 
-export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
+export function PassengerForm({ onSubmit, onBack, price }: PassengerFormProps) {
   const [formData, setFormData] = useState({
     sex: '1',
     name: '',
@@ -36,7 +37,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
     phone: '',
     confirmEmail: '',
     destination: '',
-    transferPoint: '',
+    transferPoint: 'Tu_di_den_truong',
   })
 
   const [errors, setErrors] = useState({
@@ -51,7 +52,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
 
   const [captchaValue, setCaptchaValue] = useState<string | null>(null)
   const [captchaError, setCaptchaError] = useState('')
-
+  
   const validateForm = () => {
     let isValid = true
     const newErrors = {
@@ -181,7 +182,7 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             {errors.phone && <span className="text-sm text-red-500 mt-1">{errors.phone}</span>}
           </div>
           <div>
-            <Label>Điểm đến (vui lòng lòng xem lộ trình để tránh lệch điểm xuống)</Label>
+            <Label>Điểm đến (vui lòng lòng xem lộ trình bên trên để tránh không đi qua điểm đến)</Label>
             <Input
               type="text"
               placeholder="Nhập điểm đến của bạn"
@@ -224,26 +225,28 @@ export function PassengerForm({ onSubmit, onBack }: PassengerFormProps) {
             )}
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          <div>
-            <Label>Điểm trung chuyển</Label>
-            <Select
-              value={formData.transferPoint}
-              onValueChange={(value) => setFormData({ ...formData, transferPoint: value })}
-            >
-              <SelectTrigger className="mt-1 rounded-full h-12">
-                <SelectValue placeholder="Chọn điểm trung chuyển" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Tu_di_den_truong">Tự đi đến trường</SelectItem>
-                <SelectItem value="Den_do_tan_xa">Đèn đỏ Tân Xã</SelectItem>
-                <SelectItem value="Cay_xang_39">Cây xăng 39</SelectItem>
-                <SelectItem value="Cay_xa_cu_phenikaa">Cây xà cừ (Phenikaa)</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.transferPoint && <span className="text-sm text-red-500 mt-1">{errors.transferPoint}</span>}
+        {parseInt(price.replace(/\./g, ''), 10) >= 100000 && (
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <Label>Điểm trung chuyển</Label>
+              <Select
+                value={formData.transferPoint}
+                onValueChange={(value) => setFormData({ ...formData, transferPoint: value })}
+              >
+                <SelectTrigger className="mt-1 rounded-full h-12">
+                  <SelectValue placeholder="Chọn điểm trung chuyển" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Tu_di_den_truong">Tự đi đến trường</SelectItem>
+                  <SelectItem value="Den_do_tan_xa">Đèn đỏ Tân Xã</SelectItem>
+                  <SelectItem value="Cay_xang_39">Cây xăng 39</SelectItem>
+                  <SelectItem value="Cay_xa_cu_phenikaa">Cây xà cừ (Phenikaa)</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.transferPoint && <span className="text-sm text-red-500 mt-1">{errors.transferPoint}</span>}
+            </div>
           </div>
-        </div>
+        )}
         <div>
           <ReCAPTCHA
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
