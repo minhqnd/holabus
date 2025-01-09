@@ -19,7 +19,6 @@ interface UserData {
   name: string
   mail: string
   phone: string
-  confirmEmail: string
   destination: string
   transferPoint: string
 }
