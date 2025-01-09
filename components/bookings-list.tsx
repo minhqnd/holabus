@@ -86,11 +86,11 @@ export function BookingsList() {
     const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
       setBookings(data || {} as Record<string, Booking>)
     })
-    
+
     const unsubscribeUsers = subscribeToCollection<Record<string, User>>('users', (data) => {
       setUsers(data || {} as Record<string, User>)
     })
-    
+
     const unsubscribeTrips = subscribeToCollection<Record<string, Trip>>('trips', (data) => {
       setTrips(data || {} as Record<string, Trip>)
     })
@@ -124,7 +124,7 @@ export function BookingsList() {
           <SelectItem value="all">All routes</SelectItem>
           {Object.entries(routes).map(([value, route]) => (
             <SelectItem key={value} value={value}>
-              {route.name} 
+              {route.name}
             </SelectItem>
           ))}
         </SelectGroup>
@@ -136,12 +136,11 @@ export function BookingsList() {
     .filter(([key, booking]) => {
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
-      console.log(key)
-      const matchesSearch = 
-        searchTerm === '' || 
+      const matchesSearch =
+        searchTerm === '' ||
         key.includes(searchTerm) ||
         (user?.name && user.name.toLowerCase().includes(searchTerm.toLowerCase()));
-        
+
       return (
         (activeTab === 'pending' ? !booking.paid : booking.paid) &&
         (!filterRouteId || trip?.routeId === filterRouteId) &&
@@ -154,7 +153,7 @@ export function BookingsList() {
   const groupedBookings = filteredBookings.reduce((acc, [id, booking]) => {
     const trip = trips[booking.tripId]
     if (!trip) return acc
-    
+
     if (!acc[trip.routeId]) {
       acc[trip.routeId] = {}
     }
@@ -174,16 +173,17 @@ export function BookingsList() {
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
       const route = routes[trip.routeId]
-      
+
       if (!route) {
         throw new Error('Không tìm thấy route cho chuyến xe này.')
       }
 
-      const ticketData = {
+      const userData = {
         bookingId: bookingId,
         tripId: booking.tripId,
         price: trip.price,
         createdAt: booking.createdAt,
+        locations: trip?.locations || [],
         tripInfo: {
           name: trip.name,
           time: trip.time,
@@ -199,17 +199,17 @@ export function BookingsList() {
           destination: user.destination,
         },
       }
-
-      const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
+      console.log(userData)
+      const response = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(ticketData),
+        body: JSON.stringify(userData),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to send ticket')
+        throw new Error(`Không thể gửi vé: ${response.status} ${response.statusText}`)
       }
 
       console.log('Ticket sent successfully')
@@ -310,7 +310,7 @@ export function BookingsList() {
         throw new Error('Không tìm thấy chuyến xe này.');
       }
       await handleSendTicket(id)
-      
+
       await updateDocument(`bookings/${id}`, { paid: true });
 
       const newSlot = trip.slot - 1;
@@ -327,10 +327,10 @@ export function BookingsList() {
     try {
       const booking = bookings[id]
       const trip = trips[booking.tripId]
-      
+
       // Cập nhật trạng thái thanh toán của booking
       await updateDocument(`bookings/${id}`, { paid: false })
-      
+
       // Cập nhật số slot của trip
       if (trip) {
         const newSlot = trip.slot + 1
@@ -409,7 +409,7 @@ export function BookingsList() {
       </div>
       {Object.entries(groupedBookings).map(([routeId, tripGroups]) => (
         <div key={routeId}>
-          <div 
+          <div
             className="flex my-4 cursor-pointer hover:bg-gray-50 p-2 rounded"
             onClick={() => toggleGroup(routeId)}
           >
@@ -420,7 +420,7 @@ export function BookingsList() {
               {getProvinceNameById(routeId)}
             </h2>
           </div>
-          
+
           {!collapsedGroups[routeId] && (
             <div className="space-y-8 ml-4">
               {Object.entries(tripGroups).map(([tripId, bookings]) => {
@@ -429,7 +429,7 @@ export function BookingsList() {
                   <div key={tripId}>
                     <div className="flex items-center mb-4">
                       <h3 className="text-lg font-medium break-words mr-2">
-                        ({trip?.name || `Trip ${tripId}`}) 
+                        ({trip?.name || `Trip ${tripId}`})
                       </h3>
                       <Badge variant={trip?.slot > 0 ? "default" : "destructive"} className="text-base">
                         {trip?.slot > 0 ? `Còn ${trip?.slot} vé` : "Hết vé"}
@@ -438,19 +438,19 @@ export function BookingsList() {
                     <div className="space-y-4">
                       {bookings.map(([id, booking]: [string, Booking], index: number) => {
                         const isSending = sendingEmails[id]
-                            const transferPoints: Record<string, string> = {
-                              "Tu_di_den_truong": "Tự đi đến trường",
-                              "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-                              "Cay_xang_39": "Cây xăng 39",
-                              "Cay_xa_cu_phenikaa": "Cây xà cừ (Phenikaa)"
-                            };
+                        const transferPoints: Record<string, string> = {
+                          "Tu_di_den_truong": "Tự đi đến trường",
+                          "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+                          "Cay_xang_39": "Cây xăng 39",
+                          "Cay_xa_cu_phenikaa": "Cây xà cừ (Phenikaa)"
+                        };
                         return (
                           <Card
                             key={id}
                             className={`${flashingBookings[id] ? 'animate-pulse ring-2 ring-blue-500' : ''}`}
                           >
                             <CardContent>
-                              
+
                               <div className="flex items-center justify-between my-4">
                                 <div className="flex items-center gap-2">
                                   <Badge>{index + 1}</Badge>
@@ -498,14 +498,16 @@ export function BookingsList() {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={(e) => handleSendEmail(id, booking.paid ? 'ticket' : 'payment', e)}
+                                  onClick={(e) => {
+                                    return booking.paid ? setConfirmPaymentId(id) : handleSendEmail(id, 'payment', e);
+                                  }}
                                   disabled={isSending}
                                 >
                                   <Mail className="mr-2 h-4 w-4" />
                                   {isSending ? (
                                     <Spinner className="mr-2 h-4 w-4" />
                                   ) : (
-                                    booking.paid ? "Gửi lại vé" : "Gửi lại mail thanh toán"
+                                    booking.paid ? "Gửi lại vé" : "Gửi lại mail hóa đơn"
                                   )}
                                 </Button>
                                 <div className="space-x-2">
@@ -525,15 +527,20 @@ export function BookingsList() {
                                       onClick={() => setConfirmPaymentId(id)}
                                     >
                                       <Check className="mr-2 h-4 w-4" />
-                                      Đã thanh toán
+                                      {isSending ? (
+                                        <Spinner className="mr-2 h-4 w-4" />
+                                      ) : (
+                                        "Đã thanh toán"
+                                      )}
+
                                     </Button>
                                   )}
                                   <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
                                     <Pencil className="h-4 w-4" />
                                   </Button>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
                                     onClick={() => setDeletingBookingId(id)}
                                     className="text-red-500 hover:text-red-700"
                                   >
@@ -586,7 +593,7 @@ export function BookingsList() {
           )}
         </div>
       ))}
-      
+
       {editingBooking && editedBooking && editedUser && (
         <EditModal
           isOpen={true}
@@ -651,13 +658,13 @@ export function BookingsList() {
           </form>
         </EditModal>
       )}
-      
+
       <Dialog open={!!confirmPaymentId} onOpenChange={() => setConfirmPaymentId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Xác nhận thanh toán</DialogTitle>
+            <DialogTitle>Xác nhận gửi vé</DialogTitle>
             <DialogDescription>
-              Bạn có chắc chắn muốn đánh dấu đơn đặt vé này là đã thanh toán?
+              Bạn có chắc chắn muốn gửi vé cho khách hàng?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -668,7 +675,7 @@ export function BookingsList() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       <Dialog open={!!deletingBookingId} onOpenChange={() => setDeletingBookingId(null)}>
         <DialogContent>
           <DialogHeader>
@@ -679,8 +686,8 @@ export function BookingsList() {
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeletingBookingId(null)}>Hủy</Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={() => deletingBookingId && handleDeleteBooking(deletingBookingId)}
             >
               Xóa
