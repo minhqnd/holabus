@@ -25,7 +25,8 @@ interface Route {
 }
 
 interface EditableRoute extends Route {
-  id: string
+  id: string;
+  iframeMap?: string;
 }
 
 export function RoutesList() {
@@ -68,6 +69,13 @@ export function RoutesList() {
             locations: editedRoute.locations
           })
         }
+
+        if (editedRoute.iframeMap) {
+          await setDocument(`routeMaps/${editedRoute.id}`, {
+            iframeMap: editedRoute.iframeMap
+          })
+        }
+
         setEditingRoute(null)
         setEditedRoute(null)
       } catch (error) {
@@ -91,6 +99,7 @@ export function RoutesList() {
   const handleDeleteRoute = async (id: string) => {
     try {
       await deleteDocument(`routes/${id}`)
+      await deleteDocument(`routeMaps/${id}`)
       setDeletingUserId(null)
     } catch (error) {
       console.error('Lỗi khi xóa tuyến xe:', error)
@@ -211,6 +220,16 @@ export function RoutesList() {
                 rows={5}
               />
             </div>
+            <div>
+              <label htmlFor="iframeMap" className="block text-sm font-medium text-gray-700">Iframe Bản Đồ</label>
+              <Input
+                id="iframeMap"
+                value={editedRoute.iframeMap || ''}
+                onChange={(e) => setEditedRoute({ ...editedRoute, iframeMap: e.target.value })}
+                className="mt-1"
+                placeholder="Paste link iframe của bản đồ để cập nhật <iframe src=...>"
+              />
+            </div>
             <Button type="submit">Lưu thay đổi</Button>
           </form>
         </EditModal>
@@ -229,6 +248,7 @@ export function RoutesList() {
               price: formData.get('price') as string,
               available: formData.get('available') === 'true',
               locations: (formData.get('locations') as string).split('\n'),
+              iframeMap: formData.get('iframeMap') as string,
             }
             handleAddRoute(newRouteId, newRouteData)
           }} className="space-y-4">
@@ -265,6 +285,15 @@ export function RoutesList() {
                 required
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 rows={5}
+              />
+            </div>
+            <div>
+              <label htmlFor="iframeMap" className="block text-sm font-medium text-gray-700">Iframe Bản Đồ</label>
+              <Input
+                id="iframeMap"
+                name="iframeMap"
+                className="mt-1"
+                placeholder="Paste link iframe của bản đồ để cập nhật <iframe src=...>" 
               />
             </div>
             <DialogFooter>
