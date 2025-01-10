@@ -60,7 +60,7 @@ export function PaymentDetails({
             <span className="font-medium">{accountName}</span>
           </div>
         </div>
-        <div className="mx-12 mt-4 text-center">
+        <div className="mx-8 mt-4 text-center">
           <p className="text-base font-medium">Vui lòng thanh toán sớm để nhận vé, HolaBus sẽ hoàn tiền cho trường hợp hết vé do thanh toán muộn.</p>
         </div>
       </div>
@@ -70,7 +70,7 @@ export function PaymentDetails({
           <li>Mở ứng dụng ngân hàng trên điện thoại của bạn</li>
           <li>Quét mã QR hiển thị trên màn hình hoặc nhập thủ công</li>
           <li>Kiểm tra thông tin và xác nhận thanh toán <b>chính xác số tiền và nội dung</b></li>
-          <li>Bạn sẽ nhận được mail vé điện tử khi hệ thống xác nhận thành công (30p-6h)</li>
+          <li>Bạn sẽ nhận được mail vé điện tử khi hệ thống xác nhận thành công (5p-3h)</li>
           <li> <b>Chỉ sau khi thanh toán bạn mới nhận được vé online</b></li>
         </ol>
       </div>
