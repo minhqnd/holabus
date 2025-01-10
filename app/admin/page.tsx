@@ -1,10 +1,20 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Bus, Calendar, FileText, Users, DollarSign, Clock } from 'lucide-react'
+import { Bus, Calendar, FileText, DollarSign, Clock } from 'lucide-react'
 import { subscribeToCollection } from '@/lib/firebase'
 import { useEffect, useState } from 'react'
 import { withAuth } from '@/components/auth-guard'
+
+interface Trip {
+  price?: string;
+}
+
+interface Booking {
+  paid?: boolean;
+  tripId?: string;
+  createdAt?: string;
+}
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -17,6 +27,8 @@ function AdminDashboard() {
     completedBookings: 0,
     todayBookings: 0
   })
+  const [tripsData, setTripsData] = useState<Record<string, Trip>>({})
+  const [bookingsData, setBookingsData] = useState<Record<string, Booking>>({})
 
   useEffect(() => {
     const unsubscribeRoutes = subscribeToCollection('routes', (data) => {
@@ -24,53 +36,57 @@ function AdminDashboard() {
     })
 
     const unsubscribeTrips = subscribeToCollection('trips', (data) => {
+      setTripsData(data as Record<string, Trip>)
       setStats(prev => ({ ...prev, totalTrips: Object.keys(data || {}).length }))
     })
 
-    const unsubscribeUsers = subscribeToCollection('users', (data) => {
-      setStats(prev => ({ ...prev, totalUsers: Object.keys(data || {}).length }))
-    })
+    // const unsubscribeUsers = subscribeToCollection('users', (data) => {
+    //   setStats(prev => ({ ...prev, totalUsers: Object.keys(data || {}).length }))
+    // })
 
     const unsubscribeBookings = subscribeToCollection('bookings', (data) => {
-      const bookings = data || {}
-      const today = new Date().toISOString().split('T')[0]
-      
-      // let totalRevenue = 0
-      let pendingCount = 0
-      let completedCount = 0
-      let todayCount = 0
-
-      Object.values(bookings).forEach((booking: unknown) => {
-        const typedBooking = booking as { paid: boolean; price?: string; createdAt?: string }
-        if (typedBooking.paid) {
-          // totalRevenue += parseInt(typedBooking.price || '0')
-          completedCount++
-        } else {
-          pendingCount++
-        }
-        
-        if (typedBooking.createdAt?.startsWith(today)) {
-          todayCount++
-        }
-      })
-
-      setStats(prev => ({
-        ...prev,
-        totalBookings: Object.keys(bookings).length,
-        // totalRevenue,
-        pendingBookings: pendingCount,
-        completedBookings: completedCount,
-        todayBookings: todayCount
-      }))
+      return setBookingsData(data as Record<string, Booking> || {})
     })
 
     return () => {
       unsubscribeRoutes()
       unsubscribeTrips()
-      unsubscribeUsers()
+      // unsubscribeUsers()
       unsubscribeBookings()
     }
   }, [])
+
+  useEffect(() => {
+    if (!Object.keys(tripsData).length || !Object.keys(bookingsData).length) return
+    const today = new Date().toISOString().split('T')[0]
+    let totalRevenue = 0
+    let pendingCount = 0
+    let completedCount = 0
+    let todayCount = 0
+
+    Object.values(bookingsData).forEach((booking: Booking) => {
+      if (booking.paid) {
+        totalRevenue += parseInt(
+          tripsData[booking.tripId || '']?.price?.replace(/\./g, '') || '0'
+        )
+        completedCount++
+      } else {
+        pendingCount++
+      }
+      if (booking.createdAt?.startsWith(today)) {
+        todayCount++
+      }
+    })
+
+    setStats(prev => ({
+      ...prev,
+      totalBookings: Object.keys(bookingsData).length,
+      totalRevenue,
+      pendingBookings: pendingCount,
+      completedBookings: completedCount,
+      todayBookings: todayCount
+    }))
+  }, [tripsData, bookingsData])
 
   return (
     <div>
@@ -109,7 +125,7 @@ function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Tổng số khách hàng</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -117,7 +133,7 @@ function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalUsers}</div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -125,12 +141,9 @@ function AdminDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {/* <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold">
               {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })
                 .format(stats.totalRevenue)}
-            </div> */}
-            <div className="text-2xl font-bold">
-              Next update...
             </div>
           </CardContent>
         </Card>
