@@ -17,6 +17,12 @@ interface Booking {
   createdAt?: string;
 }
 
+interface ChartDataPoint {
+  date: string;
+  bookings: number;
+  revenue: number;
+}
+
 function AdminDashboard() {
   const [stats, setStats] = useState({
     totalRoutes: 0,
@@ -30,7 +36,7 @@ function AdminDashboard() {
   })
   const [tripsData, setTripsData] = useState<Record<string, Trip>>({})
   const [bookingsData, setBookingsData] = useState<Record<string, Booking>>({})
-  const [chartData, setChartData] = useState<Array<{ date: string; bookings: number }>>([])
+  const [chartData, setChartData] = useState<Array<ChartDataPoint>>([])
 
   useEffect(() => {
     const unsubscribeRoutes = subscribeToCollection('routes', (data) => {
@@ -91,24 +97,33 @@ function AdminDashboard() {
   }, [tripsData, bookingsData])
 
   useEffect(() => {
-    if (!Object.keys(bookingsData).length) return
+    if (!Object.keys(bookingsData).length || !Object.keys(tripsData).length) return
     
     // Process data for chart
-    const bookingsByDate = Object.values(bookingsData).reduce((acc: Record<string, number>, booking) => {
+    const dailyStats = Object.values(bookingsData).reduce((acc: Record<string, ChartDataPoint>, booking) => {
       const date = booking.createdAt?.split('T')[0] || 'unknown'
-      acc[date] = (acc[date] || 0) + 1
+      
+      if (!acc[date]) {
+        acc[date] = { date, bookings: 0, revenue: 0 }
+      }
+      
+      acc[date].bookings += 1
+      
+      if (booking.paid) {
+        acc[date].revenue += parseInt(
+          tripsData[booking.tripId || '']?.price?.replace(/\./g, '') || '0'
+        )
+      }
+      
       return acc
     }, {})
 
     // Convert to array and sort by date
-    const sortedData = Object.entries(bookingsByDate)
-      .map(([date, bookings]) => ({ date, bookings }))
+    const sortedData = Object.values(dailyStats)
       .sort((a, b) => a.date.localeCompare(b.date))
       .slice(-7) // Last 7 days
 
     setChartData(sortedData)
-
-    // ...existing booking statistics calculation...
   }, [tripsData, bookingsData])
 
   return (
@@ -184,16 +199,13 @@ function AdminDashboard() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Số lượng đặt vé theo ngày</CardTitle>
+          <CardTitle>Thống kê theo ngày</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke="#e2e8f0" 
-                />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis 
                   dataKey="date"
                   tickFormatter={(value) => {
@@ -204,12 +216,27 @@ function AdminDashboard() {
                   tick={{ fontSize: 12, fontWeight: 500 }}
                 />
                 <YAxis 
-                  stroke="#64748b"
+                  yAxisId="left"
+                  stroke="#6366f1"
+                  tick={{ fontSize: 12, fontWeight: 500 }}
+                />
+                <YAxis 
+                  yAxisId="right"
+                  orientation="right"
+                  stroke="#10b981"
                   tick={{ fontSize: 12, fontWeight: 500 }}
                 />
                 <Tooltip 
                   labelFormatter={(value) => `Ngày ${new Date(value).toLocaleDateString('vi-VN')}`}
-                  formatter={(value) => [`${value} vé`, 'Số lượng']}
+                  formatter={(value, name) => {
+                    if (name === 'revenue') {
+                      return [new Intl.NumberFormat('vi-VN', { 
+                        style: 'currency', 
+                        currency: 'VND' 
+                      }).format(value as number), 'Doanh thu']
+                    }
+                    return [`${value} vé`, 'Số vé']
+                  }}
                   contentStyle={{
                     backgroundColor: 'white',
                     borderRadius: '8px',
@@ -220,13 +247,24 @@ function AdminDashboard() {
                   labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
                 />
                 <Line 
+                  yAxisId="left"
                   type="monotone" 
                   dataKey="bookings" 
                   stroke="#6366f1" 
-                  strokeWidth={2}
+                  strokeWidth={3}
                   dot={{ stroke: '#6366f1', strokeWidth: 2, r: 4, fill: 'white' }}
                   activeDot={{ stroke: '#6366f1', strokeWidth: 2, r: 6, fill: 'white' }}
-                  name="Số vé"
+                  name="bookings"
+                />
+                <Line 
+                  yAxisId="right"
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  dot={{ stroke: '#10b981', strokeWidth: 2, r: 4, fill: 'white' }}
+                  activeDot={{ stroke: '#10b981', strokeWidth: 2, r: 6, fill: 'white' }}
+                  name="revenue"
                 />
               </LineChart>
             </ResponsiveContainer>
