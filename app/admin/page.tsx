@@ -5,6 +5,7 @@ import { Bus, Calendar, FileText, DollarSign, Clock } from 'lucide-react'
 import { subscribeToCollection } from '@/lib/firebase'
 import { useEffect, useState } from 'react'
 import { withAuth } from '@/components/auth-guard'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface Trip {
   price?: string;
@@ -29,6 +30,7 @@ function AdminDashboard() {
   })
   const [tripsData, setTripsData] = useState<Record<string, Trip>>({})
   const [bookingsData, setBookingsData] = useState<Record<string, Booking>>({})
+  const [chartData, setChartData] = useState<Array<{ date: string; bookings: number }>>([])
 
   useEffect(() => {
     const unsubscribeRoutes = subscribeToCollection('routes', (data) => {
@@ -86,6 +88,27 @@ function AdminDashboard() {
       completedBookings: completedCount,
       todayBookings: todayCount
     }))
+  }, [tripsData, bookingsData])
+
+  useEffect(() => {
+    if (!Object.keys(bookingsData).length) return
+    
+    // Process data for chart
+    const bookingsByDate = Object.values(bookingsData).reduce((acc: Record<string, number>, booking) => {
+      const date = booking.createdAt?.split('T')[0] || 'unknown'
+      acc[date] = (acc[date] || 0) + 1
+      return acc
+    }, {})
+
+    // Convert to array and sort by date
+    const sortedData = Object.entries(bookingsByDate)
+      .map(([date, bookings]) => ({ date, bookings }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(-7) // Last 7 days
+
+    setChartData(sortedData)
+
+    // ...existing booking statistics calculation...
   }, [tripsData, bookingsData])
 
   return (
@@ -158,6 +181,58 @@ function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Số lượng đặt vé theo ngày</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid 
+                  strokeDasharray="3 3" 
+                  stroke="#e2e8f0" 
+                />
+                <XAxis 
+                  dataKey="date"
+                  tickFormatter={(value) => {
+                    const date = new Date(value)
+                    return `${date.getDate()}/${date.getMonth() + 1}`
+                  }}
+                  stroke="#64748b"
+                  tick={{ fontSize: 12, fontWeight: 500 }}
+                />
+                <YAxis 
+                  stroke="#64748b"
+                  tick={{ fontSize: 12, fontWeight: 500 }}
+                />
+                <Tooltip 
+                  labelFormatter={(value) => `Ngày ${new Date(value).toLocaleDateString('vi-VN')}`}
+                  formatter={(value) => [`${value} vé`, 'Số lượng']}
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    borderRadius: '8px',
+                    padding: '8px',
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                  labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="bookings" 
+                  stroke="#6366f1" 
+                  strokeWidth={2}
+                  dot={{ stroke: '#6366f1', strokeWidth: 2, r: 4, fill: 'white' }}
+                  activeDot={{ stroke: '#6366f1', strokeWidth: 2, r: 6, fill: 'white' }}
+                  name="Số vé"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
