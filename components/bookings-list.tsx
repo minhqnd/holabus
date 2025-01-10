@@ -442,7 +442,8 @@ export function BookingsList() {
                           "Tu_di_den_truong": "Tự đi đến trường",
                           "Den_do_tan_xa": "Đèn đỏ Tân Xã",
                           "Cay_xang_39": "Cây xăng 39",
-                          "Cay_xa_cu_phenikaa": "Cây xà cừ (Phenikaa)"
+                          "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+                          "Cho_hoa_lac": "Chợ Hoà Lạc",
                         };
                         return (
                           <Card

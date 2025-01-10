@@ -238,9 +238,10 @@ export function PassengerForm({ onSubmit, onBack, price }: PassengerFormProps) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Tu_di_den_truong">Tự đi đến trường</SelectItem>
-                  <SelectItem value="Den_do_tan_xa">Đèn đỏ Tân Xã</SelectItem>
+                  <SelectItem value="Den_do_tan_xa">Đèn đỏ Hồ Tân Xã</SelectItem>
                   <SelectItem value="Cay_xang_39">Cây xăng 39</SelectItem>
-                  <SelectItem value="Cay_xa_cu_phenikaa">Cây xà cừ (Phenikaa)</SelectItem>
+                  <SelectItem value="Cay_xa_cu_phenikaa">Cây xăng xà cừ</SelectItem>
+                  <SelectItem value="Cho_hoa_lac">Chợ Hòa Lạc</SelectItem>
                 </SelectContent>
               </Select>
               {errors.transferPoint && <span className="text-sm text-red-500 mt-1">{errors.transferPoint}</span>}
