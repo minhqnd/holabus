@@ -35,7 +35,6 @@ export async function getMapById(tripId: string) {
     if (!res.ok) {
         throw new Error('Failed to fetch trip data');
     }
-    // return await res.json().iframeMap;
     const data = await res.json();
-    return data.iframeMap;
+    return data ? data.iframeMap : null;
 }
