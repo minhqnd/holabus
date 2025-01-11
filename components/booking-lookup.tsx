@@ -60,7 +60,7 @@ export function BookingLookup() {
         const searchId = id || bookingId
         setError('')
         setBookingInfo(null)
-        sendGAEvent('event', 'booked', { value: searchId })
+        sendGAEvent('event', 'tra-cuu', { value: searchId })
 
         if (!searchId) {
             setError('Vui lòng nhập mã đặt chỗ')

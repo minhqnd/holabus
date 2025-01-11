@@ -9,6 +9,7 @@ import { PaymentDetails } from '@/components/payment-details'
 import { Breadcrumbs } from '@/components/breadcrumbs'
 import { getBookingById } from '@/lib/api/bookings'
 import { getTripsById } from '@/lib/api/trips'
+import { sendGAEvent } from '@next/third-parties/google'
 
 const currentPage = 'Thanh toán'
 
@@ -21,6 +22,7 @@ const PaymentContent = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      sendGAEvent('event', 'Payment check', { value: bookingId });
       if (!bookingId) {
         console.error('Không tìm thấy bookingId trong URL.')
         setLoading(false)

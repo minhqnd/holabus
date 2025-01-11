@@ -74,8 +74,8 @@ export function RouteCard({ title, locations, price, id, available }: RouteCardP
             // onClick={() => available && router.push(`/search?tinh=${id}`)}
             onClick={() => {
               if (available) {
-              sendGAEvent('button_click', 'Click routes', id);
-              router.push(`/search?tinh=${id}`);
+                sendGAEvent('event', 'Routes clicked', { value: id });
+                router.push(`/search?tinh=${id}`);
               }
             }}
             disabled={!available}
