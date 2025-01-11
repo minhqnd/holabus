@@ -23,7 +23,7 @@ export function BusCard({
   time,
   date,
   price,
-  slot,
+  // slot,
   location,
   isSelected,
   onSelect,
