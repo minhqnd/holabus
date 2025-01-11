@@ -64,10 +64,10 @@ export function BusCard({
           {/* <div className="text-center w-full md:w-auto mt-4 md:mt-0">
             <div className="h-0.5 w-16 bg-gray-300" />
           </div> */}
-          <div className="w-full md:w-auto mt-4 md:mt-0">
+          {/* <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold">{slot}</div>
             <div className="text-sm text-gray-500">Vé còn lại</div>
-          </div>
+          </div> */}
           <div className="w-full md:w-auto mt-4 md:mt-0">
             <div className="text-lg font-bold text-red-600">{price}</div>
             <div className="text-sm text-gray-500">VND</div>
@@ -124,10 +124,10 @@ export function BusCard({
                 <div className="text-sm text-gray-500">ID chuyến:</div>
                 <div className="font-medium">{id}</div>
               </div>
-              <div>
+              {/* <div>
                 <div className="text-sm text-gray-500">Vé còn lại:</div>
                 <div className="font-medium">{slot}</div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
