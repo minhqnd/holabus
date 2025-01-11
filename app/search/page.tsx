@@ -16,7 +16,7 @@ import { generateUniqueBookingId, saveBookingData } from '@/utils/booking'
 import { getTripsById } from '@/lib/api/trips'
 import { getRouteByProvince } from '@/lib/api/routes'
 import { Confirm } from '@/components/confirm'
-
+import { sendGAEvent } from '@next/third-parties/google'
 interface UserData {
     sex: string
     name: string
@@ -131,7 +131,7 @@ function SearchContent() {
 
             // Lưu booking với trạng thái gửi email
             await saveBookingData(bookingId, selectedTripId, userId, false, note)
-
+            sendGAEvent('event', 'booked', { value: tripData?.price })
             // Chuyển hướng sau khi lưu booking thành công
             router.push(`/payment?booking=${bookingId}`)
         } catch (error) {

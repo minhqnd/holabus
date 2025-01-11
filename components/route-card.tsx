@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import Popup from '@/components/popup'
 import { useRouter } from 'next/navigation'
+import { sendGAEvent } from '@next/third-parties/google'
 
 interface RouteCardProps {
   title: string
@@ -70,7 +71,13 @@ export function RouteCard({ title, locations, price, id, available }: RouteCardP
           <div className="text-xl font-bold text-red-700 md:text-2xl">{price} VND</div>
           <Button 
             className="rounded-full bg-red-600 px-6 py-2 text-base font-medium text-white hover:bg-red-700"
-            onClick={() => available && router.push(`/search?tinh=${id}`)}
+            // onClick={() => available && router.push(`/search?tinh=${id}`)}
+            onClick={() => {
+              if (available) {
+              sendGAEvent('button_click', 'Click routes', id);
+              router.push(`/search?tinh=${id}`);
+              }
+            }}
             disabled={!available}
           > 
             {available ? 'Đặt ngay' : 'Hết vé'}

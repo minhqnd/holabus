@@ -10,6 +10,7 @@ import { getBookingById } from '@/lib/api/bookings'
 import { getTripsById } from '@/lib/api/trips'
 import { getRouteByProvince } from '@/lib/api/routes'
 import { getUserById } from '@/lib/api/user'
+import { sendGAEvent } from '@next/third-parties/google'
 
 interface Booking {
     createdAt: string;
@@ -59,6 +60,8 @@ export function BookingLookup() {
         const searchId = id || bookingId
         setError('')
         setBookingInfo(null)
+        sendGAEvent('event', 'booked', { value: searchId })
+
         if (!searchId) {
             setError('Vui lòng nhập mã đặt chỗ')
             return
@@ -83,7 +86,7 @@ export function BookingLookup() {
     }, [bookingId, setError, setBookingInfo])
 
     useEffect(() => {
-        if (initialBookingId) {
+        if (!bookingId && initialBookingId) {
             setBookingId(initialBookingId)
             handleSearch(initialBookingId)
         }
