@@ -297,19 +297,30 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully');
-      toast.success('Gửi hóa đơn thành công');
+      // toast.success('Gửi vé thành công');
     } catch (error) {
       console.error('Error sending ticket:', error);
-      toast.error('Lỗi khi gửi hóa đơn');
+      toast.error('Lỗi khi gửi vé');
 
     }
   }
 
+  const handleResendEmail = async (id: string) => {
+    setSendingEmails(prev => ({ ...prev, [id]: true }));
+    try {
+      await handleSendTicket(id);
+      toast.success('Gửi lại vé thành công');
+    } catch (error) {
+      console.error('Lỗi khi gửi lại vé:', error);
+      toast.error('Lỗi khi gửi lại vé');
+    } finally {
+      setSendingEmails(prev => ({ ...prev, [id]: false }));
+    }
+  };
+
   const handleConfirmPayment = async (id: string) => {
-    setConfirmPaymentId(null)
-
-    setSendingEmails(prev => ({ ...prev, [id]: true }))
-
+    setConfirmPaymentId(null);
+    setSendingEmails(prev => ({ ...prev, [id]: true }));
     try {
       const booking = bookings[id];
       const trip = trips[booking.tripId];
@@ -317,8 +328,7 @@ export function BookingsList() {
       if (!trip) {
         throw new Error('Không tìm thấy chuyến xe này.');
       }
-      await handleSendTicket(id)
-
+      await handleSendTicket(id);
       await updateDocument(`bookings/${id}`, { paid: true });
 
       const newSlot = trip.slot - 1;
@@ -326,12 +336,12 @@ export function BookingsList() {
 
       toast.success('Xác nhận thành công');
     } catch (error) {
-      console.error('Lỗi khi xác nhận thanh toán:', error)
+      console.error('Lỗi khi xác nhận thanh toán:', error);
       toast.error('Lỗi khi xác nhận thanh toán');
     } finally {
-      setSendingEmails(prev => ({ ...prev, [id]: false }))
+      setSendingEmails(prev => ({ ...prev, [id]: false }));
     }
-  }
+  };
 
   const handleCancelPayment = async (id: string) => {
     try {
@@ -515,7 +525,7 @@ export function BookingsList() {
                                   variant="outline"
                                   size="sm"
                                   onClick={(e) => {
-                                    return booking.paid ? setConfirmPaymentId(id) : handleSendEmail(id, 'payment', e);
+                                    return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
                                   }}
                                   disabled={isSending}
                                 >
