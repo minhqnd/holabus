@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
 import { Pencil, Mail, Check, Trash2, ChevronDown, X } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+// import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -20,6 +20,7 @@ import { subscribeToCollection, updateDocument, deleteDocument } from '@/lib/fir
 import { getProvinceNameById } from '@/lib/utils/province'
 import { Spinner } from '@/components/ui/spinner'
 import { toast, ToastContainer } from 'react-toastify';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface Booking {
   userId: string;
@@ -80,7 +81,7 @@ export function BookingsList() {
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
-  const [flashingBookings] = useState<Record<string, boolean>>({});
+  // const [flashingBookings] = useState<Record<string, boolean>>({});
   const [sendingEmails, setSendingEmails] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -168,13 +169,13 @@ export function BookingsList() {
   const handleSendEmail = async (bookingId: string, type: 'payment' | 'ticket', e: React.MouseEvent) => {
     e.stopPropagation()
     setSendingEmails(prev => ({ ...prev, [bookingId]: true }))
+    const toastid = toast.loading('Đang gửi hóa đơn...');
     try {
       console.log(`Sending ${type} email for booking ${bookingId}`)
       const booking = bookings[bookingId]
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
       const route = routes[trip.routeId]
-
       if (!route) {
         throw new Error('Không tìm thấy route cho chuyến xe này.')
       }
@@ -214,10 +215,13 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully')
-      toast.success('Gửi hóa đơn thành công');
+      // toast.success('Gửi hóa đơn thành công');
+      toast.update(toastid, { render: "Gửi hóa đơn thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Error sending ticket:', error)
-      toast.error('Error sending ticket, retry');
+      // toast.error('Error sending ticket, retry');
+      toast.update(toastid, { render: "Lỗi khi gửi hóa đơn", type: "error", isLoading: false, autoClose: 5000 });
+
     } finally {
       setSendingEmails(prev => ({ ...prev, [bookingId]: false }))
     }
@@ -234,7 +238,10 @@ export function BookingsList() {
 
   const handleSaveEdit = async () => {
     if (editingBooking && editedBooking && editedUser) {
+      const toastid = toast.loading('Đang gửi hóa đơn...');
       try {
+        // toast.loading('Đang sửa...');
+
         // Cập nhật thông tin booking
         await updateDocument(`bookings/${editingBooking}`, editedBooking)
         // Cập nhật thông tin user
@@ -242,15 +249,16 @@ export function BookingsList() {
         setEditingBooking(null)
         setEditedBooking(null)
         setEditedUser(null)
-        toast.success('Sửa đơn thành công');
+        toast.update(toastid, { render: "Sửa thành công", type: "success", isLoading: false, autoClose: 5000 });
       } catch (error) {
         console.error('Lỗi khi cập nhật:', error)
-        toast.error('Error updating booking');
+        toast.update(toastid, { render: "Lỗi khi sửa", type: "error", isLoading: false, autoClose: 5000 });
       }
     }
   }
 
   const handleSendTicket = async (id: string) => {
+    const toastid = toast.loading('Đang gửi vé...');
     try {
       const booking = bookings[id];
       const user = users[booking.userId];
@@ -297,11 +305,10 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully');
-      // toast.success('Gửi vé thành công');
+      toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Error sending ticket:', error);
-      toast.error('Lỗi khi gửi vé');
-
+      toast.update(toastid, { render: "Lỗi khi gửi vé", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
@@ -309,10 +316,10 @@ export function BookingsList() {
     setSendingEmails(prev => ({ ...prev, [id]: true }));
     try {
       await handleSendTicket(id);
-      toast.success('Gửi lại vé thành công');
+      // toast.success('Gửi lại vé thành công');
     } catch (error) {
       console.error('Lỗi khi gửi lại vé:', error);
-      toast.error('Lỗi khi gửi lại vé');
+      // toast.error('Lỗi khi gửi lại vé');
     } finally {
       setSendingEmails(prev => ({ ...prev, [id]: false }));
     }
@@ -328,22 +335,25 @@ export function BookingsList() {
       if (!trip) {
         throw new Error('Không tìm thấy chuyến xe này.');
       }
+      // toast.loading('Đang gửi vé...');
       await handleSendTicket(id);
       await updateDocument(`bookings/${id}`, { paid: true });
 
       const newSlot = trip.slot - 1;
       await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
 
-      toast.success('Xác nhận thành công');
+      // toast.success('Xác nhận thành công');
     } catch (error) {
       console.error('Lỗi khi xác nhận thanh toán:', error);
-      toast.error('Lỗi khi xác nhận thanh toán');
+      // toast.error('Lỗi khi xác nhận thanh toán');
     } finally {
       setSendingEmails(prev => ({ ...prev, [id]: false }));
     }
   };
 
   const handleCancelPayment = async (id: string) => {
+    const toastid = toast.loading('Đang hủy...');
+
     try {
       const booking = bookings[id]
       const trip = trips[booking.tripId]
@@ -356,21 +366,23 @@ export function BookingsList() {
         const newSlot = trip.slot + 1
         await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
       }
-      toast.success('Hủy trạng thái thanh toán thành công');
+      toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false, autoClose: 5000 });
 
     } catch (error) {
       console.error('Lỗi khi hủy thanh toán:', error)
+      toast.update(toastid, { render: "Lỗi khi hủy thanh toán", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
   const handleDeleteBooking = async (id: string) => {
+    const toastid = toast.loading('Đang xóa vé...');
     try {
       await deleteDocument(`bookings/${id}`)
       setDeletingBookingId(null)
-      toast.success('Xóa vé thành công');
+      toast.update(toastid, { render: "Xóa vé thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Lỗi khi xóa vé:', error)
-      toast.error(`Lỗi khi xóa vé`);
+      toast.update(toastid, { render: "Lỗi khi xóa vé", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
@@ -387,17 +399,30 @@ export function BookingsList() {
   };
 
   const handleSaveNote = async (id: string) => {
+    const toastid = toast.loading('Đang cập nhật ghi chú...');
     try {
       await updateDocument(`bookings/${id}`, { note: noteText });
+      toast.update(toastid, { render: "Cập nhật ghi chú thành công", type: "success", isLoading: false, autoClose: 5000 });
       setEditingNote(null);
     } catch (error) {
       console.error('Lỗi khi cập nhật ghi chú:', error);
+      toast.update(toastid, { render: "Lỗi khi cập nhật ghi chú", type: "error", isLoading: false, autoClose: 5000 });
     }
   };
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
       <div className="mb-4 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex space-x-2">
           <Button
@@ -447,11 +472,11 @@ export function BookingsList() {
           </div>
 
           {!collapsedGroups[routeId] && (
-            <div className="space-y-8 ml-4">
+            <div className="space-y-8 ml-4 p-4 rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
               {Object.entries(tripGroups).map(([tripId, bookings]) => {
                 const trip = trips[tripId]
                 return (
-                  <div key={tripId}>
+                  <div key={tripId} className="mb-6">
                     <div className="flex items-center mb-4">
                       <h3 className="text-lg font-medium break-words mr-2">
                         ({trip?.name || `Trip ${tripId}`})
@@ -460,157 +485,169 @@ export function BookingsList() {
                         {trip?.slot > 0 ? `Còn ${trip?.slot} vé` : "Hết vé"}
                       </Badge>
                     </div>
-                    <div className="space-y-4">
-                      {bookings.map(([id, booking]: [string, Booking], index: number) => {
-                        const isSending = sendingEmails[id]
-                        const transferPoints: Record<string, string> = {
-                          "Tu_di_den_truong": "Tự đi đến trường",
-                          "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-                          "Cay_xang_39": "Cây xăng 39",
-                          "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-                          "Cho_hoa_lac": "Chợ Hoà Lạc",
-                        };
-                        return (
-                          <Card
-                            key={id}
-                            className={`${flashingBookings[id] ? 'animate-pulse ring-2 ring-blue-500' : ''}`}
-                          >
-                            <CardContent>
-
-                              <div className="flex items-center justify-between my-4">
-                                <div className="flex items-center gap-2">
-                                  <Badge>{index + 1}</Badge>
-                                  <span className="text-xl font-semibold break-words">{id}</span>
-                                </div>
-                                <Badge variant={booking.paid ? "default" : "destructive"}>
-                                  {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                                </Badge>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                  <p className="text-sm font-medium break-words">Khách hàng</p>
-                                  <p className="text-sm break-words">{users[booking.userId].name}</p>
-                                  <p className="text-sm text-gray-500 break-words">Email: {users[booking.userId].mail}</p>
-                                  <p className="text-sm text-gray-500 break-words">SĐT: {users[booking.userId].phone}</p>
-                                  <p className="text-sm text-gray-500 break-words">
-                                    Giới tính: {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium break-words">Chuyến xe</p>
-                                  <p className="text-sm break-words">{trip?.name}</p>
-                                  <p className="text-sm text-gray-500 break-words">Mã chuyến: {booking.tripId}</p>
-                                  <p className="text-sm text-gray-500 break-words">Ngày khởi hành: {trip?.date}</p>
-                                  <p className="text-sm text-gray-500 break-words">Giờ khởi hành: {trip?.time}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium break-words">Ngày tạo</p>
-                                  <p className="text-sm break-words">{new Date(booking.createdAt).toLocaleString('vi-VN')}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium break-words">Giá</p>
-                                  <p className="text-sm font-semibold break-words">{trip?.price} VND</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium break-words">Điểm đến</p>
-                                  <p className="text-sm break-words">{users[booking.userId].destination || 'N/A'}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium break-words">Điểm trung chuyển</p>
-                                  <p className="text-sm break-words">{transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}</p>
-                                </div>
-                              </div>
-                              <div className="mt-4 flex justify-between">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
-                                  }}
-                                  disabled={isSending}
+                    <div className="overflow-x-auto rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
+                      <table className="w-full border-collapse text-sm">
+                        <thead className="bg-gray-100">
+                          <tr className="text-gray-700">
+                            <th className="p-2">#</th>
+                            <th className="p-2">Booking ID</th>
+                            <th className="p-2">Khách hàng</th>
+                            <th className="p-2">Email</th>
+                            <th className="p-2">SĐT</th>
+                            <th className="p-2">Giới tính</th>
+                            <th className="p-2">Ngày tạo</th>
+                            <th className="p-2">Giá</th>
+                            <th className="p-2">Điểm đến</th>
+                            <th className="p-2">Điểm trung chuyển</th>
+                            <th className="p-2">Trạng thái</th>
+                            <th className="p-2">Ghi chú</th>
+                            <th className="p-2">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bookings.map(([id, booking]: [string, Booking], index: number) => {
+                            const isSending = sendingEmails[id]
+                            const transferPoints: Record<string, string> = {
+                              "Tu_di_den_truong": "Tự đi đến trường",
+                              "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+                              "Cay_xang_39": "Cây xăng 39",
+                              "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+                              "Cho_hoa_lac": "Chợ Hoà Lạc",
+                            };
+                            return (
+                              <tr
+                                key={id}
+                                className="border-b last:border-0 odd:bg-white even:bg-gray-50 hover:bg-gray-100"
+                              >
+                                <td className="p-2 whitespace-nowrap">{index + 1}</td>
+                                <td className="p-2 text-ellipsis overflow-hidden max-w-[100px] whitespace-nowrap" title={id}>
+                                  {id}
+                                </td>
+                                <td className="p-2">{users[booking.userId].name}</td>
+                                <td
+                                  className="p-2 text-ellipsis overflow-hidden max-w-40 whitespace-nowrap"
+                                  title={users[booking.userId].mail}
                                 >
-                                  <Mail className="mr-2 h-4 w-4" />
-                                  {isSending ? (
-                                    <Spinner className="mr-2 h-4 w-4" />
-                                  ) : (
-                                    booking.paid ? "Gửi lại vé" : "Gửi lại mail hóa đơn"
-                                  )}
-                                </Button>
-                                <div className="space-x-2">
-                                  {booking.paid ? (
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={() => handleCancelPayment(id)}
-                                    >
-                                      <X className="mr-2 h-4 w-4" />
-                                      Hủy thanh toán
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant="default"
-                                      size="sm"
-                                      onClick={() => setConfirmPaymentId(id)}
-                                    >
-                                      <Check className="mr-2 h-4 w-4" />
-                                      {isSending ? (
-                                        <Spinner className="mr-2 h-4 w-4" />
-                                      ) : (
-                                        "Đã thanh toán"
-                                      )}
-
-                                    </Button>
-                                  )}
-                                  <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                                    <Pencil className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setDeletingBookingId(id)}
-                                    className="text-red-500 hover:text-red-700"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                              <div className="mt-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm text-gray-600">Ghi chú:</span>
-                                  {editingNote === id ? (
-                                    <div className="flex gap-2">
-                                      <Input
-                                        value={noteText}
-                                        onChange={(e) => setNoteText(e.target.value)}
-                                        className="text-sm"
-                                      />
-                                      <Button
-                                        size="sm"
-                                        onClick={() => handleSaveNote(id)}
-                                      >
-                                        Lưu
+                                  {users[booking.userId].mail}
+                                </td>
+                                <td className="p-2">{users[booking.userId].phone}</td>
+                                <td className="p-2">
+                                  {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}
+                                </td>
+                                <td className="p-2">
+                                  {new Date(booking.createdAt).toLocaleString('vi-VN')}
+                                </td>
+                                <td className="p-2">{trip?.price} VND</td>
+                                <td className="p-2">
+                                  {users[booking.userId].destination || 'N/A'}
+                                </td>
+                                <td className="p-2">
+                                  {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}
+                                </td>
+                                <td className="p-2">
+                                  {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+                                </td>
+                                <td className="p-2">
+                                  <div className="flex items-center gap-2">
+                                    {/* <span className="text-sm text-gray-600">Ghi chú:</span> */}
+                                    {editingNote === id ? (
+                                      <div className="flex gap-2">
+                                        <Input
+                                          value={noteText}
+                                          onChange={(e) => setNoteText(e.target.value)}
+                                          className="text-sm"
+                                        />
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleSaveNote(id)}
+                                        >
+                                          Lưu
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm">
+                                          {booking.note || ''}
+                                        </span>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => handleEditNote(id, booking.note ?? '')}
+                                        >
+                                          <Pencil className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="p-2">
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="outline" size="sm">
+                                        Actions
+                                        <ChevronDown className="ml-1 h-4 w-4" />
                                       </Button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm">
-                                        {booking.note || 'Không có ghi chú'}
-                                      </span>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleEditNote(id, booking.note ?? '')}
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          return booking.paid ? handleCancelPayment(id) : setConfirmPaymentId(id);
+                                        }}
+                                        disabled={isSending}
                                       >
-                                        <Pencil className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        )
-                      })}
+                                        {booking.paid ? (
+                                          <>
+                                            <X className="mr-2 h-4 w-4" />
+                                            Hủy thanh toán
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Check className="mr-2 h-4 w-4" />
+                                            Thanh toán
+                                          </>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={(e) => {
+                                          return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
+                                        }}
+                                        disabled={isSending}
+                                      >
+                                        {isSending ? (
+                                          <>
+                                            <Spinner className="mr-2 h-4 w-4" />
+                                            Đang gửi...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Mail className="mr-2 h-4 w-4" />
+                                            {booking.paid ? "Gửi lại vé" : "Gửi lại hóa đơn"}
+                                          </>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={(e) => handleEditClick(id, e)}
+                                        disabled={isSending}
+                                      >
+                                        <Pencil className="mr-2 h-4 w-4" />
+                                        Sửa
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={() => setDeletingBookingId(id)}
+                                        className="text-red-500"
+                                        disabled={isSending}
+                                      >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Xóa
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 )
