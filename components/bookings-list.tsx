@@ -496,7 +496,12 @@ export function BookingsList() {
                                   {id}
                                 </td>
                                 <td className="p-2">{users[booking.userId].name}</td>
-                                <td className="p-2">{users[booking.userId].mail}</td>
+                                <td
+                                  className="p-2 text-ellipsis overflow-hidden max-w-40 whitespace-nowrap"
+                                  title={users[booking.userId].mail}
+                                >
+                                  {users[booking.userId].mail}
+                                </td>
                                 <td className="p-2">{users[booking.userId].phone}</td>
                                 <td className="p-2">
                                   {users[booking.userId].sex === "1" ? "Nam" : "Nữ"}

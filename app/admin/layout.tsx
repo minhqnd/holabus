@@ -9,7 +9,7 @@ export default function AdminLayout({
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 overflow-auto bg-[#FFF9F0] bg-[url('/section-background.png')] bg-repeat">
-        <main className="container mx-auto p-4 md:p-8 min-h-full">
+        <main className="container mx-auto p-4 md:p-4 min-h-full">
           {children}
         </main>
       </div>
