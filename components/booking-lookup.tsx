@@ -90,7 +90,7 @@ export function BookingLookup() {
             setBookingId(initialBookingId)
             handleSearch(initialBookingId)
         }
-    }, [initialBookingId, handleSearch])
+    }, [initialBookingId, handleSearch, bookingId])
 
     return (
         <div className="rounded-3xl bg-white p-6 shadow-lg" >
