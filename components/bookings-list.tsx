@@ -521,7 +521,7 @@ export function BookingsList() {
                                 </td>
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-600">Ghi chú:</span>
+                                    {/* <span className="text-sm text-gray-600">Ghi chú:</span> */}
                                     {editingNote === id ? (
                                       <div className="flex gap-2">
                                         <Input
@@ -539,7 +539,7 @@ export function BookingsList() {
                                     ) : (
                                       <div className="flex items-center gap-2">
                                         <span className="text-sm">
-                                          {booking.note || 'Không có ghi chú'}
+                                          {booking.note || ''}
                                         </span>
                                         <Button
                                           variant="ghost"
@@ -553,57 +553,54 @@ export function BookingsList() {
                                   </div>
                                 </td>
                                 <td className="p-2">
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={(e) => {
-                                      return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
-                                    }}
-                                    disabled={isSending}
-                                  >
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    {isSending ? (
-                                      <Spinner className="mr-2 h-4 w-4" />
-                                    ) : (
-                                      booking.paid ? "Gửi lại vé" : "Gửi lại mail hóa đơn"
-                                    )}
-                                  </Button>
-                                  <div className="space-x-2">
-                                    {booking.paid ? (
+                                  <div className="flex flex-col items-center gap-1">
+                                    <div className="flex space-x-2">
                                       <Button
-                                        variant="destructive"
+                                        variant="outline"
                                         size="sm"
-                                        onClick={() => handleCancelPayment(id)}
+                                        onClick={(e) => {
+                                          return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
+                                        }}
+                                        disabled={isSending}
                                       >
-                                        <X className="mr-2 h-4 w-4" />
-                                        Hủy thanh toán
+                                        <Mail className="mr-2 h-4 w-4" />
+                                        {isSending ? <Spinner className="mr-2 h-4 w-4" /> : booking.paid ? "Gửi lại vé" : "Gửi lại hóa đơn"}
                                       </Button>
-                                    ) : (
+                                    </div>
+                                    <div className="flex space-x-2">
+                                      {booking.paid ? (
+                                        <Button
+                                          variant="destructive"
+                                          size="sm"
+                                          onClick={() => handleCancelPayment(id)}
+                                        >
+                                          <X className="mr-2 h-4 w-4" />
+                                          Hủy thanh toán
+                                        </Button>
+                                      ) : (
+                                        <Button
+                                          variant="default"
+                                          size="sm"
+                                          onClick={() => setConfirmPaymentId(id)}
+                                        >
+                                          <Check className="mr-2 h-4 w-4" />
+                                          {isSending ? <Spinner className="mr-2 h-4 w-4" /> : "Thanh toán"}
+                                        </Button>
+                                      )}
+                                    </div>
+                                    <div className="flex space-x-2">
+                                      <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
+                                        <Pencil className="h-4 w-4" />
+                                      </Button>
                                       <Button
-                                        variant="default"
+                                        variant="ghost"
                                         size="sm"
-                                        onClick={() => setConfirmPaymentId(id)}
+                                        onClick={() => setDeletingBookingId(id)}
+                                        className="text-red-500 hover:text-red-700"
                                       >
-                                        <Check className="mr-2 h-4 w-4" />
-                                        {isSending ? (
-                                          <Spinner className="mr-2 h-4 w-4" />
-                                        ) : (
-                                          "Đã thanh toán"
-                                        )}
-
+                                        <Trash2 className="h-4 w-4" />
                                       </Button>
-                                    )}
-                                    <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                                      <Pencil className="h-4 w-4" />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => setDeletingBookingId(id)}
-                                      className="text-red-500 hover:text-red-700"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
+                                    </div>
                                   </div>
                                 </td>
                               </tr>
