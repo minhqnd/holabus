@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
 import { Pencil, Mail, Check, Trash2, ChevronDown, X } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+// import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -81,7 +81,7 @@ export function BookingsList() {
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({})
   const [editingNote, setEditingNote] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
-  const [flashingBookings] = useState<Record<string, boolean>>({});
+  // const [flashingBookings] = useState<Record<string, boolean>>({});
   const [sendingEmails, setSendingEmails] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -216,11 +216,11 @@ export function BookingsList() {
 
       console.log('Ticket sent successfully')
       // toast.success('Gửi hóa đơn thành công');
-      toast.update(toastid, { render: "Gửi hóa đơn thành công", type: "success", isLoading: false });
+      toast.update(toastid, { render: "Gửi hóa đơn thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Error sending ticket:', error)
       // toast.error('Error sending ticket, retry');
-      toast.update(toastid, { render: "Lỗi khi gửi hóa đơn", type: "error", isLoading: false });
+      toast.update(toastid, { render: "Lỗi khi gửi hóa đơn", type: "error", isLoading: false, autoClose: 5000 });
 
     } finally {
       setSendingEmails(prev => ({ ...prev, [bookingId]: false }))
@@ -249,10 +249,10 @@ export function BookingsList() {
         setEditingBooking(null)
         setEditedBooking(null)
         setEditedUser(null)
-        toast.update(toastid, { render: "Sửa thành công", type: "success", isLoading: false });
+        toast.update(toastid, { render: "Sửa thành công", type: "success", isLoading: false, autoClose: 5000 });
       } catch (error) {
         console.error('Lỗi khi cập nhật:', error)
-        toast.update(toastid, { render: "Lỗi khi sửa", type: "error", isLoading: false });
+        toast.update(toastid, { render: "Lỗi khi sửa", type: "error", isLoading: false, autoClose: 5000 });
       }
     }
   }
@@ -305,10 +305,10 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully');
-      toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false });
+      toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Error sending ticket:', error);
-      toast.update(toastid, { render: "Lỗi khi gửi vé", type: "error", isLoading: false });
+      toast.update(toastid, { render: "Lỗi khi gửi vé", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
@@ -342,7 +342,7 @@ export function BookingsList() {
       const newSlot = trip.slot - 1;
       await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
 
-      toast.success('Xác nhận thành công');
+      // toast.success('Xác nhận thành công');
     } catch (error) {
       console.error('Lỗi khi xác nhận thanh toán:', error);
       // toast.error('Lỗi khi xác nhận thanh toán');
@@ -366,11 +366,11 @@ export function BookingsList() {
         const newSlot = trip.slot + 1
         await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
       }
-      toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false });
+      toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false, autoClose: 5000 });
 
     } catch (error) {
       console.error('Lỗi khi hủy thanh toán:', error)
-      toast.update(toastid, { render: "Lỗi khi hủy thanh toán", type: "error", isLoading: false });
+      toast.update(toastid, { render: "Lỗi khi hủy thanh toán", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
@@ -379,10 +379,10 @@ export function BookingsList() {
     try {
       await deleteDocument(`bookings/${id}`)
       setDeletingBookingId(null)
-      toast.update(toastid, { render: "Xóa vé thành công", type: "success", isLoading: false });
+      toast.update(toastid, { render: "Xóa vé thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Lỗi khi xóa vé:', error)
-      toast.update(toastid, { render: "Lỗi khi xóa vé", type: "error", isLoading: false });
+      toast.update(toastid, { render: "Lỗi khi xóa vé", type: "error", isLoading: false, autoClose: 5000 });
     }
   }
 
@@ -402,17 +402,27 @@ export function BookingsList() {
     const toastid = toast.loading('Đang cập nhật ghi chú...');
     try {
       await updateDocument(`bookings/${id}`, { note: noteText });
-      toast.update(toastid, { render: "Cập nhật ghi chú thành công", type: "success", isLoading: false });
+      toast.update(toastid, { render: "Cập nhật ghi chú thành công", type: "success", isLoading: false, autoClose: 5000 });
       setEditingNote(null);
     } catch (error) {
       console.error('Lỗi khi cập nhật ghi chú:', error);
-      toast.update(toastid, { render: "Lỗi khi cập nhật ghi chú", type: "error", isLoading: false });
+      toast.update(toastid, { render: "Lỗi khi cập nhật ghi chú", type: "error", isLoading: false, autoClose: 5000 });
     }
   };
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
       <div className="mb-4 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex space-x-2">
           <Button
@@ -505,7 +515,10 @@ export function BookingsList() {
                               "Cho_hoa_lac": "Chợ Hoà Lạc",
                             };
                             return (
-                              <tr key={id} className="border-b last:border-0 hover:bg-gray-50">
+                              <tr
+                                key={id}
+                                className="border-b last:border-0 odd:bg-white even:bg-gray-50 hover:bg-gray-100"
+                              >
                                 <td className="p-2 whitespace-nowrap">{index + 1}</td>
                                 <td className="p-2 text-ellipsis overflow-hidden max-w-[100px] whitespace-nowrap" title={id}>
                                   {id}
@@ -577,24 +590,6 @@ export function BookingsList() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                       <DropdownMenuItem
-                                        onClick={(e) => {
-                                          return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
-                                        }}
-                                        disabled={isSending}
-                                      >
-                                        {isSending ? (
-                                          <>
-                                            <Spinner className="mr-2 h-4 w-4" />
-                                            Đang gửi...
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Mail className="mr-2 h-4 w-4" />
-                                            {booking.paid ? "Gửi lại vé" : "Gửi hóa đơn"}
-                                          </>
-                                        )}
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem
                                         onClick={() => {
                                           return booking.paid ? handleCancelPayment(id) : setConfirmPaymentId(id);
                                         }}
@@ -609,6 +604,24 @@ export function BookingsList() {
                                           <>
                                             <Check className="mr-2 h-4 w-4" />
                                             Thanh toán
+                                          </>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={(e) => {
+                                          return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
+                                        }}
+                                        disabled={isSending}
+                                      >
+                                        {isSending ? (
+                                          <>
+                                            <Spinner className="mr-2 h-4 w-4" />
+                                            Đang gửi...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Mail className="mr-2 h-4 w-4" />
+                                            {booking.paid ? "Gửi lại vé" : "Gửi lại hóa đơn"}
                                           </>
                                         )}
                                       </DropdownMenuItem>
