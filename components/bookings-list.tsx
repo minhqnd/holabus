@@ -20,6 +20,7 @@ import { subscribeToCollection, updateDocument, deleteDocument } from '@/lib/fir
 import { getProvinceNameById } from '@/lib/utils/province'
 import { Spinner } from '@/components/ui/spinner'
 import { toast, ToastContainer } from 'react-toastify';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface Booking {
   userId: string;
@@ -168,13 +169,13 @@ export function BookingsList() {
   const handleSendEmail = async (bookingId: string, type: 'payment' | 'ticket', e: React.MouseEvent) => {
     e.stopPropagation()
     setSendingEmails(prev => ({ ...prev, [bookingId]: true }))
+    const toastid = toast.loading('Đang gửi hóa đơn...');
     try {
       console.log(`Sending ${type} email for booking ${bookingId}`)
       const booking = bookings[bookingId]
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
       const route = routes[trip.routeId]
-
       if (!route) {
         throw new Error('Không tìm thấy route cho chuyến xe này.')
       }
@@ -214,10 +215,13 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully')
-      toast.success('Gửi hóa đơn thành công');
+      // toast.success('Gửi hóa đơn thành công');
+      toast.update(toastid, { render: "Gửi hóa đơn thành công", type: "success", isLoading: false });
     } catch (error) {
       console.error('Error sending ticket:', error)
-      toast.error('Error sending ticket, retry');
+      // toast.error('Error sending ticket, retry');
+      toast.update(toastid, { render: "Lỗi khi gửi hóa đơn", type: "error", isLoading: false });
+
     } finally {
       setSendingEmails(prev => ({ ...prev, [bookingId]: false }))
     }
@@ -234,7 +238,10 @@ export function BookingsList() {
 
   const handleSaveEdit = async () => {
     if (editingBooking && editedBooking && editedUser) {
+      const toastid = toast.loading('Đang gửi hóa đơn...');
       try {
+        // toast.loading('Đang sửa...');
+
         // Cập nhật thông tin booking
         await updateDocument(`bookings/${editingBooking}`, editedBooking)
         // Cập nhật thông tin user
@@ -242,15 +249,16 @@ export function BookingsList() {
         setEditingBooking(null)
         setEditedBooking(null)
         setEditedUser(null)
-        toast.success('Sửa đơn thành công');
+        toast.update(toastid, { render: "Sửa thành công", type: "success", isLoading: false });
       } catch (error) {
         console.error('Lỗi khi cập nhật:', error)
-        toast.error('Error updating booking');
+        toast.update(toastid, { render: "Lỗi khi sửa", type: "error", isLoading: false });
       }
     }
   }
 
   const handleSendTicket = async (id: string) => {
+    const toastid = toast.loading('Đang gửi vé...');
     try {
       const booking = bookings[id];
       const user = users[booking.userId];
@@ -297,11 +305,10 @@ export function BookingsList() {
       }
 
       console.log('Ticket sent successfully');
-      // toast.success('Gửi vé thành công');
+      toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false });
     } catch (error) {
       console.error('Error sending ticket:', error);
-      toast.error('Lỗi khi gửi vé');
-
+      toast.update(toastid, { render: "Lỗi khi gửi vé", type: "error", isLoading: false });
     }
   }
 
@@ -309,10 +316,10 @@ export function BookingsList() {
     setSendingEmails(prev => ({ ...prev, [id]: true }));
     try {
       await handleSendTicket(id);
-      toast.success('Gửi lại vé thành công');
+      // toast.success('Gửi lại vé thành công');
     } catch (error) {
       console.error('Lỗi khi gửi lại vé:', error);
-      toast.error('Lỗi khi gửi lại vé');
+      // toast.error('Lỗi khi gửi lại vé');
     } finally {
       setSendingEmails(prev => ({ ...prev, [id]: false }));
     }
@@ -328,6 +335,7 @@ export function BookingsList() {
       if (!trip) {
         throw new Error('Không tìm thấy chuyến xe này.');
       }
+      // toast.loading('Đang gửi vé...');
       await handleSendTicket(id);
       await updateDocument(`bookings/${id}`, { paid: true });
 
@@ -337,13 +345,15 @@ export function BookingsList() {
       toast.success('Xác nhận thành công');
     } catch (error) {
       console.error('Lỗi khi xác nhận thanh toán:', error);
-      toast.error('Lỗi khi xác nhận thanh toán');
+      // toast.error('Lỗi khi xác nhận thanh toán');
     } finally {
       setSendingEmails(prev => ({ ...prev, [id]: false }));
     }
   };
 
   const handleCancelPayment = async (id: string) => {
+    const toastid = toast.loading('Đang hủy...');
+
     try {
       const booking = bookings[id]
       const trip = trips[booking.tripId]
@@ -356,21 +366,23 @@ export function BookingsList() {
         const newSlot = trip.slot + 1
         await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
       }
-      toast.success('Hủy trạng thái thanh toán thành công');
+      toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false });
 
     } catch (error) {
       console.error('Lỗi khi hủy thanh toán:', error)
+      toast.update(toastid, { render: "Lỗi khi hủy thanh toán", type: "error", isLoading: false });
     }
   }
 
   const handleDeleteBooking = async (id: string) => {
+    const toastid = toast.loading('Đang xóa vé...');
     try {
       await deleteDocument(`bookings/${id}`)
       setDeletingBookingId(null)
-      toast.success('Xóa vé thành công');
+      toast.update(toastid, { render: "Xóa vé thành công", type: "success", isLoading: false });
     } catch (error) {
       console.error('Lỗi khi xóa vé:', error)
-      toast.error(`Lỗi khi xóa vé`);
+      toast.update(toastid, { render: "Lỗi khi xóa vé", type: "error", isLoading: false });
     }
   }
 
@@ -387,11 +399,14 @@ export function BookingsList() {
   };
 
   const handleSaveNote = async (id: string) => {
+    const toastid = toast.loading('Đang cập nhật ghi chú...');
     try {
       await updateDocument(`bookings/${id}`, { note: noteText });
+      toast.update(toastid, { render: "Cập nhật ghi chú thành công", type: "success", isLoading: false });
       setEditingNote(null);
     } catch (error) {
       console.error('Lỗi khi cập nhật ghi chú:', error);
+      toast.update(toastid, { render: "Lỗi khi cập nhật ghi chú", type: "error", isLoading: false });
     }
   };
 
@@ -553,55 +568,67 @@ export function BookingsList() {
                                   </div>
                                 </td>
                                 <td className="p-2">
-                                  <div className="flex flex-col items-center gap-1">
-                                    <div className="flex space-x-2">
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="outline" size="sm">
+                                        Actions
+                                        <ChevronDown className="ml-1 h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                      <DropdownMenuItem
                                         onClick={(e) => {
                                           return booking.paid ? handleResendEmail(id) : handleSendEmail(id, 'payment', e);
                                         }}
                                         disabled={isSending}
                                       >
-                                        <Mail className="mr-2 h-4 w-4" />
-                                        {isSending ? <Spinner className="mr-2 h-4 w-4" /> : booking.paid ? "Gửi lại vé" : "Gửi lại hóa đơn"}
-                                      </Button>
-                                    </div>
-                                    <div className="flex space-x-2">
-                                      {booking.paid ? (
-                                        <Button
-                                          variant="destructive"
-                                          size="sm"
-                                          onClick={() => handleCancelPayment(id)}
-                                        >
-                                          <X className="mr-2 h-4 w-4" />
-                                          Hủy thanh toán
-                                        </Button>
-                                      ) : (
-                                        <Button
-                                          variant="default"
-                                          size="sm"
-                                          onClick={() => setConfirmPaymentId(id)}
-                                        >
-                                          <Check className="mr-2 h-4 w-4" />
-                                          {isSending ? <Spinner className="mr-2 h-4 w-4" /> : "Thanh toán"}
-                                        </Button>
-                                      )}
-                                    </div>
-                                    <div className="flex space-x-2">
-                                      <Button variant="ghost" size="sm" onClick={(e) => handleEditClick(id, e)}>
-                                        <Pencil className="h-4 w-4" />
-                                      </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => setDeletingBookingId(id)}
-                                        className="text-red-500 hover:text-red-700"
+                                        {isSending ? (
+                                          <>
+                                            <Spinner className="mr-2 h-4 w-4" />
+                                            Đang gửi...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Mail className="mr-2 h-4 w-4" />
+                                            {booking.paid ? "Gửi lại vé" : "Gửi hóa đơn"}
+                                          </>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          return booking.paid ? handleCancelPayment(id) : setConfirmPaymentId(id);
+                                        }}
+                                        disabled={isSending}
                                       >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  </div>
+                                        {booking.paid ? (
+                                          <>
+                                            <X className="mr-2 h-4 w-4" />
+                                            Hủy thanh toán
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Check className="mr-2 h-4 w-4" />
+                                            Thanh toán
+                                          </>
+                                        )}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={(e) => handleEditClick(id, e)}
+                                        disabled={isSending}
+                                      >
+                                        <Pencil className="mr-2 h-4 w-4" />
+                                        Sửa
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={() => setDeletingBookingId(id)}
+                                        className="text-red-500"
+                                        disabled={isSending}
+                                      >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Xóa
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                 </td>
                               </tr>
                             )
