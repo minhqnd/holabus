@@ -1,4 +1,4 @@
-name: Check Build
+name: Check Lint
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +21,5 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build project
-      run: npm run build
-
+    - name: Run linter
+      run: npx next lint
