@@ -20,7 +20,7 @@ export function useAuth() {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider)
-            const email = result.user.email?.replace('.', '_')
+            const email = result.user.email?.replace(/\./g, '_')
 
             // Kiểm tra trong database
             const adminRef = ref(database, `admin/${email}`)
@@ -47,4 +47,4 @@ export function useAuth() {
     }
 
     return { user, loading, signInWithGoogle, logout }
-} 
+}
