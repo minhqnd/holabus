@@ -472,7 +472,7 @@ export function BookingsList() {
           </div>
 
           {!collapsedGroups[routeId] && (
-            <div className="space-y-8 ml-4 p-4 rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
+            <div className="space-y-8 md:ml-4 p-4 md:rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
               {Object.entries(tripGroups).map(([tripId, bookings]) => {
                 const trip = trips[tripId]
                 return (
@@ -485,7 +485,7 @@ export function BookingsList() {
                         {trip?.slot > 0 ? `Còn ${trip?.slot} vé` : "Hết vé"}
                       </Badge>
                     </div>
-                    <div className="overflow-x-auto rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
+                    <div className="overflow-x-auto md:rounded-xl border bg-card text-card-foreground shadow cursor-pointer hover:shadow-md transition-shadow duration-200">
                       <table className="w-full border-collapse text-sm">
                         <thead className="bg-gray-100">
                           <tr className="text-gray-700">
