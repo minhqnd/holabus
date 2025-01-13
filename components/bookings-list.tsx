@@ -22,6 +22,14 @@ import { Spinner } from '@/components/ui/spinner'
 import { toast, ToastContainer } from 'react-toastify';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
+const transferPoints: Record<string, string> = {
+  "Tu_di_den_truong": "Tự đi đến trường",
+  "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+  "Cay_xang_39": "Cây xăng 39",
+  "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+  "Cho_hoa_lac": "Chợ Hoà Lạc",
+}
+
 interface Booking {
   userId: string;
   tripId: string;
@@ -199,6 +207,7 @@ export function BookingsList() {
           mail: user.mail,
           phone: user.phone,
           destination: user.destination,
+          transferPoint: user.transferPoint,
         },
       }
       console.log(userData)
@@ -288,6 +297,7 @@ export function BookingsList() {
           mail: user.mail,
           phone: user.phone,
           destination: user.destination,
+          transferPoint: user.transferPoint,
         },
       };
 
@@ -507,13 +517,6 @@ export function BookingsList() {
                         <tbody>
                           {bookings.map(([id, booking]: [string, Booking], index: number) => {
                             const isSending = sendingEmails[id]
-                            const transferPoints: Record<string, string> = {
-                              "Tu_di_den_truong": "Tự đi đến trường",
-                              "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-                              "Cay_xang_39": "Cây xăng 39",
-                              "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-                              "Cho_hoa_lac": "Chợ Hoà Lạc",
-                            };
                             return (
                               <tr
                                 key={id}
@@ -761,4 +764,5 @@ export function BookingsList() {
     </div>
   )
 }
+
 
