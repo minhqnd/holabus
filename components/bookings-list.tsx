@@ -509,7 +509,7 @@ export function BookingsList() {
                             <th className="p-2">Giá</th>
                             <th className="p-2">Điểm đến</th>
                             <th className="p-2">Điểm trung chuyển</th>
-                            <th className="p-2">Trạng thái</th>
+                            {/* <th className="p-2">Trạng thái</th> */}
                             <th className="p-2">Ghi chú</th>
                             <th className="p-2">Actions</th>
                           </tr>
@@ -547,9 +547,9 @@ export function BookingsList() {
                                 <td className="p-2">
                                   {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}
                                 </td>
-                                <td className="p-2">
+                                {/* <td className="p-2">
                                   {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                                </td>
+                                </td> */}
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
                                     {/* <span className="text-sm text-gray-600">Ghi chú:</span> */}
