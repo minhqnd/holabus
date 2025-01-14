@@ -29,7 +29,7 @@ export default function Home() {
       try {
         const response = await fetch('https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app/routes.json')
         const data = await response.json()
-        console.log('Fetched data:', data)
+        //console.log('Fetched data:', data)
         const transformedData = Object.entries(data).map(([id, route]: [string, unknown]) => {
           const typedRoute = route as {
             name: string
@@ -46,7 +46,7 @@ export default function Home() {
           }
         }).sort((a, b) => Number(b.available) - Number(a.available))
 
-        console.log('Transformed data:', transformedData)
+        //console.log('Transformed data:', transformedData)
         setProvinces(transformedData)
         setLoading(false)
       } catch (error) {

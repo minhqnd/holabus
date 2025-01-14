@@ -26,7 +26,7 @@ export function Sidebar() {
 
   // const handleLogout = () => {
   //   // Implement logout logic here
-  //   console.log('Logging out...')
+  //   //console.log('Logging out...')
   // }
 
   return (

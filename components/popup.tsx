@@ -35,7 +35,7 @@ const Popup = ({ isOpen, onClose, children }: PopupProps) => {
   if (!isOpen || !portalElement) return null
 
   const handleClose = () => {
-    console.log('Closing popup');
+    //console.log('Closing popup');
     onClose();
   }
 

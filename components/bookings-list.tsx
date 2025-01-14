@@ -179,7 +179,7 @@ export function BookingsList() {
     setSendingEmails(prev => ({ ...prev, [bookingId]: true }))
     const toastid = toast.loading('Đang gửi hóa đơn...');
     try {
-      console.log(`Sending ${type} email for booking ${bookingId}`)
+      //console.log(`Sending ${type} email for booking ${bookingId}`)
       const booking = bookings[bookingId]
       const user = users[booking.userId]
       const trip = trips[booking.tripId]
@@ -210,7 +210,7 @@ export function BookingsList() {
           transferPoint: user.transferPoint,
         },
       }
-      console.log(userData)
+      //console.log(userData)
       const response = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
         method: 'POST',
         headers: {
@@ -223,7 +223,7 @@ export function BookingsList() {
         throw new Error(`Không thể gửi vé: ${response.status} ${response.statusText}`)
       }
 
-      console.log('Ticket sent successfully')
+      //console.log('Ticket sent successfully')
       // toast.success('Gửi hóa đơn thành công');
       toast.update(toastid, { render: "Gửi hóa đơn thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
@@ -301,7 +301,7 @@ export function BookingsList() {
         },
       };
 
-      console.log(JSON.stringify(ticketData));
+      //console.log(JSON.stringify(ticketData));
       const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
         method: 'POST',
         headers: {
@@ -314,7 +314,7 @@ export function BookingsList() {
         throw new Error('Failed to send ticket');
       }
 
-      console.log('Ticket sent successfully');
+      //console.log('Ticket sent successfully');
       toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false, autoClose: 5000 });
     } catch (error) {
       console.error('Error sending ticket:', error);
