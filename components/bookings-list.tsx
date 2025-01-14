@@ -21,6 +21,7 @@ import { getProvinceNameById } from '@/lib/utils/province'
 import { Spinner } from '@/components/ui/spinner'
 import { toast, ToastContainer } from 'react-toastify';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import * as XLSX from 'xlsx'
 
 const transferPoints: Record<string, string> = {
   "Tu_di_den_truong": "Tự đi đến trường",
@@ -78,7 +79,6 @@ export function BookingsList() {
   const [editedBooking, setEditedBooking] = useState<typeof bookings[keyof typeof bookings] | null>(null)
   const [confirmPaymentId, setConfirmPaymentId] = useState<string | null>(null)
   const [filterRouteId, setFilterRouteId] = useState<string | null>(null)
-  const [filterDate, setFilterDate] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [bookings, setBookings] = useState<Record<string, Booking>>({})
   const [users, setUsers] = useState<Record<string, User>>({})
@@ -154,7 +154,6 @@ export function BookingsList() {
       return (
         (activeTab === 'pending' ? !booking.paid : booking.paid) &&
         (!filterRouteId || trip?.routeId === filterRouteId) &&
-        (!filterDate || booking.createdAt.startsWith(filterDate)) &&
         matchesSearch
       )
     })
@@ -246,8 +245,8 @@ export function BookingsList() {
   }
 
   const handleSaveEdit = async () => {
+    const toastid = toast.loading('Đang sửa...');
     if (editingBooking && editedBooking && editedUser) {
-      const toastid = toast.loading('Đang gửi hóa đơn...');
       try {
         // toast.loading('Đang sửa...');
 
@@ -420,6 +419,40 @@ export function BookingsList() {
     }
   };
 
+  const handleExportToXLSX = () => {
+    const workbook = XLSX.utils.book_new()
+
+    Object.entries(groupedBookings).forEach(([, tripGroups]) => {
+      Object.entries(tripGroups).forEach(([tripId, bookings]) => {
+        console.log(Object.keys(tripGroups))
+        const trip = trips[tripId]
+        const data = bookings.map(([id, booking], index) => {
+          const user = users[booking.userId]
+          return {
+            'STT': index + 1,
+            'Booking ID': id,
+            'Khách hàng': user.name,
+            'Email': user.mail,
+            'SĐT': user.phone,
+            'Giới tính': user.sex === "1" ? "Nam" : "Nữ",
+            'Ngày tạo': new Date(booking.createdAt).toLocaleString('vi-VN'),
+            'Giá': trip?.price,
+            'Điểm đến': user.destination,
+            'Điểm trung chuyển': transferPoints[user.transferPoint as keyof typeof transferPoints] || 'N/A',
+            'Ghi chú': booking.note || '',
+            'Trạng thái': booking.paid ? "Đã thanh toán" : "Chưa thanh toán"
+          }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(data)
+        const sheetName = `${tripId} ${trip?.date.replace(/\//g, '-')}` || `Trip ${tripId}`;
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+      })
+    })
+
+    XLSX.writeFile(workbook, 'bookings.xlsx')
+  }
+
   return (
     <div>
       <ToastContainer
@@ -450,11 +483,6 @@ export function BookingsList() {
         </div>
         <div className="flex space-x-2">
           <RouteFilter />
-          <Input
-            type="date"
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="w-[180px]"
-          />
           <div className="relative">
             <Input
               type="text"
@@ -463,8 +491,8 @@ export function BookingsList() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-8"
             />
-            {/* <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" /> */}
           </div>
+          <Button onClick={handleExportToXLSX}>Xuất ra XLSX</Button>
         </div>
       </div>
       {Object.entries(groupedBookings).map(([routeId, tripGroups]) => (
@@ -509,7 +537,6 @@ export function BookingsList() {
                             <th className="p-2">Giá</th>
                             <th className="p-2">Điểm đến</th>
                             <th className="p-2">Điểm trung chuyển</th>
-                            {/* <th className="p-2">Trạng thái</th> */}
                             <th className="p-2">Ghi chú</th>
                             <th className="p-2">Actions</th>
                           </tr>
@@ -517,6 +544,7 @@ export function BookingsList() {
                         <tbody>
                           {bookings.map(([id, booking]: [string, Booking], index: number) => {
                             const isSending = sendingEmails[id]
+                            const trip = trips[booking.tripId]
                             return (
                               <tr
                                 key={id}
@@ -547,9 +575,6 @@ export function BookingsList() {
                                 <td className="p-2">
                                   {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}
                                 </td>
-                                {/* <td className="p-2">
-                                  {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                                </td> */}
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
                                     {/* <span className="text-sm text-gray-600">Ghi chú:</span> */}
