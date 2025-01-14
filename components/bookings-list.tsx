@@ -245,8 +245,8 @@ export function BookingsList() {
   }
 
   const handleSaveEdit = async () => {
+    const toastid = toast.loading('Đang sửa...');
     if (editingBooking && editedBooking && editedUser) {
-      const toastid = toast.loading('Đang gửi hóa đơn...');
       try {
         // toast.loading('Đang sửa...');
 
