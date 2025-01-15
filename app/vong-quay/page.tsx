@@ -1,7 +1,7 @@
 'use client'
 
-import { Navbar } from '@/components/navbar'
-import { Footer } from '@/components/footer'
+// import { Navbar } from '@/components/navbar'
+// import { Footer } from '@/components/footer'
 import dynamic from 'next/dynamic'
 // import { spinnerwheel } from '@/components/spinnerwheel'
 const LuckyWheel = dynamic(() => import('@/components/spinnerwheel'), { ssr: false })
