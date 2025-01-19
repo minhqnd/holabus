@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label'
 import { Calendar, Clock, MapPin, User, Phone, Mail } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/button';
+import { toast, ToastContainer } from 'react-toastify';
+
 
 interface User {
   name: string;
@@ -86,12 +88,15 @@ const CheckinPage = () => {
       setConfirmCheckin(true);
     } else {
       const timestamp = new Date().toISOString();
+      const toastid = toast.loading('Đang gửi hóa đơn...');
       try {
         await updateDocument(`bookings/${scanResult}`, { checkin: timestamp });
-        alert('Checkin thành công');
+        // alert('Checkin thành công');
+      toast.update(toastid, { render: "Checkin thành công", type: "success", isLoading: false, autoClose: 2000 });
       } catch (error) {
         console.error('Error updating checkin:', error);
-        alert('Checkin thất bại');
+        toast.update(toastid, { render: "Checkin thất bại", type: "error", isLoading: false, autoClose: 2000 });
+        // alert('Checkin thất bại');
       }
       setConfirmCheckin(false);
     }
@@ -116,6 +121,17 @@ const CheckinPage = () => {
 
   return (
     <div className="w-full h-full pt-2 p-2 flex flex-col items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
       <Image src="/red-logo.png" alt="Red Logo" width={100} height={100} className='h-12 w-auto mb-4' />
       <div className="w-[70%] max-w-xl h-auto mx-auto mb-2">
         <Scanner
@@ -134,7 +150,7 @@ const CheckinPage = () => {
         <div className="flex-1 overflow-y-auto w-full">
           <div className="relative border-b border-dashed bg-red-50/50 p-4 w-full">
             <Label className="text-xl font-bold text-red-800 text-center">
-                {scanResult && bookings[scanResult] && users[bookings[scanResult].userId]
+              {scanResult && bookings[scanResult] && users[bookings[scanResult].userId]
                 ? `${scanResult} - ${users[bookings[scanResult].userId].name}`
                 : 'Quét để xem thông tin booking'}
             </Label>
