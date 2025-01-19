@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Bus, CakeSlice, Calendar, FileText, LogOut, Menu } from 'lucide-react'
+import { Bus, CakeSlice, Calendar, FileText, LogOut, Menu, CheckSquare } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/admin/routes', label: 'Tuyến xe', icon: Bus },
   { href: '/admin/trips', label: 'Chuyến xe', icon: Calendar },
   { href: '/admin/bookings', label: 'Đặt vé', icon: FileText },
+  { href: '/admin/checkin', label: 'Checkin', icon: CheckSquare },
 ]
 
 export function Sidebar() {
