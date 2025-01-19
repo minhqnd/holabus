@@ -69,8 +69,12 @@ const CheckinPage = () => {
 
   const handleScan = (result: { rawValue: string }[]) => {
     if (result && result.length > 0) {
-      setScanResult(result[0].rawValue);
+      setScanResult(null); // Clear content
       setConfirmCheckin(false); // Reset button state
+      setTimeout(() => {
+        setScanResult(result[0].rawValue);
+        // document.querySelector('.flex-1.overflow-y-auto')?.scrollTo(0, 0); // Scroll to top
+      }, 50); // Delay to ensure content is cleared
       // setPaused(true);
     }
   };
