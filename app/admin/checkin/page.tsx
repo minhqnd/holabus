@@ -69,8 +69,12 @@ const CheckinPage = () => {
     }
   };
 
-  const handleError = (error: Error) => {
-    console.error(error);
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      console.error(error);
+    } else {
+      console.error('An unknown error occurred:', error);
+    }
   };
 
   // const closePopup = () => {
