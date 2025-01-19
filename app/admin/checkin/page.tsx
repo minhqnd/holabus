@@ -6,6 +6,7 @@ import { subscribeToCollection } from '@/lib/firebase' // or your fetching metho
 import { Label } from '@/components/ui/label'
 import { Calendar, Clock, MapPin, User, Phone, Mail } from 'lucide-react'
 import Image from 'next/image'
+import { Button } from '@/components/button';
 
 interface User {
   name: string;
@@ -85,7 +86,7 @@ const CheckinPage = () => {
   return (
     <div className="w-full h-full pt-2 p-2 flex flex-col items-center">
       <Image src="/red-logo.png" alt="Red Logo" width={100} height={100} className='h-12 w-auto mb-4' />
-      <div className="w-full max-w-xl h-auto mx-auto mb-2">
+      <div className="w-[70%] max-w-xl h-auto mx-auto mb-2">
         <Scanner
           onScan={handleScan}
           onError={handleError}
@@ -122,7 +123,7 @@ const CheckinPage = () => {
                   "Cho_hoa_lac": "Chợ Hoà Lạc",
                 };
                 return (
-                  <div className="grid gap-3 md:grid-cols-2 p-4 w-full">
+                  <div className="grid gap-3 md:grid-cols-2 p-4 w-full text-sm">
                     {/* Left column */}
                     <div className="space-y-2">
                       {/* Booking info */}
@@ -213,6 +214,14 @@ const CheckinPage = () => {
                         </div>
                       </div>
                     </div>
+                    <Button
+                      className="mt-4 rounded-full bg-red-600 text-white hover:bg-red-700"
+                      onClick={() => {
+                        alert('Checkin thành công');
+                      }}
+                    >
+                      Checkin
+                    </Button>
                   </div>
                 );
               })()
