@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Scanner, centerText } from '@yudiel/react-qr-scanner';
-import { subscribeToCollection } from '@/lib/firebase' // or your fetching method
+import { subscribeToCollection, updateDocument } from '@/lib/firebase' // or your fetching method
 import { Label } from '@/components/ui/label'
 import { Calendar, Clock, MapPin, User, Phone, Mail } from 'lucide-react'
 import Image from 'next/image'
+import { Button } from '@/components/button';
 
 interface User {
   name: string;
@@ -19,6 +20,7 @@ interface Booking {
   userId: string;
   tripId: string;
   paid: boolean;
+  checkin?: string;
 }
 
 interface Trip {
@@ -33,6 +35,7 @@ interface Route {
 
 const CheckinPage = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
+  const [confirmCheckin, setConfirmCheckin] = useState(false);
   // const [paused, setPaused] = useState(false);
   const [users, setUsers] = useState<Record<string, User>>({});
   const [bookings, setBookings] = useState<Record<string, Booking>>({});
@@ -65,6 +68,7 @@ const CheckinPage = () => {
   const handleScan = (result: { rawValue: string }[]) => {
     if (result && result.length > 0) {
       setScanResult(result[0].rawValue);
+      setConfirmCheckin(false); // Reset button state
       // setPaused(true);
     }
   };
@@ -77,6 +81,34 @@ const CheckinPage = () => {
     }
   };
 
+  const handleCheckin = async () => {
+    if (!confirmCheckin) {
+      setConfirmCheckin(true);
+    } else {
+      const timestamp = new Date().toISOString();
+      try {
+        await updateDocument(`bookings/${scanResult}`, { checkin: timestamp });
+        alert('Checkin thành công');
+      } catch (error) {
+        console.error('Error updating checkin:', error);
+        alert('Checkin thất bại');
+      }
+      setConfirmCheckin(false);
+    }
+  };
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   // const closePopup = () => {
   //   setScanResult(null);
   //   // setPaused(false);
@@ -85,7 +117,7 @@ const CheckinPage = () => {
   return (
     <div className="w-full h-full pt-2 p-2 flex flex-col items-center">
       <Image src="/red-logo.png" alt="Red Logo" width={100} height={100} className='h-12 w-auto mb-4' />
-      <div className="w-full max-w-xl h-auto mx-auto mb-2">
+      <div className="w-[70%] max-w-xl h-auto mx-auto mb-2">
         <Scanner
           onScan={handleScan}
           onError={handleError}
@@ -122,7 +154,7 @@ const CheckinPage = () => {
                   "Cho_hoa_lac": "Chợ Hoà Lạc",
                 };
                 return (
-                  <div className="grid gap-3 md:grid-cols-2 p-4 w-full">
+                  <div className="grid gap-3 md:grid-cols-2 p-4 w-full text-sm">
                     {/* Left column */}
                     <div className="space-y-2">
                       {/* Booking info */}
@@ -213,6 +245,13 @@ const CheckinPage = () => {
                         </div>
                       </div>
                     </div>
+                    <Button
+                      className={`mt-4 rounded-full transition-colors duration-300 ${confirmCheckin ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-600 hover:bg-red-700'} text-white `}
+                      onClick={handleCheckin}
+                      disabled={!!booking.checkin}
+                    >
+                      {booking.checkin ? `Đã checkin lúc ${formatTimestamp(booking.checkin)}` : (confirmCheckin ? 'Xác nhận Checkin' : 'Checkin')}
+                    </Button>
                   </div>
                 );
               })()

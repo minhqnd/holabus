@@ -42,7 +42,7 @@ export function Sidebar() {
         "fixed inset-y-0 left-0 z-40 w-64 transform bg-white transition-transform duration-200 ease-in-out md:relative md:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="h-screen overflow-y-auto">
+        <div className="h-screen overflow-y-auto mt-16 md:mt-0">
           <div className="sticky top-0 bg-white z-10">
             <div className="flex h-16 items-center justify-center border-b">
               <Link href="/" className="w-auto h-[90%]">
