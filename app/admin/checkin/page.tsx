@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Scanner, centerText } from '@yudiel/react-qr-scanner';
-import { subscribeToCollection } from '@/lib/firebase' // or your fetching method
+import { subscribeToCollection, updateDocument } from '@/lib/firebase' // or your fetching method
 import { Label } from '@/components/ui/label'
 import { Calendar, Clock, MapPin, User, Phone, Mail } from 'lucide-react'
 import Image from 'next/image'
@@ -20,6 +20,7 @@ interface Booking {
   userId: string;
   tripId: string;
   paid: boolean;
+  checkin?: string;
 }
 
 interface Trip {
@@ -34,6 +35,7 @@ interface Route {
 
 const CheckinPage = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
+  const [confirmCheckin, setConfirmCheckin] = useState(false);
   // const [paused, setPaused] = useState(false);
   const [users, setUsers] = useState<Record<string, User>>({});
   const [bookings, setBookings] = useState<Record<string, Booking>>({});
@@ -66,6 +68,7 @@ const CheckinPage = () => {
   const handleScan = (result: { rawValue: string }[]) => {
     if (result && result.length > 0) {
       setScanResult(result[0].rawValue);
+      setConfirmCheckin(false); // Reset button state
       // setPaused(true);
     }
   };
@@ -76,6 +79,34 @@ const CheckinPage = () => {
     } else {
       console.error('An unknown error occurred:', error);
     }
+  };
+
+  const handleCheckin = async () => {
+    if (!confirmCheckin) {
+      setConfirmCheckin(true);
+    } else {
+      const timestamp = new Date().toISOString();
+      try {
+        await updateDocument(`bookings/${scanResult}`, { checkin: timestamp });
+        alert('Checkin thành công');
+      } catch (error) {
+        console.error('Error updating checkin:', error);
+        alert('Checkin thất bại');
+      }
+      setConfirmCheckin(false);
+    }
+  };
+
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString('vi-VN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   };
 
   // const closePopup = () => {
@@ -215,12 +246,11 @@ const CheckinPage = () => {
                       </div>
                     </div>
                     <Button
-                      className="mt-4 rounded-full bg-red-600 text-white hover:bg-red-700"
-                      onClick={() => {
-                        alert('Checkin thành công');
-                      }}
+                      className={`mt-4 rounded-full transition-colors duration-300 ${confirmCheckin ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-red-600 hover:bg-red-700'} text-white `}
+                      onClick={handleCheckin}
+                      disabled={!!booking.checkin}
                     >
-                      Checkin
+                      {booking.checkin ? `Đã checkin lúc ${formatTimestamp(booking.checkin)}` : (confirmCheckin ? 'Xác nhận Checkin' : 'Checkin')}
                     </Button>
                   </div>
                 );
