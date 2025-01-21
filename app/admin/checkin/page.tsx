@@ -366,7 +366,7 @@ const CheckinPage = () => {
                       <tr>
                         <th className="px-4 py-2 text-left">Họ tên</th>
                         <th className="px-4 py-2 text-left">SĐT</th>
-                        <th className="px-4 py-2 text-left">Điểm đón</th>
+                        {/* <th className="px-4 py-2 text-left">Điểm đón</th> */}
                         <th className="px-4 py-2 text-center">Check-in</th>
                       </tr>
                     </thead>
@@ -381,9 +381,9 @@ const CheckinPage = () => {
                               </a>
                             ) : 'N/A'}
                             </td>
-                          <td className="px-4 py-2">
+                          {/* <td className="px-4 py-2">
                             {user?.transferPoint ? transferPoints[user.transferPoint] : 'N/A'}
-                          </td>
+                          </td> */}
                           <td className="px-4 py-2 text-center">
                             <Circle
                               className="h-4 w-4 stroke-0 inline-block"
