@@ -249,8 +249,6 @@ export function BookingsList() {
     const toastid = toast.loading('Đang sửa...');
     if (editingBooking && editedBooking && editedUser) {
       try {
-        // toast.loading('Đang sửa...');
-
         // Cập nhật thông tin booking
         await updateDocument(`bookings/${editingBooking}`, editedBooking)
         // Cập nhật thông tin user
@@ -612,7 +610,7 @@ export function BookingsList() {
                                 </td>
                                 <td className="p-2">
                                   <Circle
-                                  className={`h-4 w-4 ${booking.checkin ? 'text-green-500' : 'text-red-500'}`}
+                                  className={`h-4 w-4 stroke-0 text-transparent stroke-white text-white`}
                                   fill={booking.checkin ? 'green' : 'red'}
                                   />
                                 </td>
@@ -732,6 +730,15 @@ export function BookingsList() {
                 <option value="1">Nam</option>
                 <option value="2">Nữ</option>
               </select>
+              <select
+                value={editedUser.transferPoint}
+                onChange={(e) => setEditedUser({ ...editedUser, transferPoint: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                {Object.entries(transferPoints).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Thông tin chuyến xe</label>
@@ -751,6 +758,17 @@ export function BookingsList() {
               >
                 <option value="true">Đã thanh toán</option>
                 <option value="false">Chưa thanh toán</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Trạng thái check-in</label>
+              <select
+                value={editedBooking.checkin ? 'true' : 'false'}
+                onChange={(e) => setEditedBooking({ ...editedBooking, checkin: e.target.value === 'true' })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                <option value="true">Đã check-in</option>
+                <option value="false">Chưa check-in</option>
               </select>
             </div>
             <Button type="submit">Lưu thay đổi</Button>
