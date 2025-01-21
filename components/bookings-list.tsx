@@ -544,7 +544,7 @@ export function BookingsList() {
                         <tbody>
                           {bookings.map(([id, booking]: [string, Booking], index: number) => {
                             const isSending = sendingEmails[id]
-                            const trip = trips[booking.tripId]
+                            // const trip = trips[booking.tripId]
                             return (
                               <tr
                                 key={id}
