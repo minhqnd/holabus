@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Check, Trash2, ChevronDown, X } from 'lucide-react'
+import { Pencil, Mail, Check, Trash2, ChevronDown, X, Circle } from 'lucide-react'
 // import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
@@ -38,6 +38,7 @@ interface Booking {
   createdAt: string;
   note?: string;
   destination: string;
+  checkin?: boolean;
 }
 
 interface Route {
@@ -534,10 +535,11 @@ export function BookingsList() {
                             <th className="p-2">SĐT</th>
                             <th className="p-2">Giới tính</th>
                             <th className="p-2">Ngày tạo</th>
-                            <th className="p-2">Giá</th>
+                            {/* <th className="p-2">Giá</th> */}
                             <th className="p-2">Điểm đến</th>
                             <th className="p-2">Điểm trung chuyển</th>
                             <th className="p-2">Ghi chú</th>
+                            <th className="p-2">Checkin</th>
                             <th className="p-2">Actions</th>
                           </tr>
                         </thead>
@@ -568,7 +570,7 @@ export function BookingsList() {
                                 <td className="p-2">
                                   {new Date(booking.createdAt).toLocaleString('vi-VN')}
                                 </td>
-                                <td className="p-2">{trip?.price} VND</td>
+                                {/* <td className="p-2">{trip?.price} VND</td> */}
                                 <td className="p-2">
                                   {users[booking.userId].destination || 'N/A'}
                                 </td>
@@ -609,11 +611,17 @@ export function BookingsList() {
                                   </div>
                                 </td>
                                 <td className="p-2">
+                                  <Circle
+                                  className={`h-4 w-4 ${booking.checkin ? 'text-green-500' : 'text-red-500'}`}
+                                  fill={booking.checkin ? 'green' : 'red'}
+                                  />
+                                </td>
+                                <td className="p-2">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                       <Button variant="outline" size="sm">
-                                        Actions
-                                        <ChevronDown className="ml-1 h-4 w-4" />
+                                        {/* Actions */}
+                                        <ChevronDown className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
