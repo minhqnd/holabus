@@ -516,7 +516,7 @@ export function BookingsList() {
                   <div key={tripId} className="mb-6">
                     <div className="flex items-center mb-4">
                       <h3 className="text-lg font-medium break-words mr-2">
-                        ({`${trip?.name} - ${trip?.date}` || `Trip ${tripId}`})
+                        ({`${trip?.name} - ${trip?.date} - ${trip?.price}` || `Trip ${tripId}`})
                       </h3>
                       <Badge variant={trip?.slot > 0 ? "default" : "destructive"} className="text-base">
                         {trip?.slot > 0 ? `Còn ${trip?.slot} vé` : "Hết vé"}
