@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Mail, Check, Trash2, ChevronDown, X } from 'lucide-react'
+import { Pencil, Mail, Check, Trash2, ChevronDown, X, Circle } from 'lucide-react'
 // import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
@@ -38,6 +38,7 @@ interface Booking {
   createdAt: string;
   note?: string;
   destination: string;
+  checkin?: boolean;
 }
 
 interface Route {
@@ -248,8 +249,6 @@ export function BookingsList() {
     const toastid = toast.loading('Đang sửa...');
     if (editingBooking && editedBooking && editedUser) {
       try {
-        // toast.loading('Đang sửa...');
-
         // Cập nhật thông tin booking
         await updateDocument(`bookings/${editingBooking}`, editedBooking)
         // Cập nhật thông tin user
@@ -438,7 +437,7 @@ export function BookingsList() {
             'Ngày tạo': new Date(booking.createdAt).toLocaleString('vi-VN'),
             'Giá': trip?.price,
             'Điểm đến': user.destination,
-            'Điểm trung chuyển': transferPoints[user.transferPoint as keyof typeof transferPoints] || 'N/A',
+            'Điểm trung chuyển': transferPoints[user.transferPoint as keyof typeof transferPoints] || 'Tự đi đến trường',
             'Ghi chú': booking.note || '',
             'Trạng thái': booking.paid ? "Đã thanh toán" : "Chưa thanh toán"
           }
@@ -534,17 +533,18 @@ export function BookingsList() {
                             <th className="p-2">SĐT</th>
                             <th className="p-2">Giới tính</th>
                             <th className="p-2">Ngày tạo</th>
-                            <th className="p-2">Giá</th>
+                            {/* <th className="p-2">Giá</th> */}
                             <th className="p-2">Điểm đến</th>
                             <th className="p-2">Điểm trung chuyển</th>
                             <th className="p-2">Ghi chú</th>
+                            <th className="p-2">Checkin</th>
                             <th className="p-2">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           {bookings.map(([id, booking]: [string, Booking], index: number) => {
                             const isSending = sendingEmails[id]
-                            const trip = trips[booking.tripId]
+                            // const trip = trips[booking.tripId]
                             return (
                               <tr
                                 key={id}
@@ -568,12 +568,12 @@ export function BookingsList() {
                                 <td className="p-2">
                                   {new Date(booking.createdAt).toLocaleString('vi-VN')}
                                 </td>
-                                <td className="p-2">{trip?.price} VND</td>
+                                {/* <td className="p-2">{trip?.price} VND</td> */}
                                 <td className="p-2">
                                   {users[booking.userId].destination || 'N/A'}
                                 </td>
                                 <td className="p-2">
-                                  {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}
+                                  {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'Tự đi đến trường'}
                                 </td>
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
@@ -609,11 +609,17 @@ export function BookingsList() {
                                   </div>
                                 </td>
                                 <td className="p-2">
+                                  <Circle
+                                  className={`h-4 w-4 stroke-0 text-transparent stroke-white text-white`}
+                                  fill={booking.checkin ? 'green' : 'red'}
+                                  />
+                                </td>
+                                <td className="p-2">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                       <Button variant="outline" size="sm">
-                                        Actions
-                                        <ChevronDown className="ml-1 h-4 w-4" />
+                                        {/* Actions */}
+                                        <ChevronDown className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
@@ -724,6 +730,15 @@ export function BookingsList() {
                 <option value="1">Nam</option>
                 <option value="2">Nữ</option>
               </select>
+              <select
+                value={editedUser.transferPoint}
+                onChange={(e) => setEditedUser({ ...editedUser, transferPoint: e.target.value })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                {Object.entries(transferPoints).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Thông tin chuyến xe</label>
@@ -743,6 +758,17 @@ export function BookingsList() {
               >
                 <option value="true">Đã thanh toán</option>
                 <option value="false">Chưa thanh toán</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Trạng thái check-in</label>
+              <select
+                value={editedBooking.checkin ? 'true' : 'false'}
+                onChange={(e) => setEditedBooking({ ...editedBooking, checkin: e.target.value === 'true' })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              >
+                <option value="true">Đã check-in</option>
+                <option value="false">Chưa check-in</option>
               </select>
             </div>
             <Button type="submit">Lưu thay đổi</Button>

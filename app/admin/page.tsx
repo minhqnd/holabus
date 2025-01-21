@@ -121,7 +121,7 @@ function AdminDashboard() {
     // Convert to array and sort by date
     const sortedData = Object.values(dailyStats)
       .sort((a, b) => a.date.localeCompare(b.date))
-      .slice(-7) // Last 7 days
+      // .slice(-7) // Last 7 days
 
     setChartData(sortedData)
   }, [tripsData, bookingsData])
