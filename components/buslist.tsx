@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EditModal } from '@/components/edit-modal'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Pencil, Plus, Trash2, Circle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
     Dialog,
@@ -19,6 +19,14 @@ import { subscribeToCollection, updateDocument, setDocument, deleteDocument } fr
 import { toast } from 'react-toastify'
 import { Checkbox } from "@/components/ui/checkbox"
 
+const transferPoints: Record<string, string> = {
+  "Tu_di_den_truong": "Tự đi đến trường",
+  "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+  "Cay_xang_39": "Cây xăng 39",
+  "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+  "Cho_hoa_lac": "Chợ Hoà Lạc",
+}
+
 interface Bus {
     id: string;
     name: string;
@@ -28,6 +36,7 @@ interface Bus {
 }
 
 interface Booking {
+    checkin: any
     userId: string;
     tripId: string;
     busId: string;
@@ -251,7 +260,7 @@ export function BusesList() {
 
                         <div className="mt-4">
                             <div className="flex justify-between items-center mb-2">
-                                <h3 className="font-semibold">Danh sách vé đặt</h3>
+                                <h3 className="font-semibold">Danh sách hành khách</h3>
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -264,16 +273,41 @@ export function BusesList() {
                                     Thêm khách
                                 </Button>
                             </div>
-                            <div className="space-y-2">
-                                {getBusBookings(id).map(([bookingId, booking]) => (
-                                    <div key={bookingId} className="p-2 bg-gray-50 rounded-md">
-                                        <p className="text-sm">Booking ID: {bookingId}</p>
-                                        <p className="text-sm">Ngày đặt: {new Date(booking.createdAt).toLocaleDateString()}</p>
-                                        <Badge variant={booking.paid ? "success" : "warning"}>
-                                            {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                                        </Badge>
-                                    </div>
-                                ))}
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-4 py-2 text-left">#</th>
+                                            <th className="px-4 py-2 text-left">Booking ID</th>
+                                            <th className="px-4 py-2 text-left">Họ tên</th>
+                                            <th className="px-4 py-2 text-left">Số điện thoại</th>
+                                            <th className="px-4 py-2 text-left">Điểm đến</th>
+                                            <th className="px-4 py-2 text-left">Điểm đón</th>
+                                            <th className="px-4 py-2 text-center">Check-in</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {getBusBookings(id).map(([bookingId, booking], index) => {
+                                            const user = users[booking.userId] || {};
+                                            return (
+                                                <tr key={bookingId} className="border-b hover:bg-gray-50">
+                                                    <td className="px-4 py-2">{index + 1}</td>
+                                                    <td className="px-4 py-2">{bookingId}</td>
+                                                    <td className="px-4 py-2">{user.name}</td>
+                                                    <td className="px-4 py-2">{user.phone}</td>
+                                                    <td className="px-4 py-2">{user.destination}</td>
+                                                    <td className="px-4 py-2">{transferPoints[user.transferPoint as keyof typeof transferPoints] || 'N/A'}</td>
+                                                    <td className="px-4 py-2 text-center">
+                                                        <Circle
+                                                            className={`h-4 w-4 stroke-0 inline-block`}
+                                                            fill={booking.checkin ? 'green' : 'red'}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </CardContent>
@@ -386,7 +420,7 @@ export function BusesList() {
             </Dialog>
 
             <Dialog open={showBookingSelector} onOpenChange={setShowBookingSelector}>
-                <DialogContent className="max-w-3xl">
+                <DialogContent className="max-w-4xl">
                     <DialogHeader>
                         <DialogTitle>Chọn khách hàng để thêm vào xe</DialogTitle>
                         <DialogDescription>
@@ -401,42 +435,48 @@ export function BusesList() {
                                     <h3 className="font-medium text-lg mb-2 bg-gray-100 p-2 rounded">
                                         {trip?.name} - {trip?.date} {trip?.time}
                                     </h3>
-                                    <table className="w-full">
-                                        <thead className="bg-white">
-                                            <tr>
-                                                <th className="p-2"></th>
-                                                <th className="p-2 text-left">Booking ID</th>
-                                                <th className="p-2 text-left">Khách hàng</th>
-                                                <th className="p-2 text-left">Số điện thoại</th>
-                                                <th className="p-2 text-left">Điểm đến</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {tripBookings.map(([bookingId, booking]) => {
-                                                const user = users[booking.userId] || {};
-                                                return (
-                                                    <tr key={bookingId} className="border-b">
-                                                        <td className="p-2">
-                                                            <Checkbox
-                                                                checked={selectedBookings.includes(bookingId)}
-                                                                onCheckedChange={(checked) => {
-                                                                    setSelectedBookings(prev =>
-                                                                        checked
-                                                                            ? [...prev, bookingId]
-                                                                            : prev.filter(id => id !== bookingId)
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </td>
-                                                        <td className="p-2">{bookingId}</td>
-                                                        <td className="p-2">{user.name || 'N/A'}</td>
-                                                        <td className="p-2">{user.phone || 'N/A'}</td>
-                                                        <td className="p-2">{user.destination || 'N/A'}</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full min-w-[800px]">
+                                            <thead className="bg-white">
+                                                <tr>
+                                                    <th className="p-2"></th>
+                                                    <th className="p-2 text-left">Booking ID</th>
+                                                    <th className="p-2 text-left">Khách hàng</th>
+                                                    <th className="p-2 text-left">Số điện thoại</th>
+                                                    <th className="p-2 text-left">Điểm đến</th>
+                                                    <th className="p-2 text-left">Điểm đón</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {tripBookings.map(([bookingId, booking]) => {
+                                                    const user = users[booking.userId] || {};
+                                                    return (
+                                                        <tr key={bookingId} className="border-b hover:bg-gray-50">
+                                                            <td className="p-2">
+                                                                <Checkbox
+                                                                    checked={selectedBookings.includes(bookingId)}
+                                                                    onCheckedChange={(checked) => {
+                                                                        setSelectedBookings(prev =>
+                                                                            checked
+                                                                                ? [...prev, bookingId]
+                                                                                : prev.filter(id => id !== bookingId)
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </td>
+                                                            <td className="p-2">{bookingId}</td>
+                                                            <td className="p-2">{user.name || 'N/A'}</td>
+                                                            <td className="p-2">{user.phone || 'N/A'}</td>
+                                                            <td className="p-2">{user.destination || 'N/A'}</td>
+                                                            <td className="p-2">
+                                                                {transferPoints[user.transferPoint as keyof typeof transferPoints] || 'N/A'}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             );
                         })}
