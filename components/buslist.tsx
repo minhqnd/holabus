@@ -20,11 +20,11 @@ import { toast } from 'react-toastify'
 import { Checkbox } from "@/components/ui/checkbox"
 
 const transferPoints: Record<string, string> = {
-  "Tu_di_den_truong": "Tự đi đến trường",
-  "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-  "Cay_xang_39": "Cây xăng 39",
-  "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-  "Cho_hoa_lac": "Chợ Hoà Lạc",
+    "Tu_di_den_truong": "Tự đi đến trường",
+    "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+    "Cay_xang_39": "Cây xăng 39",
+    "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+    "Cho_hoa_lac": "Chợ Hoà Lạc",
 }
 
 interface Bus {
@@ -36,7 +36,7 @@ interface Bus {
 }
 
 interface Booking {
-    checkin: any
+    checkin: string;
     userId: string;
     tripId: string;
     busId: string;
@@ -110,9 +110,10 @@ export function BusesList() {
                 isLoading: false,
                 autoClose: 2000
             })
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định'
             toast.update(toastId, {
-                render: 'Lỗi khi cập nhật',
+                render: `Lỗi khi cập nhật: ${errorMessage}`,
                 type: 'error',
                 isLoading: false,
                 autoClose: 2000
@@ -131,9 +132,10 @@ export function BusesList() {
                 isLoading: false,
                 autoClose: 2000
             })
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định'
             toast.update(toastId, {
-                render: 'Lỗi khi thêm xe',
+                render: `Lỗi khi thêm xe: ${errorMessage}`,
                 type: 'error',
                 isLoading: false,
                 autoClose: 2000
@@ -152,9 +154,10 @@ export function BusesList() {
                 isLoading: false,
                 autoClose: 2000
             })
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định'
             toast.update(toastId, {
-                render: 'Lỗi khi xóa',
+                render: `Lỗi khi xóa: ${errorMessage}`,
                 type: 'error',
                 isLoading: false,
                 autoClose: 2000
@@ -187,20 +190,15 @@ export function BusesList() {
                 isLoading: false,
                 autoClose: 2000
             });
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định'
             toast.update(toastId, {
-                render: 'Lỗi khi thêm khách',
+                render: `Lỗi khi thêm khách: ${errorMessage}`,
                 type: 'error',
                 isLoading: false,
                 autoClose: 2000
             });
         }
-    };
-
-    const getAvailableBookings = () => {
-        return Object.entries(bookings)
-            .filter(([, booking]) => booking.paid && !booking.busId)
-            .sort((a, b) => new Date(b[1].createdAt).getTime() - new Date(a[1].createdAt).getTime());
     };
 
     const getAvailableBookingsByTrip = () => {

@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Scanner, centerText } from '@yudiel/react-qr-scanner';
 import { subscribeToCollection, updateDocument } from '@/lib/firebase' // or your fetching method
 import { Label } from '@/components/ui/label'
-import { Calendar, Clock, MapPin, User, Phone, Mail, Search, Circle } from 'lucide-react'
-import Image from 'next/image'
+import { Calendar, Clock, MapPin, User, Phone, Mail, Circle } from 'lucide-react'
+// import Image from 'next/image'
 import { Button } from '@/components/button';
 import { toast, ToastContainer } from 'react-toastify';
-import { Input } from '@/components/ui/input';
+// import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -62,7 +62,7 @@ const CheckinPage = () => {
   const [trips, setTrips] = useState<Record<string, Trip>>({});
   const [routes, setRoutes] = useState<Record<string, Route>>({});
   const [buses, setBuses] = useState<Record<string, Bus>>({});
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm] = useState('');
   const [selectedBusId, setSelectedBusId] = useState<string>('');
   const transferPoints: Record<string, string> = {
     "Tu_di_den_truong": "Tự đi đến trường",
@@ -159,10 +159,10 @@ const CheckinPage = () => {
       }));
   };
 
-  const filteredBuses = Object.entries(buses).filter(([, bus]) =>
-    bus.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    bus.plateNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredBuses = Object.entries(buses).filter(([, bus]) =>
+  //   bus.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   bus.plateNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   // const closePopup = () => {
   //   setScanResult(null);
