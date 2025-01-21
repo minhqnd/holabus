@@ -437,7 +437,7 @@ export function BookingsList() {
             'Ngày tạo': new Date(booking.createdAt).toLocaleString('vi-VN'),
             'Giá': trip?.price,
             'Điểm đến': user.destination,
-            'Điểm trung chuyển': transferPoints[user.transferPoint as keyof typeof transferPoints] || 'N/A',
+            'Điểm trung chuyển': transferPoints[user.transferPoint as keyof typeof transferPoints] || 'Tự đi đến trường',
             'Ghi chú': booking.note || '',
             'Trạng thái': booking.paid ? "Đã thanh toán" : "Chưa thanh toán"
           }
@@ -573,7 +573,7 @@ export function BookingsList() {
                                   {users[booking.userId].destination || 'N/A'}
                                 </td>
                                 <td className="p-2">
-                                  {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'N/A'}
+                                  {transferPoints[users[booking.userId].transferPoint as keyof typeof transferPoints] || 'Tự đi đến trường'}
                                 </td>
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
