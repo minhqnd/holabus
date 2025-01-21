@@ -5,7 +5,7 @@ import { Scanner, centerText } from '@yudiel/react-qr-scanner';
 import { subscribeToCollection, updateDocument } from '@/lib/firebase' // or your fetching method
 import { Label } from '@/components/ui/label'
 import { Calendar, Clock, MapPin, User, Phone, Mail, Circle } from 'lucide-react'
-// import Image from 'next/image'
+import Image from 'next/image'
 import { Button } from '@/components/button';
 import { toast, ToastContainer } from 'react-toastify';
 // import { Input } from '@/components/ui/input';
@@ -170,7 +170,7 @@ const CheckinPage = () => {
   // };
 
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-screen pb-2 flex flex-col">
       <div className="snap-x snap-mandatory flex overflow-x-auto scrollbar-hide h-[calc(100vh-2rem)]">
         {/* Scanner Tab */}
         <div className="snap-center snap-always w-full h-full flex-shrink-0 flex flex-col">
@@ -186,7 +186,7 @@ const CheckinPage = () => {
               draggable
               pauseOnHover
               theme="light" />
-            {/* <Image src="/red-logo.png" alt="Red Logo" width={100} height={100} className='h-12 w-auto mb-4' /> */}
+            <Image src="/red-logo.png" alt="Red Logo" width={100} height={100} className='h-12 w-auto mb-4' />
             <div className="w-[70%] max-w-xl h-auto mx-auto mb-2">
               <Scanner
                 onScan={handleScan}
