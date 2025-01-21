@@ -16,6 +16,7 @@ const navItems = [
   { href: '/admin/trips', label: 'Chuyến xe', icon: Calendar },
   { href: '/admin/bookings', label: 'Đặt vé', icon: FileText },
   { href: '/admin/checkin', label: 'Checkin', icon: CheckSquare },
+  { href: '/admin/xep-xe', label: 'Xếp xe', icon: Bus },
 ]
 
 export function Sidebar() {
