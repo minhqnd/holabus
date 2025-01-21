@@ -64,13 +64,13 @@ const CheckinPage = () => {
   const [buses, setBuses] = useState<Record<string, Bus>>({});
   // const [searchTerm] = useState('');
   const [selectedBusId, setSelectedBusId] = useState<string>('');
-  const transferPoints: Record<string, string> = {
-    "Tu_di_den_truong": "Tự đi đến trường",
-    "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-    "Cay_xang_39": "Cây xăng 39",
-    "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-    "Cho_hoa_lac": "Chợ Hoà Lạc",
-  }
+  // const transferPoints: Record<string, string> = {
+  //   "Tu_di_den_truong": "Tự đi đến trường",
+  //   "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+  //   "Cay_xang_39": "Cây xăng 39",
+  //   "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+  //   "Cho_hoa_lac": "Chợ Hoà Lạc",
+  // }
   useEffect(() => {
     // Fetch or subscribe to 'users' collection
     const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
