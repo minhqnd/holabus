@@ -177,7 +177,7 @@ export function BusesList() {
 
   const getAvailableBookings = () => {
     return Object.entries(bookings)
-      .filter(([, booking]) => !booking.busId)
+      .filter(([, booking]) => booking.paid && !booking.busId)
       .sort((a, b) => new Date(b[1].createdAt).getTime() - new Date(a[1].createdAt).getTime());
   };
 
@@ -362,7 +362,7 @@ export function BusesList() {
           <DialogHeader>
             <DialogTitle>Chọn khách hàng để thêm vào xe</DialogTitle>
             <DialogDescription>
-              Chọn các booking ID cần thêm vào xe. Chỉ hiển thị các booking chưa được gán cho xe nào.
+              Chọn các khách hàng đã thanh toán để thêm vào xe.
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto">
@@ -372,37 +372,34 @@ export function BusesList() {
                   <th className="p-2"></th>
                   <th className="p-2 text-left">Booking ID</th>
                   <th className="p-2 text-left">Khách hàng</th>
-                  <th className="p-2 text-left">Ngày đặt</th>
-                  <th className="p-2 text-left">Trạng thái</th>
+                  <th className="p-2 text-left">Số điện thoại</th>
+                  <th className="p-2 text-left">Điểm đến</th>
                 </tr>
               </thead>
               <tbody>
-                {getAvailableBookings().map(([bookingId, booking]) => (
-                  <tr key={bookingId} className="border-b">
-                    <td className="p-2">
-                      <Checkbox
-                        checked={selectedBookings.includes(bookingId)}
-                        onCheckedChange={(checked) => {
-                          setSelectedBookings(prev =>
-                            checked
-                              ? [...prev, bookingId]
-                              : prev.filter(id => id !== bookingId)
-                          );
-                        }}
-                      />
-                    </td>
-                    <td className="p-2">{bookingId}</td>
-                    <td className="p-2">{users[booking.userId]?.name || 'N/A'}</td>
-                    <td className="p-2">
-                      {new Date(booking.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-2">
-                      <Badge variant={booking.paid ? "success" : "warning"}>
-                        {booking.paid ? "Đã thanh toán" : "Chưa thanh toán"}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
+                {getAvailableBookings().map(([bookingId, booking]) => {
+                  const user = users[booking.userId] || {};
+                  return (
+                    <tr key={bookingId} className="border-b">
+                      <td className="p-2">
+                        <Checkbox
+                          checked={selectedBookings.includes(bookingId)}
+                          onCheckedChange={(checked) => {
+                            setSelectedBookings(prev =>
+                              checked
+                                ? [...prev, bookingId]
+                                : prev.filter(id => id !== bookingId)
+                            );
+                          }}
+                        />
+                      </td>
+                      <td className="p-2">{bookingId}</td>
+                      <td className="p-2">{user.name || 'N/A'}</td>
+                      <td className="p-2">{user.phone || 'N/A'}</td>
+                      <td className="p-2">{user.destination || 'N/A'}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
