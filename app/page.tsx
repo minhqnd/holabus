@@ -62,9 +62,9 @@ export default function Home() {
     <main className="min-h-screen bg-[#FFF9F0] flex flex-col items-center w-full bg-[url('/section-background.png')] bg-repeat">
       <SakuraEffect />
       <Navbar />
-      {/* <div className="bg-yellow-200 text-yellow-800 p-4 rounded mb-4 text-center w-full">
+      <div className="bg-yellow-200 text-yellow-800 p-4 rounded mb-4 text-center w-full">
         Đã đóng bán vé, cảm ơn bạn vì đã đồng hành cùng HolaBus trong dịp tết 2025 ❤️
-      </div> */}
+      </div>
       {/* Phần hero và search */}
       <div className="w-full relative z-10">
         <div className="relative mx-auto w-full md:px-8 max-w-[90rem] hidden md:block">
