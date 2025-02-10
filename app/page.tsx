@@ -6,7 +6,7 @@ import { HeroSearch } from '@/components/hero-search'
 import { RouteCard } from '@/components/route-card'
 import { Button } from "@/components/ui/button"
 import { ChevronDown } from 'lucide-react'
-import { Footer } from '@/components/footer'
+import {  } from '@/components/footer'
 import Image from 'next/image'
 import { SakuraEffect } from '@/components/SakuraEffect'
 import { FaqAccordion } from '@/components/faq-accordion'
