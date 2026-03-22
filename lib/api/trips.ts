@@ -1,4 +1,3 @@
-export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 /**
  * Lấy danh sách chuyến xe theo tỉnh.
@@ -6,15 +5,11 @@ export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.fireba
  * @returns {Promise<Array>} Danh sách chuyến xe.
  */
 export async function getTripsByProvince(provinceId: string) {
-    const res = await fetch(`${BASE_URL}/trips.json?orderBy=%22routeId%22&equalTo=%22${provinceId.toUpperCase()}%22`);
+    const res = await fetch(`/api/trips?routeId=${provinceId.toUpperCase()}`);
     if (!res.ok) {
         return [];
     }
-    const data = await res.json();
-    return Object.entries(data || {}).map(([id, item]) => ({
-        id,
-        ...(typeof item === 'object' && item !== null ? item : {})
-    }));
+    return await res.json();
 }
 
 /**
@@ -23,17 +18,17 @@ export async function getTripsByProvince(provinceId: string) {
  * @returns {Promise<Object>} Thông tin chuyến xe.
  */
 export async function getTripsById(tripId: string) {
-    const res = await fetch(`${BASE_URL}/trips/${tripId}.json`);
+    const res = await fetch(`/api/trips/${tripId}`);
     if (!res.ok) {
         throw new Error('Failed to fetch trip data');
     }
     return await res.json();
 }
 
-export async function getMapById(tripId: string) {
-    const res = await fetch(`${BASE_URL}/routeMaps/${tripId}.json`);
+export async function getMapById(routeId: string) {
+    const res = await fetch(`/api/route-maps/${routeId}`);
     if (!res.ok) {
-        throw new Error('Failed to fetch trip data');
+        return null;
     }
     const data = await res.json();
     return data ? data.iframeMap : null;

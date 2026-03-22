@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Scanner, centerText } from '@yudiel/react-qr-scanner';
-import { subscribeToCollection, updateDocument } from '@/lib/firebase' // or your fetching method
 import { Label } from '@/components/ui/label'
-import { Calendar, Clock, MapPin, User, Phone, Mail, Circle } from 'lucide-react'
+import { Calendar, Clock, MapPin, Phone, Mail, Circle } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '@/components/button';
 import { toast, ToastContainer } from 'react-toastify';
-// import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -18,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-interface User {
+interface UserData {
   name: string;
   phone: string;
   mail: string;
@@ -26,87 +24,68 @@ interface User {
   transferPoint?: string;
 }
 
-interface Booking {
+interface BookingData {
   userId: string;
   tripId: string;
   paid: boolean;
-  checkin?: string;
+  checkin?: string | boolean;
   busId?: string;
 }
 
-interface Trip {
+interface TripData {
   routeId: string;
   date: string;
   time: string;
 }
 
-interface Route {
+interface RouteData {
   name: string;
 }
 
-interface Bus {
+interface BusData {
   id: string;
   name: string;
   plateNumber: string;
   active: boolean;
 }
 
-
-
 const CheckinPage = () => {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [confirmCheckin, setConfirmCheckin] = useState(false);
-  // const [paused, setPaused] = useState(false);
-  const [users, setUsers] = useState<Record<string, User>>({});
-  const [bookings, setBookings] = useState<Record<string, Booking>>({});
-  const [trips, setTrips] = useState<Record<string, Trip>>({});
-  const [routes, setRoutes] = useState<Record<string, Route>>({});
-  const [buses, setBuses] = useState<Record<string, Bus>>({});
-  // const [searchTerm] = useState('');
+  const [users, setUsers] = useState<Record<string, UserData>>({});
+  const [bookings, setBookings] = useState<Record<string, BookingData>>({});
+  const [trips, setTrips] = useState<Record<string, TripData>>({});
+  const [routes, setRoutes] = useState<Record<string, RouteData>>({});
+  const [buses, setBuses] = useState<Record<string, BusData>>({});
   const [selectedBusId, setSelectedBusId] = useState<string>('');
-  // const transferPoints: Record<string, string> = {
-  //   "Tu_di_den_truong": "Tự đi đến trường",
-  //   "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-  //   "Cay_xang_39": "Cây xăng 39",
-  //   "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-  //   "Cho_hoa_lac": "Chợ Hoà Lạc",
-  // }
-  useEffect(() => {
-    // Fetch or subscribe to 'users' collection
-    const unsubscribeBookings = subscribeToCollection<Record<string, Booking>>('bookings', (data) => {
-      setBookings(data || {});
-    });
-    const unsubscribeUsers = subscribeToCollection<Record<string, User>>('users', (data) => {
-      setUsers(data || {});
-    });
-    const unsubscribeTrips = subscribeToCollection<Record<string, Trip>>('trips', (data) => {
-      setTrips(data || {});
-    });
-    const unsubscribeRoutes = subscribeToCollection<Record<string, Route>>('routes', (data) => {
-      setRoutes(data || {});
-    });
-    const unsubscribeBuses = subscribeToCollection<Record<string, Bus>>('buses', (data) => {
-      setBuses(data || {});
-    });
 
-    return () => {
-      unsubscribeBookings();
-      unsubscribeUsers();
-      unsubscribeTrips();
-      unsubscribeRoutes();
-      unsubscribeBuses();
-    };
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/admin/checkin');
+      if (res.ok) {
+        const data = await res.json();
+        setBookings(data.bookings || {});
+        setUsers(data.users || {});
+        setTrips(data.trips || {});
+        setRoutes(data.routes || {});
+        setBuses(data.buses || {});
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleScan = (result: { rawValue: string }[]) => {
     if (result && result.length > 0) {
-      setScanResult(null); // Clear content
-      setConfirmCheckin(false); // Reset button state
+      setScanResult(null);
+      setConfirmCheckin(false);
       setTimeout(() => {
         setScanResult(result[0].rawValue);
-        // document.querySelector('.flex-1.overflow-y-auto')?.scrollTo(0, 0); // Scroll to top
-      }, 50); // Delay to ensure content is cleared
-      // setPaused(true);
+      }, 50);
     }
   };
 
@@ -122,16 +101,21 @@ const CheckinPage = () => {
     if (!confirmCheckin) {
       setConfirmCheckin(true);
     } else {
-      const timestamp = new Date().toISOString();
-      const toastid = toast.loading('Đang gửi hóa đơn...');
+      const toastid = toast.loading('Đang check-in...');
       try {
-        await updateDocument(`bookings/${scanResult}`, { checkin: timestamp });
-        // alert('Checkin thành công');
-        toast.update(toastid, { render: "Checkin thành công", type: "success", isLoading: false, autoClose: 2000 });
+        const res = await fetch(`/api/bookings/${scanResult}/checkin`, {
+          method: 'PATCH',
+        });
+        if (res.ok) {
+          toast.update(toastid, { render: "Checkin thành công", type: "success", isLoading: false, autoClose: 2000 });
+          // Refresh data
+          fetchData();
+        } else {
+          throw new Error('Checkin failed');
+        }
       } catch (error) {
         console.error('Error updating checkin:', error);
         toast.update(toastid, { render: "Checkin thất bại", type: "error", isLoading: false, autoClose: 2000 });
-        // alert('Checkin thất bại');
       }
       setConfirmCheckin(false);
     }
@@ -159,15 +143,13 @@ const CheckinPage = () => {
       }));
   };
 
-  // const filteredBuses = Object.entries(buses).filter(([, bus]) =>
-  //   bus.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //   bus.plateNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
-
-  // const closePopup = () => {
-  //   setScanResult(null);
-  //   // setPaused(false);
-  // };
+  const transferPoints: Record<string, string> = {
+    "Tu_di_den_truong": "Tự đi đến trường",
+    "Den_do_tan_xa": "Đèn đỏ Tân Xã",
+    "Cay_xang_39": "Cây xăng 39",
+    "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
+    "Cho_hoa_lac": "Chợ Hoà Lạc",
+  };
 
   return (
     <div className="w-full h-screen pb-2 flex flex-col">
@@ -216,43 +198,21 @@ const CheckinPage = () => {
                       const user = users[booking.userId];
                       const trip = trips[booking.tripId];
                       const route = trip ? routes[trip.routeId] : null;
-                      const transferPoints: Record<string, string> = {
-                        "Tu_di_den_truong": "Tự đi đến trường",
-                        "Den_do_tan_xa": "Đèn đỏ Tân Xã",
-                        "Cay_xang_39": "Cây xăng 39",
-                        "Cay_xa_cu_phenikaa": "Cây xăng xà cừ",
-                        "Cho_hoa_lac": "Chợ Hoà Lạc",
-                      };
                       return (
                         <div className="grid gap-3 md:grid-cols-2 p-4 w-full text-sm">
-                          {/* Left column */}
                           <div className="space-y-2">
-                            {/* Booking info */}
-                            {/* <div className="flex items-center gap-3">
-                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50">
-                                <CreditCard className="h-5 w-5 text-red-600" />
-                              </div>
-                              <p className=" text-gray-600">{scanResult}</p>
-                            </div> */}
-                            {/* <div className="flex items-center gap-3">
-                              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50">
-                                <User className="h-5 w-5 text-red-600" />
-                              </div>
-                              <p className=" text-gray-600">{user.name}</p>
-                            </div> */}
                             <div className="flex items-center gap-3">
                               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50">
                                 <Phone className="h-5 w-5 text-red-600" />
                               </div>
-                              <p className="text-gray-600">{user.phone}</p>
+                              <p className="text-gray-600">{user?.phone}</p>
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50">
                                 <Mail className="h-5 w-5 text-red-600" />
                               </div>
-                              <p className="text-gray-600">{user.mail}</p>
+                              <p className="text-gray-600">{user?.mail}</p>
                             </div>
-                            {/* </div> */}
                           </div>
                           <div className="flex items-center gap-3">
                             <div className={`inline-flex rounded-full px-4 py-2 text-sm font-medium ${booking.paid
@@ -262,9 +222,7 @@ const CheckinPage = () => {
                               {booking.paid ? 'Đã thanh toán' : 'Chưa thanh toán'}
                             </div>
                           </div>
-                          {/* Right column */}
                           <div className="space-y-4">
-                            {/* Trip info */}
                             <hr className="my-4 md:hidden" />
                             <h3 className="mb-4 text-lg font-semibold text-red-800">Thông tin chuyến đi</h3>
                             <div className="space-y-4">
@@ -283,7 +241,7 @@ const CheckinPage = () => {
                                 </div>
                                 <div>
                                   <p className="text-sm text-gray-500">Ngày đi</p>
-                                  <p className="font-medium">{trip.date}</p>
+                                  <p className="font-medium">{trip?.date}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
@@ -292,7 +250,7 @@ const CheckinPage = () => {
                                 </div>
                                 <div>
                                   <p className="text-sm text-gray-500">Giờ khởi hành</p>
-                                  <p className="font-medium">{trip.time}</p>
+                                  <p className="font-medium">{trip?.time}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
@@ -301,7 +259,7 @@ const CheckinPage = () => {
                                 </div>
                                 <div>
                                   <p className="text-sm text-gray-500">Điểm xuống</p>
-                                  <p className="font-medium">{user.destination || 'N/A'}</p>
+                                  <p className="font-medium">{user?.destination || 'N/A'}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
@@ -310,7 +268,7 @@ const CheckinPage = () => {
                                 </div>
                                 <div>
                                   <p className="text-sm text-gray-500">Điểm trung chuyển</p>
-                                  <p className="font-medium">{transferPoints[user.transferPoint ?? ''] || 'N/A'}</p>
+                                  <p className="font-medium">{transferPoints[user?.transferPoint ?? ''] || 'N/A'}</p>
                                 </div>
                               </div>
                             </div>
@@ -320,13 +278,13 @@ const CheckinPage = () => {
                             onClick={handleCheckin}
                             disabled={!!booking.checkin}
                           >
-                            {booking.checkin ? `Đã checkin lúc ${formatTimestamp(booking.checkin)}` : (confirmCheckin ? 'Xác nhận Checkin' : 'Checkin')}
+                            {booking.checkin ? `Đã checkin lúc ${typeof booking.checkin === 'string' ? formatTimestamp(booking.checkin) : ''}` : (confirmCheckin ? 'Xác nhận Checkin' : 'Checkin')}
                           </Button>
                         </div>
                       );
                     })()
                   ) : (
-                    <p className="text-red-600">Không tìm thấy thông tin booking.</p>
+                    <p className="text-red-600 p-4">Không tìm thấy thông tin booking.</p>
                   )
                 ) : null}
               </div>
@@ -366,7 +324,6 @@ const CheckinPage = () => {
                       <tr>
                         <th className="px-4 py-2 text-left">Họ tên</th>
                         <th className="px-4 py-2 text-left">SĐT</th>
-                        {/* <th className="px-4 py-2 text-left">Điểm đón</th> */}
                         <th className="px-4 py-2 text-center">Check-in</th>
                       </tr>
                     </thead>
@@ -381,9 +338,6 @@ const CheckinPage = () => {
                               </a>
                             ) : 'N/A'}
                             </td>
-                          {/* <td className="px-4 py-2">
-                            {user?.transferPoint ? transferPoints[user.transferPoint] : 'N/A'}
-                          </td> */}
                           <td className="px-4 py-2 text-center">
                             <Circle
                               className="h-4 w-4 stroke-0 inline-block"
@@ -401,7 +355,6 @@ const CheckinPage = () => {
         </div>
       </div>
 
-      {/* Optional: Tab indicators */}
       <div className="flex justify-center gap-2 py-2">
         <div className="w-2 h-2 rounded-full bg-red-600"></div>
         <div className="w-2 h-2 rounded-full bg-gray-300"></div>

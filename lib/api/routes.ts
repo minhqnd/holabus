@@ -1,8 +1,6 @@
 
-export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app'
-
 export async function getRouteByProvince(provinceId: string) {
-    const res = await fetch(`${BASE_URL}/routes/${provinceId.toUpperCase()}.json`)
+    const res = await fetch(`/api/routes/${provinceId.toUpperCase()}`)
     if (!res.ok) {
         return null
     }

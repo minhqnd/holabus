@@ -1,50 +1,55 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { auth, signInWithPopup, googleProvider, signOut, database, ref, get } from '@/firebase'
-import { User } from 'firebase/auth'
 
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(null)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [email, setEmail] = useState<string | null>(null)
     const router = useRouter()
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            setUser(user)
-            setLoading(false)
-        })
-
-        return () => unsubscribe()
+        // Check localStorage for login state
+        const storedEmail = localStorage.getItem('admin_email')
+        if (storedEmail) {
+            setIsLoggedIn(true)
+            setEmail(storedEmail)
+        }
+        setLoading(false)
     }, [])
 
-    const signInWithGoogle = async () => {
+    const login = async (email: string, password: string) => {
         try {
-            const result = await signInWithPopup(auth, googleProvider)
-            const email = result.user.email?.replace(/\./g, '_')
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            })
 
-            // Kiểm tra trong database
-            const adminRef = ref(database, `admin/${email}`)
-            const snapshot = await get(adminRef)
-
-            if (snapshot.exists()) {
-                router.push('/admin')
-            } else {
-                await signOut(auth)
-                alert('Bạn không có quyền truy cập!, vui lòng liên hệ admin để được cấp quyền!')
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.error || 'Login failed')
             }
+
+            const data = await res.json()
+            localStorage.setItem('admin_email', data.email)
+            setIsLoggedIn(true)
+            setEmail(data.email)
+            router.push('/admin')
+            return true
         } catch (error) {
-            console.error('Lỗi đăng nhập:', error)
+            console.error('Login error:', error)
+            throw error
         }
     }
 
-    const logout = async () => {
-        try {
-            await signOut(auth)
-            router.push('/login')
-        } catch (error) {
-            console.error('Lỗi đăng xuất:', error)
-        }
+    const logout = () => {
+        localStorage.removeItem('admin_email')
+        setIsLoggedIn(false)
+        setEmail(null)
+        router.push('/login')
     }
 
-    return { user, loading, signInWithGoogle, logout }
+    return { isLoggedIn, loading, email, login, logout }
 }

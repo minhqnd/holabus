@@ -100,44 +100,112 @@ HolaBus là hệ thống đặt vé xe buýt giúp sinh viên FPT đặt vé đi
 - Một **khách hàng** có thể đặt nhiều **vé** (1 người đặt nhiều vé)
 - Một **xe buýt** phục vụ nhiều **đơn đặt vé**
 
-### 2.3. Sơ đồ ERD
+### 2.3. Sơ đồ ERD (Dạng truyền thống - Chen Notation)
 
+Dưới đây là sơ đồ ERD theo phong cách truyền thống (Thực thể - Hình chữ nhật, Thuộc tính - Hình oval, Mối quan hệ - Hình thoi) như giảng viên hướng dẫn:
+
+```mermaid
+graph TD
+    %% Entities
+    User[Khách hàng]
+    Booking[Đặt vé]
+    Trip[Chuyến xe]
+    Route[Tuyến xe]
+    Bus[Xe buýt]
+
+    %% Relationships
+    R1{Đặt}
+    R2{Thuộc}
+    R3{Có}
+    R4{Phục vụ}
+
+    %% User Attributes
+    U1((mã KH)) --- User
+    U2((họ tên)) --- User
+    U3((email)) --- User
+    U4((số điện thoại)) --- User
+
+    %% Booking Attributes
+    B1((mã vé)) --- Booking
+    B2((thời gian đặt)) --- Booking
+    B3((trạng thái)) --- Booking
+    B4((ghi chú)) --- Booking
+
+    %% Trip Attributes
+    T1((mã chuyến)) --- Trip
+    T2((ngày đi)) --- Trip
+    T3((giờ đi)) --- Trip
+    T4((số ghế trống)) --- Trip
+
+    %% Route Attributes
+    RT1((mã tuyến)) --- Route
+    RT2((tên tuyến)) --- Route
+    RT3((giá vé)) --- Route
+
+    %% Bus Attributes
+    BS1((mã xe)) --- Bus
+    BS2((tên xe)) --- Bus
+    BS3((biển số)) --- Bus
+
+    %% Entity - Relationship Connections
+    User --- R1 --- Booking
+    Booking --- R2 --- Trip
+    Trip --- R3 --- Route
+    Bus --- R4 --- Booking
 ```
-┌─────────────┐          ┌─────────────┐
-│    ROUTE    │          │     BUS     │
-├─────────────┤          ├─────────────┤
-│ route_id PK │          │ bus_id PK   │
-│ name        │          │ name        │
-│ price       │          │ plate_number│
-│ available   │          │ active      │
-└──────┬──────┘          └──────┬──────┘
-       │ 1:N                    │ 1:N
-       ▼                        │
-┌─────────────┐                 │
-│    TRIP     │                 │
-├─────────────┤                 │
-│ trip_id PK  │                 │
-│ route_id FK │◄────────────────┤
-│ name        │                 │
-│ trip_date   │                 │
-│ time        │                 │
-│ price       │                 │
-│ slots       │                 │
-└──────┬──────┘                 │
-       │ 1:N                    │
-       ▼                        │
-┌─────────────┐          ┌──────┴──────┐
-│   BOOKING   │◄─────────│    USER     │
-├─────────────┤   N:1    ├─────────────┤
-│ booking_id  │          │ user_id PK  │
-│ user_id FK  │          │ name        │
-│ trip_id FK  │          │ email       │
-│ bus_id FK   │          │ phone       │
-│ created_at  │          │ sex         │
-│ paid        │          └─────────────┘
-│ checkin     │
-│ note        │
-└─────────────┘
+
+### 2.4. Sơ đồ ERD (Dạng Crow's Foot - Hiện đại)
+ (Sơ đồ này chi tiết hơn về kiểu dữ liệu và khóa chính/khóa ngoại)
+
+```mermaid
+erDiagram
+    ROUTE ||--o{ TRIP : "1 tuyến có nhiều chuyến"
+    TRIP ||--o{ BOOKING : "1 chuyến có nhiều vé"
+    USER ||--o{ BOOKING : "1 khách đặt nhiều vé"
+    BUS ||--o{ BOOKING : "1 xe phục vụ nhiều vé"
+
+    ROUTE {
+        string route_id PK
+        string name
+        int price
+        boolean available
+    }
+
+    BUS {
+        string bus_id PK
+        string name
+        string plate_number
+        boolean active
+    }
+
+    TRIP {
+        string trip_id PK
+        string route_id FK
+        string name
+        date trip_date
+        time departure_time
+        int price
+        int available_slots
+    }
+
+    USER {
+        string user_id PK
+        string name
+        string email
+        string phone
+        char sex
+    }
+
+    BOOKING {
+        string booking_id PK
+        string user_id FK
+        string trip_id FK
+        string bus_id FK
+        datetime created_at
+        boolean paid
+        boolean checkin
+        text note
+    }
 ```
 
 ---

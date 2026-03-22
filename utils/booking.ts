@@ -1,6 +1,3 @@
-import { get, ref, set } from 'firebase/database';
-import { database } from '@/firebase';
-
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 export const generateBookingId = (): string => {
@@ -12,11 +9,10 @@ export const generateBookingId = (): string => {
 };
 
 export const isBookingIdUnique = async (id: string): Promise<boolean> => {
-    // Check in firebase bookings
-    const bookingRef = ref(database, `bookings/${id}`);
-    const bookingSnapshot = await get(bookingRef);
-
-    if (bookingSnapshot.exists()) {
+    const res = await fetch(`/api/bookings?checkId=${id}`);
+    const data = await res.json();
+    
+    if (data.exists) {
         return false;
     }
 
@@ -45,14 +41,14 @@ export const saveBookingData = async (
   note: string = ''
 ): Promise<void> => {
   try {
-    const bookingRef = ref(database, `bookings/${bookingId}`);
-    await set(bookingRef, {
-      tripId,
-      userId,
-      createdAt: new Date().toISOString(),
-      paid: false,
-      note
+    const res = await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId, tripId, userId, paid, note }),
     });
+    if (!res.ok) {
+      throw new Error('Failed to save booking');
+    }
   } catch (error) {
     console.error('Error saving booking:', error);
     throw error;

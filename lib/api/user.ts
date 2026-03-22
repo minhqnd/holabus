@@ -1,7 +1,6 @@
-export const BASE_URL = 'https://holabus-fpt-default-rtdb.asia-southeast1.firebasedatabase.app'
 
 export async function getUserById(userID: string) {
-    const res = await fetch(`${BASE_URL}/users/${userID}.json`)
+    const res = await fetch(`/api/users/${userID}`)
     if (!res.ok) {
         return null
     }

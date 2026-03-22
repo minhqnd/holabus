@@ -7,14 +7,14 @@ import { Loader2 } from 'lucide-react'
 
 export function withAuth<T extends object>(Component: React.ComponentType<T>) {
     return function AuthenticatedComponent(props: T) {
-        const { user, loading } = useAuth()
+        const { isLoggedIn, loading } = useAuth()
         const router = useRouter()
 
         useEffect(() => {
-            if (!loading && !user) {
+            if (!loading && !isLoggedIn) {
                 router.push('/login')
             }
-        }, [user, loading, router])
+        }, [isLoggedIn, loading, router])
 
         if (loading) {
             return (
@@ -24,7 +24,7 @@ export function withAuth<T extends object>(Component: React.ComponentType<T>) {
             )
         }
 
-        if (!user) {
+        if (!isLoggedIn) {
             return null
         }
 
