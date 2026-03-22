@@ -9,23 +9,22 @@ export async function GET(
     const { id } = await params;
     const pool = await getPool();
 
-    // Get route info
-    const routeResult = await pool.request()
-      .input('route_id', sql.NVarChar, id.toUpperCase())
-      .query('SELECT * FROM Routes WHERE route_id = @route_id');
+    // Get route info and locations concurrently
+    const [routeResult, locationsResult] = await Promise.all([
+      pool.request()
+        .input('route_id', sql.NVarChar, id)
+        .execute('sp_GetRouteById'),
+      pool.request()
+        .input('route_id', sql.NVarChar, id)
+        .execute('sp_GetRouteLocations')
+    ]);
 
     if (routeResult.recordset.length === 0) {
       return NextResponse.json(null, { status: 404 });
     }
 
     const route = routeResult.recordset[0];
-
-    // Get locations
-    const locResult = await pool.request()
-      .input('route_id', sql.NVarChar, id.toUpperCase())
-      .query('SELECT location_name FROM RouteLocations WHERE route_id = @route_id ORDER BY stop_order');
-
-    const locations = locResult.recordset.map((r: { location_name: string }) => r.location_name);
+    const locations = locationsResult.recordset.map((r: { location_name: string }) => r.location_name);
 
     return NextResponse.json({
       name: route.name,

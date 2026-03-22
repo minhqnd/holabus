@@ -4,22 +4,10 @@ import { getPool, sql } from '@/lib/db';
 export async function GET() {
   try {
     const pool = await getPool();
+    const result = await pool.request().execute('sp_GetAllBookingsDetails');
 
-    const result = await pool.request().query(`
-      SELECT 
-        b.booking_id, b.user_id, b.trip_id, b.bus_id,
-        b.created_at, b.is_paid, b.is_checked_in, b.checkin_time, b.note,
-        u.name as user_name, u.phone as user_phone, u.email as user_email,
-        u.destination, u.transfer_point,
-        t.name as trip_name, t.trip_date, t.departure_time, t.price as trip_price, t.route_id,
-        r.name as route_name
-      FROM Bookings b
-      LEFT JOIN Users u ON b.user_id = u.user_id
-      LEFT JOIN Trips t ON b.trip_id = t.trip_id
-      LEFT JOIN Routes r ON t.route_id = r.route_id
-      ORDER BY b.created_at DESC
-    `);
-
+    // Format the flat SQL rows back into nested objects if needed, 
+    // or just return as is (frontend might expect a flat array now) 
     return NextResponse.json(result.recordset);
   } catch (error) {
     console.error('Error fetching admin bookings:', error);
@@ -40,21 +28,21 @@ export async function PATCH(request: NextRequest) {
     const pool = await getPool();
     const req = pool.request().input('booking_id', sql.NVarChar, bookingId);
 
-    const updates: string[] = [];
+    let hasUpdates = false;
     if (busId !== undefined) {
       req.input('bus_id', sql.NVarChar, busId);
-      updates.push('bus_id = @bus_id');
+      hasUpdates = true;
     }
     if (isPaid !== undefined) {
       req.input('is_paid', sql.Bit, isPaid ? 1 : 0);
-      updates.push('is_paid = @is_paid');
+      hasUpdates = true;
     }
 
-    if (updates.length === 0) {
+    if (!hasUpdates) {
       return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
     }
 
-    await req.query(`UPDATE Bookings SET ${updates.join(', ')} WHERE booking_id = @booking_id`);
+    await req.execute('sp_UpdateBookingAdmin');
 
     return NextResponse.json({ success: true });
   } catch (error) {

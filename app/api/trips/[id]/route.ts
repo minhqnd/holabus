@@ -11,7 +11,7 @@ export async function GET(
 
     const result = await pool.request()
       .input('trip_id', sql.NVarChar, id)
-      .query('SELECT * FROM Trips WHERE trip_id = @trip_id');
+      .execute('sp_GetTripById');
 
     if (result.recordset.length === 0) {
       return NextResponse.json(null, { status: 404 });

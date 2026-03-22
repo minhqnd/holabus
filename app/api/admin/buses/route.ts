@@ -4,7 +4,7 @@ import { getPool } from '@/lib/db';
 export async function GET() {
   try {
     const pool = await getPool();
-    const result = await pool.request().query('SELECT * FROM Buses ORDER BY name');
+    const result = await pool.request().execute('sp_GetAllBuses');
 
     const buses: Record<string, unknown> = {};
     for (const b of result.recordset) {

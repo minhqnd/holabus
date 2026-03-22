@@ -20,13 +20,11 @@ export async function POST(request: NextRequest) {
       .input('user_id', sql.NVarChar, userId)
       .input('name', sql.NVarChar, name)
       .input('email', sql.NVarChar, mail)
-      .input('confirm_email', sql.NVarChar, confirmEmail || mail)
       .input('phone', sql.NVarChar, phone)
       .input('sex', sql.NVarChar, sex || null)
       .input('destination', sql.NVarChar, destination || null)
       .input('transfer_point', sql.NVarChar, transferPoint || null)
-      .query(`INSERT INTO Users (user_id, name, email, confirm_email, phone, sex, destination, transfer_point) 
-              VALUES (@user_id, @name, @email, @confirm_email, @phone, @sex, @destination, @transfer_point)`);
+      .execute('sp_CreateUser');
 
     return NextResponse.json({ userId });
   } catch (error) {

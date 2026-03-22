@@ -11,7 +11,7 @@ export async function GET(
 
     const result = await pool.request()
       .input('user_id', sql.NVarChar, id)
-      .query('SELECT * FROM Users WHERE user_id = @user_id');
+      .execute('sp_GetUserById');
 
     if (result.recordset.length === 0) {
       return NextResponse.json(null, { status: 404 });

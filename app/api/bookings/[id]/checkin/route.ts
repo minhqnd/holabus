@@ -14,8 +14,8 @@ export async function PATCH(
 
     await pool.request()
       .input('booking_id', sql.NVarChar, id)
-      .input('checkin_time', sql.DateTime, timestamp)
-      .query(`UPDATE Bookings SET is_checked_in = 1, checkin_time = @checkin_time WHERE booking_id = @booking_id`);
+      .input('checkin_time', sql.DateTime, new Date())
+      .execute('sp_CheckInBooking');
 
     return NextResponse.json({ success: true, checkinTime: timestamp.toISOString() });
   } catch (error) {

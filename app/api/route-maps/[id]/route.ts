@@ -9,15 +9,15 @@ export async function GET(
     const { id } = await params;
     const pool = await getPool();
 
-    const result = await pool.request()
-      .input('route_id', sql.NVarChar, id.toUpperCase())
-      .query('SELECT iframe_map FROM Routes WHERE route_id = @route_id');
+    const routeResult = await pool.request()
+      .input('route_id', sql.NVarChar, id)
+      .execute('sp_GetRouteMap');
 
-    if (result.recordset.length === 0 || !result.recordset[0].iframe_map) {
+    if (routeResult.recordset.length === 0 || !routeResult.recordset[0].iframe_map) {
       return NextResponse.json(null, { status: 404 });
     }
 
-    return NextResponse.json({ iframeMap: result.recordset[0].iframe_map });
+    return NextResponse.json({ iframeMap: routeResult.recordset[0].iframe_map });
   } catch (error) {
     console.error('Error fetching route map:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

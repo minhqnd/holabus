@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     const pool = await getPool();
     const result = await pool.request()
       .input('booking_id', sql.NVarChar, checkId)
-      .query('SELECT 1 FROM Bookings WHERE booking_id = @booking_id');
+      .execute('sp_CheckBookingExists');
 
     return NextResponse.json({ exists: result.recordset.length > 0 });
   } catch (error) {

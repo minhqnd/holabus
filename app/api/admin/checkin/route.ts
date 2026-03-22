@@ -6,12 +6,13 @@ export async function GET() {
   try {
     const pool = await getPool();
 
-    const [bookingsR, usersR, tripsR, routesR, busesR] = await Promise.all([
-      pool.request().query('SELECT * FROM Bookings'),
-      pool.request().query('SELECT * FROM Users'),
-      pool.request().query('SELECT * FROM Trips'),
-      pool.request().query('SELECT * FROM Routes'),
-      pool.request().query('SELECT * FROM Buses'),
+    const [bookingsR, usersR, tripsR, routesR, busesR, locationsR] = await Promise.all([
+      pool.request().execute('sp_GetAllBookings'),
+      pool.request().execute('sp_GetAllUsers'),
+      pool.request().execute('sp_GetAllTrips'),
+      pool.request().execute('sp_GetAllRoutes'),
+      pool.request().execute('sp_GetAllBuses'),
+      pool.request().execute('sp_GetAllRouteLocations'),
     ]);
 
     // Convert to key-value objects (matching Firebase format)
@@ -63,7 +64,18 @@ export async function GET() {
     for (const r of routesR.recordset) {
       routes[r.route_id] = {
         name: r.name,
+        price: r.price ? r.price.toLocaleString('vi-VN').replace(/,/g, '.') : '0',
+        available: r.is_available,
+        locations: [],
+        iframeMap: r.iframe_map || '',
       };
+    }
+    
+    // Map locations to their respective routes
+    for (const l of locationsR.recordset) {
+      if (routes[l.route_id]) {
+        (routes[l.route_id] as { locations: string[] }).locations.push(l.location_name);
+      }
     }
 
     const buses: Record<string, unknown> = {};

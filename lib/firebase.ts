@@ -56,8 +56,8 @@ export function subscribeToCollection<T>(
 
   fetchData();
 
-  // Poll every 10 seconds for "live" updates
-  const interval = setInterval(fetchData, 10000);
+  // Giảm tải polling cập nhật "live" (Đồng bộ Realtime) từ 10 giây xuống 30 giây để đỡ spam
+  const interval = setInterval(fetchData, 30000);
 
   return () => {
     cancelled = true;

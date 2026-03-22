@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const result = await pool.request()
       .input('email', sql.NVarChar, email)
       .input('password', sql.NVarChar, password)
-      .query('SELECT * FROM Admins WHERE email = @email AND password_hash = @password');
+      .execute('sp_AdminLogin');
 
     if (result.recordset.length === 0) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });

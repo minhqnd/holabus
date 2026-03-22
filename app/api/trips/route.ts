@@ -7,15 +7,14 @@ export async function GET(request: NextRequest) {
     const routeId = searchParams.get('routeId');
     const pool = await getPool();
 
-    let query = 'SELECT * FROM Trips';
-    const req = pool.request();
-
+    let result;
     if (routeId) {
-      query += ' WHERE route_id = @route_id';
-      req.input('route_id', sql.NVarChar, routeId.toUpperCase());
+      result = await pool.request()
+        .input('route_id', sql.NVarChar, routeId)
+        .execute('sp_GetTripsByRoute');
+    } else {
+      result = await pool.request().execute('sp_GetAllTrips');
     }
-
-    const result = await req.query(query);
 
     // Format as array with id field (matching Firebase format)
     const trips = result.recordset.map((t: Record<string, unknown>) => ({

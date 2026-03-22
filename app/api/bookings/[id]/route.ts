@@ -11,7 +11,7 @@ export async function GET(
 
     const result = await pool.request()
       .input('booking_id', sql.NVarChar, id)
-      .query('SELECT * FROM Bookings WHERE booking_id = @booking_id');
+      .execute('sp_GetBookingById');
 
     if (result.recordset.length === 0) {
       return NextResponse.json(null, { status: 404 });
