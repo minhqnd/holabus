@@ -50,3 +50,27 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+// DELETE: Cancel/delete a booking
+export async function DELETE(request: NextRequest) {
+  try {
+    const body = await request.json();
+    if (!body.id) return NextResponse.json({ error: 'Missing booking id' }, { status: 400 });
+
+    const pool = await getPool();
+    // Releasing the trip slot back before deleting the record
+    await pool.request().input('booking_id', sql.NVarChar, body.id).query(`
+      DECLARE @trip_id NVARCHAR(50);
+      SELECT @trip_id = trip_id FROM Bookings WHERE booking_id = @booking_id;
+      IF @trip_id IS NOT NULL BEGIN
+          UPDATE Trips SET available_slots = available_slots + 1 WHERE trip_id = @trip_id;
+          DELETE FROM Bookings WHERE booking_id = @booking_id;
+      END
+    `);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

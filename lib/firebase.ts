@@ -109,6 +109,15 @@ export async function updateDocument(
     return;
   }
 
+  if (collection === 'routes') {
+    await fetch('/api/admin/routes', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ routeId: id, ...data }),
+    });
+    return;
+  }
+
   console.warn(`updateDocument: Unhandled collection "${collection}"`);
 }
 

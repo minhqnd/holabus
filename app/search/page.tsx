@@ -115,19 +115,19 @@ function SearchContent() {
 
             let note = '';
 
-            try {
-                const emailResponse = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(emailData)
-                });
+            // try {
+            //     const emailResponse = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
+            //         method: 'POST',
+            //         headers: { 'Content-Type': 'application/json' },
+            //         body: JSON.stringify(emailData)
+            //     });
 
-                if (!emailResponse.ok) {
-                    throw new Error('Lỗi khi gửi email');
-                }
-            } catch (error) {
-                note = 'Không gửi được mail, vui lòng kiểm tra lại! ' + error;
-            }
+            //     if (!emailResponse.ok) {
+            //         throw new Error('Lỗi khi gửi email');
+            //     }
+            // } catch (error) {
+            //     note = 'Không gửi được mail, vui lòng kiểm tra lại! ' + error;
+            // }
 
             // Lưu booking với trạng thái gửi email
             await saveBookingData(bookingId, selectedTripId, userId, false, note)

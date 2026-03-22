@@ -106,7 +106,7 @@ export function PassengerForm({ onSubmit, onBack, price }: PassengerFormProps) {
       isValid = false
     }
 
-    if (!captchaValue) {
+    if (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && !captchaValue) {
       setCaptchaError('Vui lòng xác nhận captcha')
       isValid = false
     }
@@ -248,15 +248,17 @@ export function PassengerForm({ onSubmit, onBack, price }: PassengerFormProps) {
             </div>
           </div>
         )}
-        <div>
-          <ReCAPTCHA
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-            onChange={handleCaptchaChange}
-          />
-          {captchaError && (
-            <span className="text-sm text-red-500 mt-1">{captchaError}</span>
-          )}
-        </div>
+        {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+          <div>
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+              onChange={handleCaptchaChange}
+            />
+            {captchaError && (
+              <span className="text-sm text-red-500 mt-1">{captchaError}</span>
+            )}
+          </div>
+        )}
         <div className="flex justify-between pt-6">
           <Button
             type="button"

@@ -211,17 +211,17 @@ export function BookingsList() {
         },
       }
       //console.log(userData)
-      const response = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      })
+      // const response = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(userData),
+      // })
 
-      if (!response.ok) {
-        throw new Error(`Không thể gửi vé: ${response.status} ${response.statusText}`)
-      }
+      // if (!response.ok) {
+      //   throw new Error(`Không thể gửi vé: ${response.status} ${response.statusText}`)
+      // }
 
       //console.log('Ticket sent successfully')
       // toast.success('Gửi hóa đơn thành công');
@@ -300,17 +300,17 @@ export function BookingsList() {
       };
 
       //console.log(JSON.stringify(ticketData));
-      const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ticketData),
-      });
+      // const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(ticketData),
+      // });
 
-      if (!response.ok) {
-        throw new Error('Failed to send ticket');
-      }
+      // if (!response.ok) {
+      //   throw new Error('Failed to send ticket');
+      // }
 
       //console.log('Ticket sent successfully');
       toast.update(toastid, { render: "Gửi vé thành công", type: "success", isLoading: false, autoClose: 5000 });

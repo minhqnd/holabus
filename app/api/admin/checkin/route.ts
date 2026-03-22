@@ -43,6 +43,7 @@ export async function GET() {
         name: u.name,
         mail: u.email,
         phone: u.phone,
+        sex: u.sex,
         destination: u.destination,
         transferPoint: u.transfer_point,
       };
