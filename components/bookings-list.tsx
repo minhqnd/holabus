@@ -347,8 +347,7 @@ export function BookingsList() {
       await handleSendTicket(id);
       await updateDocument(`bookings/${id}`, { paid: true });
 
-      const newSlot = trip.slot - 1;
-      await updateDocument(`trips/${booking.tripId}`, { slot: newSlot });
+      // Slot deduction is safely handled by the SQL Backend during booking creation.
 
       // toast.success('Xác nhận thành công');
     } catch (error) {
@@ -368,12 +367,6 @@ export function BookingsList() {
 
       // Cập nhật trạng thái thanh toán của booking
       await updateDocument(`bookings/${id}`, { paid: false })
-
-      // Cập nhật số slot của trip
-      if (trip) {
-        const newSlot = trip.slot + 1
-        await updateDocument(`trips/${booking.tripId}`, { slot: newSlot })
-      }
       toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false, autoClose: 5000 });
 
     } catch (error) {
