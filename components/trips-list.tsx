@@ -84,10 +84,10 @@ export function TripsList() {
     if (editingTrip && editedTrip) {
       try {
         if (editingTrip !== (editedTrip as EditableTrip).id) {
-          await setDocument(`trips/${(editedTrip as EditableTrip).id}`, editedTrip)
+          await setDocument(`trips/${(editedTrip as EditableTrip).id}`, editedTrip as unknown as Record<string, unknown>)
           await deleteDocument(`trips/${editingTrip}`)
         } else {
-          await updateDocument(`trips/${editingTrip}`, editedTrip)
+          await updateDocument(`trips/${editingTrip}`, editedTrip as unknown as Record<string, unknown>)
         }
         setEditingTrip(null)
         setEditedTrip(null)
@@ -99,7 +99,7 @@ export function TripsList() {
 
   const handleAddTrip = async (newTrip: Trip & { id: string }) => {
     try {
-      await setDocument(`trips/${newTrip.id}`, newTrip)
+      await setDocument(`trips/${newTrip.id}`, newTrip as unknown as Record<string, unknown>)
       setIsAddingTrip(false)
     } catch (error) {
       console.error('Lỗi khi thêm mới:', error)

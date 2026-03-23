@@ -102,7 +102,7 @@ export function BusesList() {
 
         const toastId = toast.loading('Đang cập nhật...')
         try {
-            await updateDocument(`buses/${editingBus.id}`, editingBus)
+            await updateDocument(`buses/${editingBus.id}`, editingBus as unknown as Record<string, unknown>)
             setEditingBus(null)
             toast.update(toastId, {
                 render: 'Cập nhật thành công',
@@ -124,7 +124,7 @@ export function BusesList() {
     const handleAddBus = async (busData: Bus) => {
         const toastId = toast.loading('Đang thêm xe...')
         try {
-            await setDocument(`buses/${busData.id}`, busData)
+            await setDocument(`buses/${busData.id}`, busData as unknown as Record<string, unknown>)
             setIsAddingBus(false)
             toast.update(toastId, {
                 render: 'Thêm xe thành công',

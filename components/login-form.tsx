@@ -18,7 +18,7 @@ export function LoginForm() {
 
     try {
       await login(email, password)
-    } catch (err) {
+    } catch {
       setError('Email hoặc mật khẩu không đúng!')
     } finally {
       setLoading(false)

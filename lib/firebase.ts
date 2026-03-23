@@ -6,14 +6,7 @@
 
 type Callback<T> = (data: T) => void;
 
-// Collection-to-API mapping
-const collectionApiMap: Record<string, string> = {
-  bookings: '/api/admin/checkin',     // returns { bookings, users, trips, routes, buses }
-  users: '/api/admin/checkin',
-  trips: '/api/admin/checkin',
-  routes: '/api/admin/checkin',
-  buses: '/api/admin/checkin',
-};
+
 
 // Cache for the combined admin data (avoid multiple fetches for same data)
 let cachedData: Record<string, unknown> | null = null;

@@ -181,36 +181,13 @@ export function BookingsList() {
     try {
       //console.log(`Sending ${type} email for booking ${bookingId}`)
       const booking = bookings[bookingId]
-      const user = users[booking.userId]
       const trip = trips[booking.tripId]
       const route = routes[trip.routeId]
       if (!route) {
         throw new Error('Không tìm thấy route cho chuyến xe này.')
       }
 
-      const userData = {
-        bookingId: bookingId,
-        tripId: booking.tripId,
-        price: trip.price,
-        createdAt: booking.createdAt,
-        locations: trip?.locations || [],
-        tripInfo: {
-          name: trip.name,
-          time: trip.time,
-          date: trip.date,
-          price: trip.price,
-          location: route.locations,
-        },
-        userInfo: {
-          sex: user.sex,
-          name: user.name,
-          mail: user.mail,
-          phone: user.phone,
-          destination: user.destination,
-          transferPoint: user.transferPoint,
-        },
-      }
-      //console.log(userData)
+
       // const response = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {
       //   method: 'POST',
       //   headers: {
@@ -250,9 +227,9 @@ export function BookingsList() {
     if (editingBooking && editedBooking && editedUser) {
       try {
         // Cập nhật thông tin booking
-        await updateDocument(`bookings/${editingBooking}`, editedBooking)
+        await updateDocument(`bookings/${editingBooking}`, editedBooking as unknown as Record<string, unknown>)
         // Cập nhật thông tin user
-        await updateDocument(`users/${editedBooking.userId}`, editedUser)
+        await updateDocument(`users/${editedBooking.userId}`, editedUser as unknown as Record<string, unknown>)
         setEditingBooking(null)
         setEditedBooking(null)
         setEditedUser(null)
@@ -267,37 +244,14 @@ export function BookingsList() {
   const handleSendTicket = async (id: string) => {
     const toastid = toast.loading('Đang gửi vé...');
     try {
-      const booking = bookings[id];
-      const user = users[booking.userId];
-      const trip = trips[booking.tripId];
+      const trip = trips[bookings[id].tripId];
       const route = routes[trip.routeId];
 
       if (!route) {
         throw new Error('Không tìm thấy route cho chuyến xe này.');
       }
 
-      const ticketData = {
-        bookingId: id,
-        tripId: booking.tripId,
-        price: trip.price,
-        createdAt: booking.createdAt,
-        locations: route.locations,
-        tripInfo: {
-          name: trip.name,
-          time: trip.time,
-          date: trip.date,
-          price: trip.price,
-          location: route.locations,
-        },
-        userInfo: {
-          sex: user.sex,
-          name: user.name,
-          mail: user.mail,
-          phone: user.phone,
-          destination: user.destination,
-          transferPoint: user.transferPoint,
-        },
-      };
+    //  const ticketData = {
 
       //console.log(JSON.stringify(ticketData));
       // const response = await fetch('https://api.holabus.com.vn/api/send-ticket', {
@@ -337,15 +291,9 @@ export function BookingsList() {
     setConfirmPaymentId(null);
     setSendingEmails(prev => ({ ...prev, [id]: true }));
     try {
-      const booking = bookings[id];
-      const trip = trips[booking.tripId];
-
-      if (!trip) {
-        throw new Error('Không tìm thấy chuyến xe này.');
-      }
-      // toast.loading('Đang gửi vé...');
       await handleSendTicket(id);
-      await updateDocument(`bookings/${id}`, { paid: true });
+
+      // Slot deduction is safely handled by the SQL Backend during booking creation.
 
       // Slot deduction is safely handled by the SQL Backend during booking creation.
 
@@ -362,9 +310,6 @@ export function BookingsList() {
     const toastid = toast.loading('Đang hủy...');
 
     try {
-      const booking = bookings[id]
-      const trip = trips[booking.tripId]
-
       // Cập nhật trạng thái thanh toán của booking
       await updateDocument(`bookings/${id}`, { paid: false })
       toast.update(toastid, { render: "Hủy trạng thái thanh toán thành công", type: "success", isLoading: false, autoClose: 5000 });

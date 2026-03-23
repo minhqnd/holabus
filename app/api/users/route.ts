@@ -5,9 +5,9 @@ import { getPool, sql } from '@/lib/db';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, mail, phone, sex, destination, transferPoint, confirmEmail } = body;
+    const { name, email, phone, sex, destination, transferPoint } = body;
 
-    if (!name || !mail || !phone) {
+    if (!name || !email || !phone) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     await pool.request()
       .input('user_id', sql.NVarChar, userId)
       .input('name', sql.NVarChar, name)
-      .input('email', sql.NVarChar, mail)
+      .input('email', sql.NVarChar, email)
       .input('phone', sql.NVarChar, phone)
       .input('sex', sql.NVarChar, sex || null)
       .input('destination', sql.NVarChar, destination || null)

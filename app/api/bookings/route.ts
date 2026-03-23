@@ -4,7 +4,7 @@ import { getPool, sql } from '@/lib/db';
 // POST: Create a new booking
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as Record<string, unknown>;
     const { bookingId, tripId, userId, paid, note } = body;
 
     if (!bookingId || !tripId || !userId) {
@@ -23,12 +23,13 @@ export async function POST(request: NextRequest) {
         .execute('sp_CreateBooking');
 
       return NextResponse.json({ success: true, bookingId });
-    } catch (dbError: any) {
+    } catch (error: unknown) {
+      const dbError = error as { number?: number };
       if (dbError.number === 50001) {
         return NextResponse.json({ error: 'Trip not found' }, { status: 404 });
       }
       if (dbError.number === 50002) {
-        return NextResponse.json({ error: 'Trip is fully booked (Hết vé)' }, { status: 400 });
+        return NextResponse.json({ error: 'Trip fully booked' }, { status: 400 });
       }
       throw dbError; // rethrow other errors
     }

@@ -103,17 +103,17 @@ function SearchContent() {
             const userId = await saveUserData(userData)
 
             // Chuẩn bị và gửi email với timeout
-            const emailData = {
-                bookingId,
-                tripId: selectedTripId,
-                price: tripData?.price,
-                createdAt: new Date().toISOString(),
-                locations: tripData?.location || [],
-                tripInfo: tripData,
-                userInfo: userData
-            }
+            // const emailData = {
+            //     bookingId,
+            //     tripId: selectedTripId,
+            //     price: tripData?.price,
+            //     createdAt: new Date().toISOString(),
+            //     locations: tripData?.location || [],
+            //     tripInfo: tripData,
+            //     userInfo: userData
+            // }
 
-            let note = '';
+            const note = '';
 
             // try {
             //     const emailResponse = await fetch('https://api.holabus.com.vn/api/send-payment-confirmation', {

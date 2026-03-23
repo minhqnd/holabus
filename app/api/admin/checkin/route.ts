@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getPool } from '@/lib/db';
 
 // Get all data needed for checkin page
@@ -15,14 +15,7 @@ export async function GET() {
       pool.request().execute('sp_GetAllRouteLocations'),
     ]);
 
-    // Convert to key-value objects (matching Firebase format)
-    const toMap = (records: Record<string, unknown>[], key: string) => {
-      const map: Record<string, unknown> = {};
-      for (const r of records) {
-        map[r[key] as string] = r;
-      }
-      return map;
-    };
+
 
     const bookings: Record<string, unknown> = {};
     for (const b of bookingsR.recordset) {
